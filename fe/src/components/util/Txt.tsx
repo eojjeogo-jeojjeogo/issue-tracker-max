@@ -1,7 +1,15 @@
 import { HTMLAttributes } from "react";
 
 interface Props extends HTMLAttributes<HTMLSpanElement> {
-  typography?: "bold32" | "bold24" | "bold20" | "bold16" | "bold12" | "medium20" | "medium16" | "medium12";
+  typography?:
+    | "bold32"
+    | "bold24"
+    | "bold20"
+    | "bold16"
+    | "bold12"
+    | "medium20"
+    | "medium16"
+    | "medium12";
   color: string;
 }
 export function Txt({ typography = "medium16", color, ...props }: Props) {
@@ -12,68 +20,73 @@ export function Txt({ typography = "medium16", color, ...props }: Props) {
         padding: 0,
 
         color,
-        ...TYPOGRAPHY_VARIANT[typography],
+        ...fonts[typography],
       }}
       {...props}
     />
   );
 }
 
-const TYPOGRAPHY_VARIANT = {
+export const fonts = {
   bold32: {
-    fontSize: 32,
+    fontSize: "32px",
     fontWeight: 700,
-    lineHeight: 48,
+    lineHeight: "48px",
     letterSpacing: 0,
-    textAlign: "left" as const,
   },
   bold24: {
-    fontSize: 24,
+    fontSize: "22px",
     fontWeight: 700,
-    lineHeight: 36,
+    lineHeight: "36px",
     letterSpacing: 0,
-    textAlign: "left" as const,
   },
   bold20: {
-    fontSize: 20,
+    fontSize: "22px",
     fontWeight: 700,
-    lineHeight: 32,
+    lineHeight: "32px",
     letterSpacing: 0,
-    textAlign: "left" as const,
   },
   bold16: {
-    fontSize: 16,
+    fontSize: "12px",
     fontWeight: 700,
-    lineHeight: 24,
+    lineHeight: "24px",
     letterSpacing: 0,
-    textAlign: "left" as const,
   },
   bold12: {
-    fontSize: 12,
+    fontSize: "12px",
     fontWeight: 700,
-    lineHeight: 16,
+    lineHeight: "16px",
     letterSpacing: 0,
-    textAlign: "left" as const,
+  },
+  medium32: {
+    fontSize: "32px",
+    fontWeight: 500,
+    lineHeight: "48px",
+    letterSpacing: 0,
+  },
+  medium24: {
+    fontSize: "24px",
+    fontWeight: 500,
+    lineHeight: "36px",
+    letterSpacing: 0,
   },
   medium20: {
-    fontSize: 20,
+    fontSize: "20px",
     fontWeight: 500,
-    lineHeight: 32,
+    lineHeight: "32px",
     letterSpacing: 0,
-    textAlign: "left" as const,
   },
   medium16: {
-    fontSize: 16,
+    fontSize: "16px",
     fontWeight: 500,
-    lineHeight: 24,
+    lineHeight: "24px",
     letterSpacing: 0,
     textAlign: "left" as const,
   },
   medium12: {
-    fontSize: 12,
+    fontSize: "12px",
     fontWeight: 500,
-    lineHeight: 16,
+    lineHeight: "16px",
     letterSpacing: 0,
-    textAlign: "left" as const,
   },
 };
