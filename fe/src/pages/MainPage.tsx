@@ -1,7 +1,12 @@
+import { Header } from "../components/Header/Header";
+import { Issue } from "../components/Issue/Issue";
+import { Background } from "../components/common/Background";
+
 export function MainPage() {
   return (
-    <>
-      <h1>Main Page</h1>
-    </>
+    <Background>
+      <Header />
+      <Issue />
+    </Background>
   );
 }
