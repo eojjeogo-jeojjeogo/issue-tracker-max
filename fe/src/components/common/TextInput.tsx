@@ -38,7 +38,7 @@ export function TextInput({
           height: `${height}px`,
           border:
             inputState === "active"
-              ? `1px solid ${color.nuetral.border.defaultActive}`
+              ? `1px solid ${color.neutral.border.defaultActive}`
               : inputState === "error"
               ? `1px solid ${color.danger.border.default}}`
               : "none",
@@ -47,17 +47,17 @@ export function TextInput({
           boxSizing: "border-box",
           backgroundColor:
             inputState === "enabled"
-              ? color.nuetral.surface.bold
+              ? color.neutral.surface.bold
               : inputState === "disabled"
-              ? color.nuetral.surface.bold
-              : color.nuetral.surface.strong,
+              ? color.neutral.surface.bold
+              : color.neutral.surface.strong,
         }}>
         {inputState === "active" && (
           <div
             css={{
               ...fonts.medium12,
 
-              color: color.nuetral.text.weak,
+              color: color.neutral.text.weak,
             }}>
             {placeholder}
           </div>
@@ -74,10 +74,10 @@ export function TextInput({
             height: "24px",
             color:
               inputState === "enabled"
-                ? color.nuetral.text.default
+                ? color.neutral.text.default
                 : inputState === "disabled"
-                ? color.nuetral.text.weak
-                : color.nuetral.text.strong,
+                ? color.neutral.text.weak
+                : color.neutral.text.strong,
             border: "none",
             backgroundColor: "transparent",
           }}

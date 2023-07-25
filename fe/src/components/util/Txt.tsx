@@ -35,19 +35,19 @@ export const fonts = {
     letterSpacing: 0,
   },
   bold24: {
-    fontSize: "22px",
+    fontSize: "24px",
     fontWeight: 700,
     lineHeight: "36px",
     letterSpacing: 0,
   },
   bold20: {
-    fontSize: "22px",
+    fontSize: "20px",
     fontWeight: 700,
     lineHeight: "32px",
     letterSpacing: 0,
   },
   bold16: {
-    fontSize: "12px",
+    fontSize: "16px",
     fontWeight: 700,
     lineHeight: "24px",
     letterSpacing: 0,

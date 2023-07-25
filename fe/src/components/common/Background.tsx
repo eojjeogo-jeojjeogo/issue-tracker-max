@@ -14,7 +14,7 @@ export function Background({ children }: { children: React.ReactNode }) {
           alignItems: "center",
           width: "1440px",
           height: "1024px",
-          backgroundColor: color.nuetral.surface.default,
+          backgroundColor: color.neutral.surface.default,
         }}>
         {children}
       </div>

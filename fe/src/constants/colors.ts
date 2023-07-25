@@ -16,7 +16,7 @@ export const color = {
   gray400: "#BEC1D5",
   gray500: "#A0A3BD",
   gray800: "#2A2A44",
-  nuetral: {
+  neutral: {
     text: {
       weak: gray600,
       default: gray700,
