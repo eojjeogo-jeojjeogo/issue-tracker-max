@@ -1,3 +1,26 @@
+// export type IconType =
+//   | "alertCircle"
+//   | "archive"
+//   | "calendar"
+//   | "checkBoxActive"
+//   | "checkBoxDisable"
+//   | "checkBoxInitial"
+//   | "checkOffCircle"
+//   | "checkOnCircle"
+//   | "chevronDown"
+//   | "edit"
+//   | "label"
+//   | "milestone"
+//   | "paperclip"
+//   | "plus"
+//   | "refreshCcw"
+//   | "search"
+//   | "smile"
+//   | "trash"
+//   | "userImageLarge"
+//   | "userImageSmall"
+//   | "xSquare";
+
 export function Icon({ type, color }: { type: string; color?: string }) {
   switch (type) {
     case "alertCircle":
@@ -8,7 +31,7 @@ export function Icon({ type, color }: { type: string; color?: string }) {
           viewBox="0 0 16 16"
           fill="none"
           xmlns="http://www.w3.org/2000/svg">
-          <g clip-path="url(#clip0_14852_5674)">
+          <g clipPath="url(#clip0_14852_5674)">
             <path
               d="M8.00016 14.6667C11.6821 14.6667 14.6668 11.6819 14.6668 8.00004C14.6668 4.31814 11.6821 1.33337 8.00016 1.33337C4.31826 1.33337 1.3335 4.31814 1.3335 8.00004C1.3335 11.6819 4.31826 14.6667 8.00016 14.6667Z"
               stroke={color}
@@ -46,7 +69,7 @@ export function Icon({ type, color }: { type: string; color?: string }) {
           viewBox="0 0 16 16"
           fill="none"
           xmlns="http://www.w3.org/2000/svg">
-          <g clip-path="url(#clip0_14852_5722)">
+          <g clipPath="url(#clip0_14852_5722)">
             <path
               d="M14 5.33337V14H2V5.33337"
               stroke={color}
@@ -193,7 +216,7 @@ export function Icon({ type, color }: { type: string; color?: string }) {
           viewBox="0 0 16 16"
           fill="none"
           xmlns="http://www.w3.org/2000/svg">
-          <g clip-path="url(#clip0_14852_5682)">
+          <g clipPath="url(#clip0_14852_5682)">
             <path
               d="M8.00016 14.6667C11.6821 14.6667 14.6668 11.6819 14.6668 8.00004C14.6668 4.31814 11.6821 1.33337 8.00016 1.33337C4.31826 1.33337 1.3335 4.31814 1.3335 8.00004C1.3335 11.6819 4.31826 14.6667 8.00016 14.6667Z"
               stroke={color}
@@ -217,7 +240,7 @@ export function Icon({ type, color }: { type: string; color?: string }) {
           viewBox="0 0 16 16"
           fill="none"
           xmlns="http://www.w3.org/2000/svg">
-          <g clip-path="url(#clip0_14852_5679)">
+          <g clipPath="url(#clip0_14852_5679)">
             <path
               d="M8.00016 14.6667C11.6821 14.6667 14.6668 11.6819 14.6668 8.00004C14.6668 4.31814 11.6821 1.33337 8.00016 1.33337C4.31826 1.33337 1.3335 4.31814 1.3335 8.00004C1.3335 11.6819 4.31826 14.6667 8.00016 14.6667Z"
               stroke={color}
@@ -265,7 +288,7 @@ export function Icon({ type, color }: { type: string; color?: string }) {
           viewBox="0 0 16 16"
           fill="none"
           xmlns="http://www.w3.org/2000/svg">
-          <g clip-path="url(#clip0_14852_5734)">
+          <g clipPath="url(#clip0_14852_5734)">
             <path
               d="M13.3335 9.77329V13.3333C13.3335 13.6869 13.193 14.0261 12.943 14.2761C12.6929 14.5262 12.3538 14.6666 12.0002 14.6666H2.66683C2.31321 14.6666 1.97407 14.5262 1.72402 14.2761C1.47397 14.0261 1.3335 13.6869 1.3335 13.3333V3.99996C1.3335 3.64634 1.47397 3.3072 1.72402 3.05715C1.97407 2.8071 2.31321 2.66663 2.66683 2.66663H6.22683"
               stroke={color}
@@ -329,7 +352,7 @@ export function Icon({ type, color }: { type: string; color?: string }) {
           viewBox="0 0 16 16"
           fill="none"
           xmlns="http://www.w3.org/2000/svg">
-          <g clip-path="url(#clip0_14852_5672)">
+          <g clipPath="url(#clip0_14852_5672)">
             <path
               d="M14.2934 7.36665L8.1667 13.4933C7.41613 14.2439 6.39815 14.6655 5.3367 14.6655C4.27524 14.6655 3.25726 14.2439 2.5067 13.4933C1.75613 12.7428 1.33447 11.7248 1.33447 10.6633C1.33447 9.60186 1.75613 8.58388 2.5067 7.83332L8.63336 1.70665C9.13374 1.20628 9.81239 0.925171 10.52 0.925171C11.2277 0.925171 11.9063 1.20628 12.4067 1.70665C12.9071 2.20703 13.1882 2.88568 13.1882 3.59332C13.1882 4.30096 12.9071 4.97961 12.4067 5.47999L6.27336 11.6067C6.02318 11.8568 5.68385 11.9974 5.33003 11.9974C4.97621 11.9974 4.63688 11.8568 4.3867 11.6067C4.13651 11.3565 3.99596 11.0171 3.99596 10.6633C3.99596 10.3095 4.13651 9.97017 4.3867 9.71999L10.0467 4.06665"
               stroke={color}
@@ -377,7 +400,7 @@ export function Icon({ type, color }: { type: string; color?: string }) {
           viewBox="0 0 16 16"
           fill="none"
           xmlns="http://www.w3.org/2000/svg">
-          <g clip-path="url(#clip0_14852_5701)">
+          <g clipPath="url(#clip0_14852_5701)">
             <path
               d="M0.666504 2.66663V6.66663H4.6665"
               stroke={color}
@@ -439,7 +462,7 @@ export function Icon({ type, color }: { type: string; color?: string }) {
           viewBox="0 0 16 16"
           fill="none"
           xmlns="http://www.w3.org/2000/svg">
-          <g clip-path="url(#clip0_14852_5691)">
+          <g clipPath="url(#clip0_14852_5691)">
             <path
               d="M8.00016 14.6667C11.6821 14.6667 14.6668 11.6819 14.6668 8.00004C14.6668 4.31814 11.6821 1.33337 8.00016 1.33337C4.31826 1.33337 1.3335 4.31814 1.3335 8.00004C1.3335 11.6819 4.31826 14.6667 8.00016 14.6667Z"
               stroke={color}

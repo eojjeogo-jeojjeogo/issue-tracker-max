@@ -1,6 +1,8 @@
 import { useState } from "react";
-import { color } from "../../constants/colors";
+// import { color } from "../../constants/colors";
 import { fonts } from "../util/Txt";
+import { ColorScheme } from "../../contexts/ThemeContext";
+import { useTheme } from "@emotion/react";
 
 export function TextInput({
   isPassword,
@@ -13,6 +15,7 @@ export function TextInput({
   placeholder: string;
   onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
 }) {
+  const color = useTheme() as ColorScheme;
   const [inputState, setInputState] = useState<
     "enabled" | "active" | "disabled" | "error"
   >("enabled");
