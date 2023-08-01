@@ -7,6 +7,7 @@ import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -38,5 +39,11 @@ public class MilestoneController {
             @RequestBody MilestoneRequest mileStoneRequest) {
         milestoneService.update(milestoneId, mileStoneRequest);
         return ResponseEntity.ok().build();
+    }
+
+    @DeleteMapping("/api/{organizationTitle}/milestones/{milestoneId}")
+    public ResponseEntity<Void> delete(@PathVariable Long milestoneId) {
+        milestoneService.delete(milestoneId);
+        return ResponseEntity.noContent().build();
     }
 }

@@ -70,6 +70,23 @@ class MilestoneRepositoryTest {
             );
         }
 
+        @DisplayName("마일스톤을 삭제 하면")
+        @Nested
+        class DeleteTest {
+
+            @BeforeEach
+            void setUp() {
+                milestoneRepository.deleteById(milestoneId);
+            }
+
+            @DisplayName("해당 마일스톤을 찾을 수 없다")
+            @Test
+            void cannotFindMilestone() {
+                assertThat(milestoneRepository.findById(milestoneId)).isEmpty();
+            }
+        }
+
+
         @DisplayName("마일스톤을 업데이트 하면")
         @Nested
         class UpdateTest {

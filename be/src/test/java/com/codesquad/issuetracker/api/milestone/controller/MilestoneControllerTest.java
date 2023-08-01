@@ -1,5 +1,6 @@
 package com.codesquad.issuetracker.api.milestone.controller;
 
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -65,11 +66,12 @@ class MilestoneControllerTest {
         // given
         long milestoneId = milestoneService.create(ORGANIZATION_TITLE, createMileStoneRequest);
 
-        // when,then
+        // when
         mockMvc.perform(get("/api/" + ORGANIZATION_TITLE + "/milestones/" + milestoneId)
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON)
                 )
+        // then
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("id").exists())
@@ -90,13 +92,31 @@ class MilestoneControllerTest {
         MilestoneRequest changedMilestoneRequest = new MilestoneRequest(TEST_TITLE, TEST_DESCRIPTION,
                 TEST_DUE_DATE);
 
-        // when,then
+        // when
         mockMvc.perform(patch("/api/" + ORGANIZATION_TITLE + "/milestones/" + milestoneId)
                         .content(objectMapper.writeValueAsString(changedMilestoneRequest))
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON)
                 )
+        // then
                 .andDo(print())
                 .andExpect(status().isOk());
+    }
+
+    @Sql(statements = "insert into organization (title) values ('eojjeogojeojjeogo')")
+    @DisplayName("마일 스톤 삭제 요청하면 204 코드를 응답한다")
+    @Test
+    void deleteMilestone() throws Exception {
+        // given
+        long milestoneId = milestoneService.create(ORGANIZATION_TITLE, createMileStoneRequest);
+
+        // when
+        mockMvc.perform(delete("/api/" + ORGANIZATION_TITLE + "/milestones/" + milestoneId)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON)
+                )
+        // then
+                .andDo(print())
+                .andExpect(status().isNoContent());
     }
 }

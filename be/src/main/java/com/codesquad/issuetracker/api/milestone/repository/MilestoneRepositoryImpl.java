@@ -6,6 +6,7 @@ import java.util.Map;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.support.DataAccessUtils;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
@@ -34,16 +35,12 @@ public class MilestoneRepositoryImpl implements MilestoneRepository {
             "UPDATE milestone"
                     + " SET title = :title,description = :description ,due_date = :due_date,is_closed = :is_closed"
                     + " WHERE id = :id";
+    public static final String DELETE_SQL = "DELETE FROM milestone WHERE id = :id";
     private final NamedParameterJdbcTemplate jdbcTemplate;
 
     @Override
     public Optional<Long> save(Milestone milestone) {
-        SqlParameterSource sqlParameterSource = new MapSqlParameterSource()
-                .addValue(TITLE, milestone.getTitle())
-                .addValue(DESCRIPTION, milestone.getDescription())
-                .addValue(DUE_DATE, Date.valueOf(milestone.getDueDate()))
-                .addValue(IS_CLOSED, milestone.isClosed())
-                .addValue(ORGANIZATION_ID, milestone.getOrganizationId());
+        SqlParameterSource sqlParameterSource = getSaveSqlParameterSource(milestone);
         KeyHolder keyHolder = new GeneratedKeyHolder();
         jdbcTemplate.update(SAVE_SQL, sqlParameterSource, keyHolder);
         Number key = keyHolder.getKey();
@@ -53,27 +50,49 @@ public class MilestoneRepositoryImpl implements MilestoneRepository {
     @Override
     public Optional<Milestone> findById(Long milestoneId) {
         Milestone milestone = DataAccessUtils.singleResult(
-                jdbcTemplate.query(FIND_BY_ID_SQL, Map.of(ID, milestoneId), (rs, rowNum) ->
-                        Milestone.builder()
-                                .id(rs.getLong(ID))
-                                .title(rs.getString(TITLE))
-                                .description(rs.getString(DESCRIPTION))
-                                .dueDate(rs.getDate(DUE_DATE).toLocalDate())
-                                .organizationId(rs.getLong(ORGANIZATION_ID))
-                                .isClosed(rs.getBoolean(IS_CLOSED))
-                                .build()
+                jdbcTemplate.query(FIND_BY_ID_SQL, Map.of(ID, milestoneId), getMilestoneRowMapper()
                 ));
         return Optional.ofNullable(milestone);
     }
 
     @Override
     public void update(Milestone milestone) {
-        SqlParameterSource sqlParameterSource = new MapSqlParameterSource()
+        SqlParameterSource sqlParameterSource = getUpdateSqlParameterSource(milestone);
+        jdbcTemplate.update(UPDATE_SQL, sqlParameterSource);
+    }
+
+    @Override
+    public void deleteById(Long milestoneId) {
+        jdbcTemplate.update(DELETE_SQL, Map.of(ID, milestoneId));
+    }
+
+    private static MapSqlParameterSource getSaveSqlParameterSource(Milestone milestone) {
+        return new MapSqlParameterSource()
+                .addValue(TITLE, milestone.getTitle())
+                .addValue(DESCRIPTION, milestone.getDescription())
+                .addValue(DUE_DATE, Date.valueOf(milestone.getDueDate()))
+                .addValue(IS_CLOSED, milestone.isClosed())
+                .addValue(ORGANIZATION_ID, milestone.getOrganizationId());
+    }
+
+    private static MapSqlParameterSource getUpdateSqlParameterSource(Milestone milestone) {
+        return new MapSqlParameterSource()
                 .addValue(TITLE, milestone.getTitle())
                 .addValue(DESCRIPTION, milestone.getDescription())
                 .addValue(DUE_DATE, Date.valueOf(milestone.getDueDate()))
                 .addValue(IS_CLOSED, milestone.isClosed())
                 .addValue(ID, milestone.getId());
-        jdbcTemplate.update(UPDATE_SQL, sqlParameterSource);
+    }
+
+    private static RowMapper<Milestone> getMilestoneRowMapper() {
+        return (rs, rowNum) ->
+                Milestone.builder()
+                        .id(rs.getLong(ID))
+                        .title(rs.getString(TITLE))
+                        .description(rs.getString(DESCRIPTION))
+                        .dueDate(rs.getDate(DUE_DATE).toLocalDate())
+                        .organizationId(rs.getLong(ORGANIZATION_ID))
+                        .isClosed(rs.getBoolean(IS_CLOSED))
+                        .build();
     }
 }

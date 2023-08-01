@@ -10,4 +10,6 @@ public interface MilestoneRepository {
     Optional<Milestone> findById(Long milestoneId);
 
     void update(Milestone milestone);
+
+    void deleteById(Long milestoneId);
 }
