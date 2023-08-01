@@ -8,4 +8,6 @@ public interface MilestoneRepository {
     Optional<Long> save(Milestone milestone);
 
     Optional<Milestone> findById(Long milestoneId);
+
+    void update(Milestone milestone);
 }

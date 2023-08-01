@@ -1,7 +1,7 @@
 package com.codesquad.issuetracker.api.milestone.service;
 
 import com.codesquad.issuetracker.api.milestone.domain.Milestone;
-import com.codesquad.issuetracker.api.milestone.dto.request.MilestoneCreateRequest;
+import com.codesquad.issuetracker.api.milestone.dto.request.MilestoneRequest;
 import com.codesquad.issuetracker.api.milestone.dto.response.MileStoneResponse;
 import com.codesquad.issuetracker.api.milestone.repository.MilestoneRepository;
 import com.codesquad.issuetracker.api.organization.repository.OrganizationRepository;
@@ -17,10 +17,10 @@ public class MilestoneService {
     private final OrganizationRepository organizationRepository;
 
     @Transactional
-    public long create(String organizationTitle, MilestoneCreateRequest mileStoneCreateRequest) {
+    public long create(String organizationTitle, MilestoneRequest mileStoneRequest) {
         Long organizationId = organizationRepository.findIdByTitle(organizationTitle)
                 .orElseThrow();
-        Milestone milestone = MilestoneCreateRequest.toEntity(mileStoneCreateRequest, organizationId);
+        Milestone milestone = MilestoneRequest.toEntity(mileStoneRequest, organizationId);
         return milestoneRepository.save(milestone)
                 .orElseThrow();
     }
@@ -29,5 +29,11 @@ public class MilestoneService {
     public MileStoneResponse read(Long milestoneId) {
         Milestone milestone = milestoneRepository.findById(milestoneId).orElseThrow();
         return MileStoneResponse.toEntity(milestone);
+    }
+
+    @Transactional
+    public void update(Long milestoneId, MilestoneRequest mileStoneRequest) {
+        Milestone milestone = MilestoneRequest.toEntity(milestoneId,mileStoneRequest);
+        milestoneRepository.update(milestone);
     }
 }
