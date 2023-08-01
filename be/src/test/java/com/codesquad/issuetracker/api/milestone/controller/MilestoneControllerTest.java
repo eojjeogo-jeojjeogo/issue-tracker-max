@@ -11,6 +11,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import com.codesquad.issuetracker.api.milestone.dto.request.MilestoneRequest;
 import com.codesquad.issuetracker.api.milestone.service.MilestoneService;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import java.util.Map;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -146,5 +147,24 @@ class MilestoneControllerTest {
         // then
                 .andDo(print())
                 .andExpect(status().isNoContent());
+    }
+
+    @Sql(statements = "insert into organization (title) values ('eojjeogojeojjeogo')")
+    @DisplayName("마일 스톤 상태 변경 요청하면 200 코드를 응답한다")
+    @Test
+    void updateMilestoneStatus() throws Exception {
+        // given
+        long milestoneId = milestoneService.create(ORGANIZATION_TITLE, createMileStoneRequest);
+        Map<String, Boolean> content = Map.of("isClosed", true);
+
+        // when
+        mockMvc.perform(patch("/api/" + ORGANIZATION_TITLE + "/milestones/" + milestoneId+"/status")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(content))
+                )
+                // then
+                .andDo(print())
+                .andExpect(status().isOk());
     }
 }

@@ -15,4 +15,6 @@ public interface MilestoneRepository {
     void deleteById(Long milestoneId);
 
     List<Milestone> readAllByOrganizationId(Long organizationId);
+
+    void updateStatus(Long milestoneId, boolean isClosed);
 }

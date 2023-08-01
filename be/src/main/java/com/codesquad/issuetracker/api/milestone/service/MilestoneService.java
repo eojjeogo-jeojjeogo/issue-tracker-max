@@ -49,4 +49,9 @@ public class MilestoneService {
         List<Milestone> milestones = milestoneRepository.readAllByOrganizationId(organizationId);
         return MileStonesResponse.from(milestones);
     }
+
+    @Transactional
+    public void updateStatus(Long milestoneId, boolean isClosed) {
+        milestoneRepository.updateStatus(milestoneId, isClosed);
+    }
 }
