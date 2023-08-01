@@ -7,6 +7,7 @@ import lombok.Getter;
 @Getter
 public class Milestone {
 
+    private Long id;
     private String title;
     private String description;
     private LocalDate dueDate;
@@ -14,7 +15,9 @@ public class Milestone {
     private Long organizationId;
 
     @Builder
-    private Milestone(String title, String description, LocalDate dueDate, boolean isClosed, long organizationId) {
+    public Milestone(Long id, String title, String description, LocalDate dueDate, boolean isClosed,
+            Long organizationId) {
+        this.id = id;
         this.title = title;
         this.description = description;
         this.dueDate = dueDate;

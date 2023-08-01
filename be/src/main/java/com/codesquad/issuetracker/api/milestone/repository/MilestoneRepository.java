@@ -6,4 +6,6 @@ import java.util.Optional;
 public interface MilestoneRepository {
 
     Optional<Long> save(Milestone milestone);
+
+    Optional<Milestone> findById(Long milestoneId);
 }

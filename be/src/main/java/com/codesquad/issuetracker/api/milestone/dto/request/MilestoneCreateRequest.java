@@ -1,4 +1,4 @@
-package com.codesquad.issuetracker.api.milestone.dto;
+package com.codesquad.issuetracker.api.milestone.dto.request;
 
 import static com.codesquad.issuetracker.common.unit.ConverterFormatter.DATE_TIME_PATTERN;
 
