@@ -23,21 +23,22 @@ public class LabelRepositoryImpl implements LabelRepository {
     }
 
     public List<Label> findAll(Long organizationId) {
-        String sql = "SELECT id, organization_id, title, description, background_color, is_dark " 
-                + "FROM label "
-                + "WHERE organization_id = :organizationId";
+        String sql = "SELECT id, organization_id, title, description, background_color, is_dark "
+            + "FROM label "
+            + "WHERE organization_id = :organizationId";
         return template.query(sql, Map.of("organizationId", organizationId), labelRowMapper());
     }
 
     public Optional<Long> save(Label label) {
-        String sql = "INSERT INTO label (organization_id, title, description, background_color, is_dark) "
+        String sql =
+            "INSERT INTO label (organization_id, title, description, background_color, is_dark) "
                 + "VALUES (:organizationId, :title, :description, :backgroundColor, :isDark)";
         SqlParameterSource param = new MapSqlParameterSource()
-                .addValue("organizationId", label.getOrganizationId())
-                .addValue("title", label.getTitle())
-                .addValue("description", label.getDescription())
-                .addValue("backgroundColor", label.getBackgroundColor())
-                .addValue("isDark", label.getIsDark());
+            .addValue("organizationId", label.getOrganizationId())
+            .addValue("title", label.getTitle())
+            .addValue("description", label.getDescription())
+            .addValue("backgroundColor", label.getBackgroundColor())
+            .addValue("isDark", label.getIsDark());
 
         KeyHolder keyHolder = new GeneratedKeyHolder();
         template.update(sql, param, keyHolder);
@@ -66,13 +67,13 @@ public class LabelRepositoryImpl implements LabelRepository {
             params.addValue("isDark", label.getIsDark());
         }
 
-        String finalSql = sql.toString().replaceAll(",$","") + " WHERE id = :id";
+        String finalSql = sql.toString().replaceAll(",$", "") + " WHERE id = :id";
         params.addValue("id", label.getId());
         template.update(finalSql, params);
         return Optional.ofNullable(label.getId());
     }
 
-    public void delete(Long labelId){
+    public void delete(Long labelId) {
         String sql = "DELETE FROM label WHERE id = :id";
 
         template.update(sql, Map.of("id", labelId));
@@ -80,12 +81,12 @@ public class LabelRepositoryImpl implements LabelRepository {
 
     private RowMapper<Label> labelRowMapper() {
         return (rs, rowNum) -> Label.builder()
-                .id(rs.getLong("id"))
-                .organizationId(rs.getLong("organization_id"))
-                .title(rs.getString("title"))
-                .description(rs.getString("description"))
-                .backgroundColor(rs.getString("background_color"))
-                .isDark(rs.getBoolean("is_dark"))
-                .build();
+            .id(rs.getLong("id"))
+            .organizationId(rs.getLong("organization_id"))
+            .title(rs.getString("title"))
+            .description(rs.getString("description"))
+            .backgroundColor(rs.getString("background_color"))
+            .isDark(rs.getBoolean("is_dark"))
+            .build();
     }
 }

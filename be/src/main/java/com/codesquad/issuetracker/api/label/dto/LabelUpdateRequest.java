@@ -13,21 +13,23 @@ public class LabelUpdateRequest {
     private String backgroundColor;
     private Boolean isDark;
 
-    public LabelUpdateRequest(String title, String description, String backgroundColor, boolean isDark){
+    public LabelUpdateRequest(String title, String description, String backgroundColor,
+        boolean isDark) {
         this.title = title;
         this.description = description;
         this.backgroundColor = backgroundColor;
         this.isDark = isDark;
     }
 
-    public static Label toEntity(LabelUpdateRequest labelUpdateRequest, Long organizationId, Long id) {
+    public static Label toEntity(LabelUpdateRequest labelUpdateRequest, Long organizationId,
+        Long id) {
         return Label.builder()
-                .id(id)
-                .organizationId(organizationId)
-                .title(labelUpdateRequest.title)
-                .description(labelUpdateRequest.description)
-                .backgroundColor(labelUpdateRequest.backgroundColor)
-                .isDark(labelUpdateRequest.isDark)
-                .build();
+            .id(id)
+            .organizationId(organizationId)
+            .title(labelUpdateRequest.title)
+            .description(labelUpdateRequest.description)
+            .backgroundColor(labelUpdateRequest.backgroundColor)
+            .isDark(labelUpdateRequest.isDark)
+            .build();
     }
 }

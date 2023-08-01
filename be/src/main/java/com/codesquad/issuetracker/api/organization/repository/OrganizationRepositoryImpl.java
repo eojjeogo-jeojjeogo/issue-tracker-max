@@ -1,12 +1,13 @@
 package com.codesquad.issuetracker.api.organization.repository;
 
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public class OrganizationRepositoryImpl implements OrganizationRepository{
+public class OrganizationRepositoryImpl implements OrganizationRepository {
 
     private final NamedParameterJdbcTemplate template;
 
@@ -14,10 +15,11 @@ public class OrganizationRepositoryImpl implements OrganizationRepository{
         this.template = template;
     }
 
-    public Optional<Long> findIdByTitle(String organizationTitle){
+    public Optional<Long> findIdByTitle(String organizationTitle) {
         String sql = "SELECT id FROM organization WHERE title = :organizationTitle";
-        Long id = template.queryForObject(sql, Map.of("organizationTitle", organizationTitle), Long.class);
-        return Optional.ofNullable(id);
+        List<Long> ids = template.query(sql, Map.of("organizationTitle", organizationTitle),
+            (rs, rowNum) -> rs.getLong(1));
+        return ids.stream().findFirst();
     }
 
 }

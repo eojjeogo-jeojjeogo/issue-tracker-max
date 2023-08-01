@@ -14,7 +14,8 @@ public class LabelCreateRequest {
     private String backgroundColor;
     private Boolean isDark;
 
-    public LabelCreateRequest(String title, String description, String backgroundColor, boolean isDark) {
+    public LabelCreateRequest(String title, String description, String backgroundColor,
+        boolean isDark) {
         this.title = title;
         this.description = description;
         this.backgroundColor = backgroundColor;
@@ -23,11 +24,11 @@ public class LabelCreateRequest {
 
     public static Label toEntity(Long organizationId, LabelCreateRequest labelRequest) {
         return Label.builder()
-                .organizationId(organizationId)
-                .title(labelRequest.title)
-                .description(labelRequest.description)
-                .backgroundColor(labelRequest.backgroundColor)
-                .isDark(labelRequest.isDark)
-                .build();
+            .organizationId(organizationId)
+            .title(labelRequest.title)
+            .description(labelRequest.description)
+            .backgroundColor(labelRequest.backgroundColor)
+            .isDark(labelRequest.isDark)
+            .build();
     }
 }

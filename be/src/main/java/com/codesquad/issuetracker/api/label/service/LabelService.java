@@ -21,8 +21,8 @@ public class LabelService {
     public List<LabelResponse> readAll(String organizationTitle) {
         Long organizationId = organizationRepository.findIdByTitle(organizationTitle).orElseThrow();
         return labelRepository.findAll(organizationId).stream()
-                .map(LabelResponse::from)
-                .collect(Collectors.toUnmodifiableList());
+            .map(LabelResponse::from)
+            .collect(Collectors.toUnmodifiableList());
     }
 
     public Long create(String organizationTitle, LabelCreateRequest labelCreateRequest) {
@@ -31,7 +31,8 @@ public class LabelService {
         return labelRepository.save(label).orElseThrow();
     }
 
-    public Long update(String organizationTitle, LabelUpdateRequest labelUpdateRequest, Long labelId) {
+    public Long update(String organizationTitle, LabelUpdateRequest labelUpdateRequest,
+        Long labelId) {
         Long organizationId = organizationRepository.findIdByTitle(organizationTitle).orElseThrow();
         Label label = LabelUpdateRequest.toEntity(labelUpdateRequest, organizationId, labelId);
         return labelRepository.update(label).orElseThrow();
