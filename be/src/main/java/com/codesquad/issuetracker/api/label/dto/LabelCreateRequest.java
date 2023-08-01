@@ -24,10 +24,10 @@ public class LabelCreateRequest {
     public static Label toEntity(Long organizationId, LabelCreateRequest labelRequest) {
         return Label.builder()
                 .organizationId(organizationId)
-                .title(labelRequest.getTitle())
-                .description(labelRequest.getDescription())
-                .backgroundColor(labelRequest.getBackgroundColor())
-                .isDark(labelRequest.getIsDark())
+                .title(labelRequest.title)
+                .description(labelRequest.description)
+                .backgroundColor(labelRequest.backgroundColor)
+                .isDark(labelRequest.isDark)
                 .build();
     }
 }

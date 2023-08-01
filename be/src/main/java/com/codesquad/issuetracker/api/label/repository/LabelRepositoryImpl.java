@@ -4,6 +4,7 @@ import com.codesquad.issuetracker.api.label.domain.Label;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Optional;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
@@ -28,7 +29,7 @@ public class LabelRepositoryImpl implements LabelRepository {
         return template.query(sql, Map.of("organizationId", organizationId), labelRowMapper());
     }
 
-    public Long save(Label label) {
+    public Optional<Long> save(Label label) {
         String sql = "INSERT INTO label (organization_id, title, description, background_color, is_dark) "
                 + "VALUES (:organizationId, :title, :description, :backgroundColor, :isDark)";
         SqlParameterSource param = new MapSqlParameterSource()
@@ -40,10 +41,10 @@ public class LabelRepositoryImpl implements LabelRepository {
 
         KeyHolder keyHolder = new GeneratedKeyHolder();
         template.update(sql, param, keyHolder);
-        return Objects.requireNonNull(keyHolder.getKey()).longValue();
+        return Optional.ofNullable(keyHolder.getKey()).map(Number::longValue);
     }
 
-    public Long update(Label label) {
+    public Optional<Long> update(Label label) {
         // TODO: 추후에 시간되면 마이바티스로 수정
         MapSqlParameterSource params = new MapSqlParameterSource();
         StringBuilder sql = new StringBuilder("UPDATE label SET ");
@@ -68,7 +69,7 @@ public class LabelRepositoryImpl implements LabelRepository {
         String finalSql = sql.toString().replaceAll(",$","") + " WHERE id = :id";
         params.addValue("id", label.getId());
         template.update(finalSql, params);
-        return label.getId();
+        return Optional.ofNullable(label.getId());
     }
 
     public void delete(Long labelId){

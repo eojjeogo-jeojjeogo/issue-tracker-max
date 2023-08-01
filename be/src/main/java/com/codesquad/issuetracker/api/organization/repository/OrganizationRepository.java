@@ -1,7 +1,9 @@
 package com.codesquad.issuetracker.api.organization.repository;
 
+import java.util.Optional;
+
 public interface OrganizationRepository {
 
-    Long findBy(String organizationTitle);
+    Optional<Long> findIdByTitle(String organizationTitle);
 
 }

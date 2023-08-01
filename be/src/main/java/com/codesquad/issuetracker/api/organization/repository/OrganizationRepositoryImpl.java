@@ -1,6 +1,7 @@
 package com.codesquad.issuetracker.api.organization.repository;
 
 import java.util.Map;
+import java.util.Optional;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
 
@@ -13,10 +14,10 @@ public class OrganizationRepositoryImpl implements OrganizationRepository{
         this.template = template;
     }
 
-    public Long findBy(String organizationTitle){
+    public Optional<Long> findIdByTitle(String organizationTitle){
         String sql = "SELECT id FROM organization WHERE title = :organizationTitle";
-
-        return template.queryForObject(sql, Map.of("organizationTitle", organizationTitle), Long.class);
+        Long id = template.queryForObject(sql, Map.of("organizationTitle", organizationTitle), Long.class);
+        return Optional.ofNullable(id);
     }
 
 }

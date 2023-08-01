@@ -24,10 +24,10 @@ public class LabelUpdateRequest {
         return Label.builder()
                 .id(id)
                 .organizationId(organizationId)
-                .title(labelUpdateRequest.getTitle())
-                .description(labelUpdateRequest.getDescription())
-                .backgroundColor(labelUpdateRequest.getBackgroundColor())
-                .isDark(labelUpdateRequest.getIsDark())
+                .title(labelUpdateRequest.title)
+                .description(labelUpdateRequest.description)
+                .backgroundColor(labelUpdateRequest.backgroundColor)
+                .isDark(labelUpdateRequest.isDark)
                 .build();
     }
 }
