@@ -41,7 +41,7 @@ class CommentControllerTest {
                     .content(request));
 
         //then
-        resultActions.andExpect(jsonPath("$.id").value(1));
+        resultActions.andExpect(jsonPath("$.id").value(issueId));
     }
 
     private CommentCreateRequest dummyCommentCreateRequest() {
@@ -50,5 +50,5 @@ class CommentControllerTest {
             .fileUrl("fileUrl")
             .build();
     }
-    
+
 }
