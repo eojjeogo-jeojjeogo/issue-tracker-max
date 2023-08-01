@@ -5,6 +5,7 @@ import com.codesquad.issuetracker.api.milestone.dto.request.MilestoneRequest;
 import com.codesquad.issuetracker.api.milestone.dto.response.MileStoneResponse;
 import com.codesquad.issuetracker.api.milestone.repository.MilestoneRepository;
 import com.codesquad.issuetracker.api.organization.repository.OrganizationRepository;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -40,5 +41,12 @@ public class MilestoneService {
     @Transactional
     public void delete(Long milestoneId) {
         milestoneRepository.deleteById(milestoneId);
+    }
+
+    public MileStonesResponse readAll(String organizationTitle) {
+        Long organizationId = organizationRepository.findIdByTitle(organizationTitle)
+                .orElseThrow();
+        List<Milestone> milestones = milestoneRepository.readAllByOrganizationId(organizationId);
+        return MileStonesResponse.from(milestones);
     }
 }

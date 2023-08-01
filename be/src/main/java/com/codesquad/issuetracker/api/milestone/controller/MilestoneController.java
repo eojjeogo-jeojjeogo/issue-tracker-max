@@ -2,6 +2,7 @@ package com.codesquad.issuetracker.api.milestone.controller;
 
 import com.codesquad.issuetracker.api.milestone.dto.request.MilestoneRequest;
 import com.codesquad.issuetracker.api.milestone.dto.response.MileStoneResponse;
+import com.codesquad.issuetracker.api.milestone.service.MileStonesResponse;
 import com.codesquad.issuetracker.api.milestone.service.MilestoneService;
 import java.util.Map;
 import lombok.RequiredArgsConstructor;
@@ -32,6 +33,12 @@ public class MilestoneController {
     public ResponseEntity<MileStoneResponse> read(@PathVariable Long milestoneId) {
         MileStoneResponse mileStoneResponse = milestoneService.read(milestoneId);
         return ResponseEntity.ok(mileStoneResponse);
+    }
+
+    @GetMapping("/api/{organizationTitle}/milestones")
+    public ResponseEntity<MileStonesResponse> readAll(@PathVariable String organizationTitle) {
+        MileStonesResponse mileStonesResponse = milestoneService.readAll(organizationTitle);
+        return ResponseEntity.ok(mileStonesResponse);
     }
 
     @PatchMapping("/api/{organizationTitle}/milestones/{milestoneId}")

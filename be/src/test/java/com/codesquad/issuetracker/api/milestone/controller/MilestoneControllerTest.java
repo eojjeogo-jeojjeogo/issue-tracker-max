@@ -60,9 +60,37 @@ class MilestoneControllerTest {
     }
 
     @Sql(statements = "insert into organization (title) values ('eojjeogojeojjeogo')")
+    @DisplayName("마일스톤 전체를 조회 하면 모든 마일스톤 info를 받을 수 있다")
+    @Test
+    void readAllMilestone() throws Exception {
+        // given
+        milestoneService.create(ORGANIZATION_TITLE, createMileStoneRequest);
+        milestoneService.create(ORGANIZATION_TITLE, createMileStoneRequest);
+
+        // when
+        mockMvc.perform(get("/api/" + ORGANIZATION_TITLE + "/milestones/")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON)
+                )
+                // then
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("milestoneOpenedCount").exists())
+                .andExpect(jsonPath("milestoneClosedCount").exists())
+                .andExpect(jsonPath("milestones").isArray())
+                .andExpect(jsonPath("milestones[*].id").exists())
+                .andExpect(jsonPath("milestones[*].title").exists())
+                .andExpect(jsonPath("milestones[*].description").exists())
+                .andExpect(jsonPath("milestones[*].dueDate").exists())
+                .andExpect(jsonPath("milestones[*].issueClosedCount").exists())
+                .andExpect(jsonPath("milestones[*].issueOpenedCount").exists())
+        ;
+    }
+
+    @Sql(statements = "insert into organization (title) values ('eojjeogojeojjeogo')")
     @DisplayName("마일 스톤 아이디로 마일스톤을 조회 하면 마일스톤 info를 받을 수 있다")
     @Test
-    void redMilestone() throws Exception {
+    void readMilestone() throws Exception {
         // given
         long milestoneId = milestoneService.create(ORGANIZATION_TITLE, createMileStoneRequest);
 

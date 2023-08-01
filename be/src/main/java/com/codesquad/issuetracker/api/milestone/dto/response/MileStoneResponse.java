@@ -3,6 +3,8 @@ package com.codesquad.issuetracker.api.milestone.dto.response;
 import com.codesquad.issuetracker.api.milestone.domain.Milestone;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import java.time.LocalDate;
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class MileStoneResponse {
 
@@ -27,6 +29,12 @@ public class MileStoneResponse {
     public static MileStoneResponse toEntity(Milestone milestone) {
         return new MileStoneResponse(milestone.getId(), milestone.getTitle(), milestone.getDescription(),
                 milestone.getDueDate(), 0L, 0L);
+    }
+
+    public static List<MileStoneResponse> from(List<Milestone> milestones) {
+        return milestones.stream()
+                .map(MileStoneResponse::toEntity)
+                .collect(Collectors.toList());
     }
 
     public Long getId() {

@@ -2,6 +2,7 @@ package com.codesquad.issuetracker.api.milestone.repository;
 
 import com.codesquad.issuetracker.api.milestone.domain.Milestone;
 import java.sql.Date;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
@@ -27,14 +28,18 @@ public class MilestoneRepositoryImpl implements MilestoneRepository {
     private static final String SAVE_SQL =
             "INSERT INTO milestone (title,description,due_date,is_closed,organization_id)"
                     + " values (:title,:description,:due_date,:is_closed,:organization_id)";
-    public static final String FIND_BY_ID_SQL =
+    private static final String FIND_BY_ID_SQL =
             "SELECT id,title,description,due_date,is_closed,organization_id"
                     + " FROM milestone"
                     + " WHERE id = :id";
-    public static final String UPDATE_SQL =
+    private static final String UPDATE_SQL =
             "UPDATE milestone"
                     + " SET title = :title,description = :description ,due_date = :due_date,is_closed = :is_closed"
                     + " WHERE id = :id";
+    private static final String FIND_ALL_BY_ORGANIZATION_ID_SQL =
+            "SELECT id,title,description,due_date,is_closed,organization_id"
+                    + " FROM milestone"
+                    + " WHERE organization_id = :organization_id";
     public static final String DELETE_SQL = "DELETE FROM milestone WHERE id = :id";
     private final NamedParameterJdbcTemplate jdbcTemplate;
 
@@ -64,6 +69,13 @@ public class MilestoneRepositoryImpl implements MilestoneRepository {
     @Override
     public void deleteById(Long milestoneId) {
         jdbcTemplate.update(DELETE_SQL, Map.of(ID, milestoneId));
+    }
+
+    @Override
+    public List<Milestone> readAllByOrganizationId(Long organizationId) {
+        return jdbcTemplate.query(FIND_ALL_BY_ORGANIZATION_ID_SQL,
+                Map.of(ORGANIZATION_ID, organizationId),
+                getMilestoneRowMapper());
     }
 
     private static MapSqlParameterSource getSaveSqlParameterSource(Milestone milestone) {

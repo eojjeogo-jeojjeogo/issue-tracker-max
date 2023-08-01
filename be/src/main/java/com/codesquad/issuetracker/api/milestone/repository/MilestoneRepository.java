@@ -1,6 +1,7 @@
 package com.codesquad.issuetracker.api.milestone.repository;
 
 import com.codesquad.issuetracker.api.milestone.domain.Milestone;
+import java.util.List;
 import java.util.Optional;
 
 public interface MilestoneRepository {
@@ -12,4 +13,6 @@ public interface MilestoneRepository {
     void update(Milestone milestone);
 
     void deleteById(Long milestoneId);
+
+    List<Milestone> readAllByOrganizationId(Long organizationId);
 }
