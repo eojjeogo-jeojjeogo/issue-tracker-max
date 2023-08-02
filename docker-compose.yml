@@ -1,0 +1,30 @@
+version: '3'
+services:
+  be:
+    container_name: issue-tracker-be
+    image: charliekorean/issuetracker-be:latest
+    ports:
+      - "8080:8080"
+    environment:
+      - JASYPT_ENCRYPTOR_PASSWORD=password
+  fe:
+    container_name: issue-tracker-fe
+    image: charliekorean/issuetracker-fe:latest
+    # 데이터 공유를 위한 volume 설정
+    volumes:
+      - build-volume:/app/dist
+  nginx:
+    container_name: nginx
+    image: charliekorean/issuetracker-nginx:latest
+    volumes:
+      # nginx 로그를 위한 설정
+      - /home/ubuntu/issue-tracker-max/nginx:/var/log/nginx
+      # fe가 공유한 volum에 접근하기위한 설정
+      - build-volume:/usr/share/nginx/html
+    ports:
+      - "80:80"
+    # fe 가 빌드된후에 nginx가 빌드되도록한다.
+    depends_on:
+      - fe
+volumes:
+  build-volume:
