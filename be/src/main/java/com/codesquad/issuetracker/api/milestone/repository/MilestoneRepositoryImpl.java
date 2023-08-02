@@ -1,5 +1,6 @@
 package com.codesquad.issuetracker.api.milestone.repository;
 
+import com.codesquad.issuetracker.api.filter.dto.MilestoneFilter;
 import com.codesquad.issuetracker.api.milestone.domain.Milestone;
 import java.sql.Date;
 import java.util.List;
@@ -45,6 +46,10 @@ public class MilestoneRepositoryImpl implements MilestoneRepository {
             "UPDATE milestone"
                     + " SET is_closed = :is_closed"
                     + " WHERE id = :id";
+    private static final String FIND_FILTER_BY_ORGANIZATION_ID_SQL =
+            "SELECT id,title"
+                    + " from milestone"
+                    + " WHERE organization_id = :organization_id";
     private final NamedParameterJdbcTemplate jdbcTemplate;
 
     @Override
@@ -87,6 +92,14 @@ public class MilestoneRepositoryImpl implements MilestoneRepository {
         jdbcTemplate.update(UPDATE_STATUS_SQL, Map.of(IS_CLOSED, isClosed, ID, milestoneId));
     }
 
+    @Override
+    public List<MilestoneFilter> findFilterByOrganizationId(Long organizationId) {
+
+        return jdbcTemplate.query(FIND_FILTER_BY_ORGANIZATION_ID_SQL,
+                Map.of(ORGANIZATION_ID,organizationId),
+                getMilestoneFilterRowMapper());
+    }
+
     private static MapSqlParameterSource getSaveSqlParameterSource(Milestone milestone) {
         return new MapSqlParameterSource()
                 .addValue(TITLE, milestone.getTitle())
@@ -115,5 +128,9 @@ public class MilestoneRepositoryImpl implements MilestoneRepository {
                         .organizationId(rs.getLong(ORGANIZATION_ID))
                         .isClosed(rs.getBoolean(IS_CLOSED))
                         .build();
+    }
+
+    private static RowMapper<MilestoneFilter> getMilestoneFilterRowMapper() {
+        return (rs, rowNum) -> new MilestoneFilter(rs.getLong(ID), rs.getString(TITLE));
     }
 }
