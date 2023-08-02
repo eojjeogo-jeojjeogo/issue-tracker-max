@@ -43,10 +43,10 @@ public class MilestoneController {
     }
 
     @PatchMapping("/api/{organizationTitle}/milestones/{milestoneId}")
-    public ResponseEntity<Void> update(@PathVariable Long milestoneId,
+    public ResponseEntity<Map<String, Long>> update(@PathVariable Long milestoneId,
             @RequestBody MilestoneRequest mileStoneRequest) {
-        milestoneService.update(milestoneId, mileStoneRequest);
-        return ResponseEntity.ok().build();
+        long id = milestoneService.update(milestoneId, mileStoneRequest);
+        return ResponseEntity.ok(Map.of("id",id));
     }
 
     @DeleteMapping("/api/{organizationTitle}/milestones/{milestoneId}")

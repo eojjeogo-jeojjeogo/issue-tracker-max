@@ -26,14 +26,14 @@ public class MileStoneResponse {
         this.issueOpenedCount = issueOpenedCount;
     }
 
-    public static MileStoneResponse toEntity(Milestone milestone) {
+    public static MileStoneResponse from(Milestone milestone) {
         return new MileStoneResponse(milestone.getId(), milestone.getTitle(), milestone.getDescription(),
                 milestone.getDueDate(), 0L, 0L);
     }
 
     public static List<MileStoneResponse> from(List<Milestone> milestones) {
         return milestones.stream()
-                .map(MileStoneResponse::toEntity)
+                .map(MileStoneResponse::from)
                 .collect(Collectors.toList());
     }
 

@@ -29,13 +29,14 @@ public class MilestoneService {
     @Transactional(readOnly = true)
     public MileStoneResponse read(Long milestoneId) {
         Milestone milestone = milestoneRepository.findById(milestoneId).orElseThrow();
-        return MileStoneResponse.toEntity(milestone);
+        return MileStoneResponse.from(milestone);
     }
 
     @Transactional
-    public void update(Long milestoneId, MilestoneRequest mileStoneRequest) {
+    public long update(Long milestoneId, MilestoneRequest mileStoneRequest) {
         Milestone milestone = MilestoneRequest.toEntity(milestoneId,mileStoneRequest);
         milestoneRepository.update(milestone);
+        return milestoneId;
     }
 
     @Transactional
