@@ -30,7 +30,7 @@ class MilestoneControllerTest {
 
     public static final String ORGANIZATION_TITLE = "eojjeogojeojjeogo";
     public static final String TEST_TITLE = "마일 스톤 이름";
-    public static final String TEST_DESCRIPTION = "레이블 설명";
+    public static final String TEST_DESCRIPTION = "마일 스톤 설명";
     public static final String TEST_DUE_DATE = "2023.07.28";
     @Autowired
     MockMvc mockMvc;
@@ -100,15 +100,13 @@ class MilestoneControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON)
                 )
-        // then
+                // then
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("id").exists())
                 .andExpect(jsonPath("title").value(TEST_TITLE))
                 .andExpect(jsonPath("description").value(TEST_DESCRIPTION))
                 .andExpect(jsonPath("dueDate").value(TEST_DUE_DATE))
-                .andExpect(jsonPath("issueClosedCount").value(0))
-                .andExpect(jsonPath("issueOpenedCount").value(0))
         ;
     }
 
@@ -127,7 +125,7 @@ class MilestoneControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON)
                 )
-        // then
+                // then
                 .andDo(print())
                 .andExpect(status().isOk());
     }
@@ -144,7 +142,7 @@ class MilestoneControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON)
                 )
-        // then
+                // then
                 .andDo(print())
                 .andExpect(status().isNoContent());
     }
@@ -158,7 +156,7 @@ class MilestoneControllerTest {
         Map<String, Boolean> content = Map.of("isClosed", true);
 
         // when
-        mockMvc.perform(patch("/api/" + ORGANIZATION_TITLE + "/milestones/" + milestoneId+"/status")
+        mockMvc.perform(patch("/api/" + ORGANIZATION_TITLE + "/milestones/" + milestoneId + "/status")
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(content))

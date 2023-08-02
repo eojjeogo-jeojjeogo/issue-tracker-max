@@ -1,7 +1,6 @@
-package com.codesquad.issuetracker.api.milestone.service;
+package com.codesquad.issuetracker.api.milestone.dto.response;
 
 import com.codesquad.issuetracker.api.milestone.domain.Milestone;
-import com.codesquad.issuetracker.api.milestone.dto.response.MileStoneResponse;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.List;
 

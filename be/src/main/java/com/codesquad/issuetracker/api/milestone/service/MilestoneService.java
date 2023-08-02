@@ -2,7 +2,8 @@ package com.codesquad.issuetracker.api.milestone.service;
 
 import com.codesquad.issuetracker.api.milestone.domain.Milestone;
 import com.codesquad.issuetracker.api.milestone.dto.request.MilestoneRequest;
-import com.codesquad.issuetracker.api.milestone.dto.response.MileStoneResponse;
+import com.codesquad.issuetracker.api.milestone.dto.response.EditMileStoneResponse;
+import com.codesquad.issuetracker.api.milestone.dto.response.MileStonesResponse;
 import com.codesquad.issuetracker.api.milestone.repository.MilestoneRepository;
 import com.codesquad.issuetracker.api.organization.repository.OrganizationRepository;
 import java.util.List;
@@ -27,9 +28,9 @@ public class MilestoneService {
     }
 
     @Transactional(readOnly = true)
-    public MileStoneResponse read(Long milestoneId) {
+    public EditMileStoneResponse read(Long milestoneId) {
         Milestone milestone = milestoneRepository.findById(milestoneId).orElseThrow();
-        return MileStoneResponse.from(milestone);
+        return EditMileStoneResponse.from(milestone);
     }
 
     @Transactional
