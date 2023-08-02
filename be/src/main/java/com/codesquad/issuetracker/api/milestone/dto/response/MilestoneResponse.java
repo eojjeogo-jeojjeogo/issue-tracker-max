@@ -6,7 +6,7 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class MileStoneResponse {
+public class MilestoneResponse {
 
     private Long id;
     private String title;
@@ -16,7 +16,7 @@ public class MileStoneResponse {
     private Long issueClosedCount;
     private Long issueOpenedCount;
 
-    public MileStoneResponse(Long id, String title, String description, LocalDate dueDate, Long issueClosedCount,
+    public MilestoneResponse(Long id, String title, String description, LocalDate dueDate, Long issueClosedCount,
             Long issueOpenedCount) {
         this.id = id;
         this.title = title;
@@ -26,14 +26,14 @@ public class MileStoneResponse {
         this.issueOpenedCount = issueOpenedCount;
     }
 
-    public static MileStoneResponse from(Milestone milestone) {
-        return new MileStoneResponse(milestone.getId(), milestone.getTitle(), milestone.getDescription(),
+    public static MilestoneResponse from(Milestone milestone) {
+        return new MilestoneResponse(milestone.getId(), milestone.getTitle(), milestone.getDescription(),
                 milestone.getDueDate(), 0L, 0L);
     }
 
-    public static List<MileStoneResponse> from(List<Milestone> milestones) {
+    public static List<MilestoneResponse> from(List<Milestone> milestones) {
         return milestones.stream()
-                .map(MileStoneResponse::from)
+                .map(MilestoneResponse::from)
                 .collect(Collectors.toList());
     }
 
