@@ -2,8 +2,8 @@ package com.codesquad.issuetracker.api.milestone.controller;
 
 import com.codesquad.issuetracker.api.milestone.dto.request.MilestoneRequest;
 import com.codesquad.issuetracker.api.milestone.dto.request.MilestoneStatusRequest;
-import com.codesquad.issuetracker.api.milestone.dto.response.MileStoneResponse;
-import com.codesquad.issuetracker.api.milestone.service.MileStonesResponse;
+import com.codesquad.issuetracker.api.milestone.dto.response.EditMileStoneResponse;
+import com.codesquad.issuetracker.api.milestone.dto.response.MilestonesResponse;
 import com.codesquad.issuetracker.api.milestone.service.MilestoneService;
 import java.util.Map;
 import lombok.RequiredArgsConstructor;
@@ -31,14 +31,14 @@ public class MilestoneController {
     }
 
     @GetMapping("/api/{organizationTitle}/milestones/{milestoneId}")
-    public ResponseEntity<MileStoneResponse> read(@PathVariable Long milestoneId) {
-        MileStoneResponse mileStoneResponse = milestoneService.read(milestoneId);
+    public ResponseEntity<EditMileStoneResponse> read(@PathVariable Long milestoneId) {
+        EditMileStoneResponse mileStoneResponse = milestoneService.read(milestoneId);
         return ResponseEntity.ok(mileStoneResponse);
     }
 
     @GetMapping("/api/{organizationTitle}/milestones")
-    public ResponseEntity<MileStonesResponse> readAll(@PathVariable String organizationTitle) {
-        MileStonesResponse mileStonesResponse = milestoneService.readAll(organizationTitle);
+    public ResponseEntity<MilestonesResponse> readAll(@PathVariable String organizationTitle) {
+        MilestonesResponse mileStonesResponse = milestoneService.readAll(organizationTitle);
         return ResponseEntity.ok(mileStonesResponse);
     }
 
@@ -46,7 +46,7 @@ public class MilestoneController {
     public ResponseEntity<Map<String, Long>> update(@PathVariable Long milestoneId,
             @RequestBody MilestoneRequest mileStoneRequest) {
         long id = milestoneService.update(milestoneId, mileStoneRequest);
-        return ResponseEntity.ok(Map.of("id",id));
+        return ResponseEntity.ok(Map.of("id", id));
     }
 
     @DeleteMapping("/api/{organizationTitle}/milestones/{milestoneId}")
@@ -56,9 +56,9 @@ public class MilestoneController {
     }
 
     @PatchMapping("/api/{organizationTitle}/milestones/{milestoneId}/status")
-    public ResponseEntity<Void> updateStatus(@PathVariable Long milestoneId,
+    public ResponseEntity<Map<String, Long>> updateStatus(@PathVariable Long milestoneId,
             @RequestBody MilestoneStatusRequest milestoneStatusRequest) {
         milestoneService.updateStatus(milestoneId, milestoneStatusRequest.isClosed());
-        return ResponseEntity.ok().build();
+        return ResponseEntity.ok(Map.of("id", milestoneId));
     }
 }

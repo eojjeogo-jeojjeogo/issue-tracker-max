@@ -6,34 +6,29 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class MileStoneResponse {
+public class EditMileStoneResponse {
 
     private Long id;
     private String title;
     private String description;
     @JsonFormat(pattern = "yyyy.MM.dd")
     private LocalDate dueDate;
-    private Long issueClosedCount;
-    private Long issueOpenedCount;
 
-    public MileStoneResponse(Long id, String title, String description, LocalDate dueDate, Long issueClosedCount,
-            Long issueOpenedCount) {
+    public EditMileStoneResponse(Long id, String title, String description, LocalDate dueDate) {
         this.id = id;
         this.title = title;
         this.description = description;
         this.dueDate = dueDate;
-        this.issueClosedCount = issueClosedCount;
-        this.issueOpenedCount = issueOpenedCount;
     }
 
-    public static MileStoneResponse from(Milestone milestone) {
-        return new MileStoneResponse(milestone.getId(), milestone.getTitle(), milestone.getDescription(),
-                milestone.getDueDate(), 0L, 0L);
+    public static EditMileStoneResponse from(Milestone milestone) {
+        return new EditMileStoneResponse(milestone.getId(), milestone.getTitle(), milestone.getDescription(),
+                milestone.getDueDate());
     }
 
-    public static List<MileStoneResponse> from(List<Milestone> milestones) {
+    public static List<EditMileStoneResponse> from(List<Milestone> milestones) {
         return milestones.stream()
-                .map(MileStoneResponse::from)
+                .map(EditMileStoneResponse::from)
                 .collect(Collectors.toList());
     }
 
@@ -51,13 +46,5 @@ public class MileStoneResponse {
 
     public LocalDate getDueDate() {
         return dueDate;
-    }
-
-    public Long getIssueClosedCount() {
-        return issueClosedCount;
-    }
-
-    public Long getIssueOpenedCount() {
-        return issueOpenedCount;
     }
 }

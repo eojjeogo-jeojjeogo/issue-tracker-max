@@ -1,5 +1,6 @@
 package com.codesquad.issuetracker.api.label.repository;
 
+import com.codesquad.issuetracker.api.filter.dto.LabelFilter;
 import com.codesquad.issuetracker.api.label.domain.Label;
 import java.util.List;
 import java.util.Optional;
@@ -15,4 +16,5 @@ public interface LabelRepository {
     void delete(Long labelId);
 
     Long findCountByOrganizationId(Long organizationId);
+    List<LabelFilter> findFilterByOrganizationId(Long organizationId);
 }

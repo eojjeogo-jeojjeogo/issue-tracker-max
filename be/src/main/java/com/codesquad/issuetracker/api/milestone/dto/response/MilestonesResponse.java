@@ -1,29 +1,28 @@
-package com.codesquad.issuetracker.api.milestone.service;
+package com.codesquad.issuetracker.api.milestone.dto.response;
 
 import com.codesquad.issuetracker.api.milestone.domain.Milestone;
-import com.codesquad.issuetracker.api.milestone.dto.response.MileStoneResponse;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.List;
 
-public class MileStonesResponse {
+public class MilestonesResponse {
 
     private long milestoneOpenedCount;
     private long milestoneClosedCount;
     @JsonProperty("milestones")
-    private List<MileStoneResponse> mileStoneResponseCollection;
+    private List<MilestoneResponse> milestoneResponseCollection;
 
-    public MileStonesResponse(long milestoneOpenedCount, long milestoneClosedCount,
-            List<MileStoneResponse> mileStoneResponseCollection) {
+    public MilestonesResponse(long milestoneOpenedCount, long milestoneClosedCount,
+            List<MilestoneResponse> milestoneResponseCollection) {
         this.milestoneOpenedCount = milestoneOpenedCount;
         this.milestoneClosedCount = milestoneClosedCount;
-        this.mileStoneResponseCollection = mileStoneResponseCollection;
+        this.milestoneResponseCollection = milestoneResponseCollection;
     }
 
-    public static MileStonesResponse from(List<Milestone> milestones) {
+    public static MilestonesResponse from(List<Milestone> milestones) {
         long closedCount = getClosedCount(milestones);
         long openedCount = getOpenedCount(closedCount, milestones);
-        List<MileStoneResponse> mileStonesResponse = MileStoneResponse.from(milestones);
-        return new MileStonesResponse(openedCount, closedCount, mileStonesResponse);
+        List<MilestoneResponse> mileStonesResponse = MilestoneResponse.from(milestones);
+        return new MilestonesResponse(openedCount, closedCount, mileStonesResponse);
     }
 
     private static long getOpenedCount(long closedCount, List<Milestone> mileStonesResponse) {
@@ -44,7 +43,7 @@ public class MileStonesResponse {
         return milestoneClosedCount;
     }
 
-    public List<MileStoneResponse> getMileStoneResponseCollection() {
-        return mileStoneResponseCollection;
+    public List<MilestoneResponse> getMileStoneResponseCollection() {
+        return milestoneResponseCollection;
     }
 }

@@ -1,5 +1,6 @@
 package com.codesquad.issuetracker.api.milestone.repository;
 
+import com.codesquad.issuetracker.api.filter.dto.MilestoneFilter;
 import com.codesquad.issuetracker.api.milestone.domain.Milestone;
 import java.util.List;
 import java.util.Optional;
@@ -19,4 +20,6 @@ public interface MilestoneRepository {
     void updateStatus(Long milestoneId, boolean isClosed);
 
     Long findCountByOrganizationId(Long organizationId);
+
+    List<MilestoneFilter> findFilterByOrganizationId(Long organizationId);
 }

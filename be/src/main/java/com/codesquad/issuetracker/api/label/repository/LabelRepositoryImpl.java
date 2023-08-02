@@ -1,5 +1,6 @@
 package com.codesquad.issuetracker.api.label.repository;
 
+import com.codesquad.issuetracker.api.filter.dto.LabelFilter;
 import com.codesquad.issuetracker.api.label.domain.Label;
 import java.util.List;
 import java.util.Map;
@@ -19,6 +20,15 @@ public class LabelRepositoryImpl implements LabelRepository {
             + " FROM label"
             + " WHERE organization_id = :organization_id";
     private static final String ORGANIZATION_ID = "organization_id";
+    private static final String FIND_FILTER_BY_ORGANIZATION_ID_SQL =
+            "SELECT id,title,background_color, is_dark"
+                    + " FROM label"
+                    + " WHERE organization_id = :organization_id";
+    public static final String ID = "id";
+    public static final String TITLE = "title";
+    public static final String BACKGROUND_COLOR = "background_color";
+    public static final String IS_DARK = "is_dark";
+
     private final NamedParameterJdbcTemplate template;
 
     public LabelRepositoryImpl(NamedParameterJdbcTemplate template) {
@@ -83,6 +93,13 @@ public class LabelRepositoryImpl implements LabelRepository {
     }
 
     @Override
+    public List<LabelFilter> findFilterByOrganizationId(Long organizationId) {
+        return template.query(FIND_FILTER_BY_ORGANIZATION_ID_SQL,
+                Map.of(ORGANIZATION_ID, organizationId),
+                getLabelFilterRowMapper());
+    }
+
+    @Override
     public Long findCountByOrganizationId(Long organizationId) {
         return template.queryForObject(
                 FIND_COUNT_BY_ORGANIZATION_SQL,
@@ -99,6 +116,15 @@ public class LabelRepositoryImpl implements LabelRepository {
                 .description(rs.getString("description"))
                 .backgroundColor(rs.getString("background_color"))
                 .isDark(rs.getBoolean("is_dark"))
+                .build();
+    }
+
+    private RowMapper<LabelFilter> getLabelFilterRowMapper() {
+        return (rs, rowNum) -> LabelFilter.builder()
+                .id(rs.getLong(ID))
+                .name(rs.getString(TITLE))
+                .backgroundColor(rs.getString(BACKGROUND_COLOR))
+                .isDark(rs.getBoolean(IS_DARK))
                 .build();
     }
 }

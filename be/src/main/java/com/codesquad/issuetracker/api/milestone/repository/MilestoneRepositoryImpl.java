@@ -1,5 +1,6 @@
 package com.codesquad.issuetracker.api.milestone.repository;
 
+import com.codesquad.issuetracker.api.filter.dto.MilestoneFilter;
 import com.codesquad.issuetracker.api.milestone.domain.Milestone;
 import java.sql.Date;
 import java.util.List;
@@ -40,11 +41,15 @@ public class MilestoneRepositoryImpl implements MilestoneRepository {
             "SELECT id,title,description,due_date,is_closed,organization_id"
                     + " FROM milestone"
                     + " WHERE organization_id = :organization_id";
-    private static final String DELETE_SQL = "DELETE FROM milestone WHERE id = :id";
+    public static final String DELETE_SQL = "DELETE FROM milestone WHERE id = :id";
     private static final String UPDATE_STATUS_SQL =
             "UPDATE milestone"
                     + " SET is_closed = :is_closed"
                     + " WHERE id = :id";
+    private static final String FIND_FILTER_BY_ORGANIZATION_ID_SQL =
+            "SELECT id,title"
+                    + " from milestone"
+                    + " WHERE organization_id = :organization_id";
     private static final String FIND_COUNT_BY_ORGANIZATION_SQL =
             "SELECT COUNT(id)"
             + " FROM milestone"
@@ -92,6 +97,14 @@ public class MilestoneRepositoryImpl implements MilestoneRepository {
     }
 
     @Override
+    public List<MilestoneFilter> findFilterByOrganizationId(Long organizationId) {
+
+        return jdbcTemplate.query(FIND_FILTER_BY_ORGANIZATION_ID_SQL,
+                Map.of(ORGANIZATION_ID,organizationId),
+                getMilestoneFilterRowMapper());
+    }
+
+    @Override
     public Long findCountByOrganizationId(Long organizationId) {
         return jdbcTemplate.queryForObject(
                 FIND_COUNT_BY_ORGANIZATION_SQL,
@@ -128,5 +141,9 @@ public class MilestoneRepositoryImpl implements MilestoneRepository {
                         .organizationId(rs.getLong(ORGANIZATION_ID))
                         .isClosed(rs.getBoolean(IS_CLOSED))
                         .build();
+    }
+
+    private static RowMapper<MilestoneFilter> getMilestoneFilterRowMapper() {
+        return (rs, rowNum) -> new MilestoneFilter(rs.getLong(ID), rs.getString(TITLE));
     }
 }
