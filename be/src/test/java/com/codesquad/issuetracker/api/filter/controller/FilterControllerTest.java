@@ -4,6 +4,8 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 
+import com.codesquad.issuetracker.api.label.dto.LabelCreateRequest;
+import com.codesquad.issuetracker.api.label.service.LabelService;
 import com.codesquad.issuetracker.api.milestone.dto.request.MilestoneRequest;
 import com.codesquad.issuetracker.api.milestone.service.MilestoneService;
 import org.junit.jupiter.api.DisplayName;
@@ -23,12 +25,13 @@ class FilterControllerTest {
     private static final String ORGANIZATION_TITLE = "eojjeogojeojjeogo";
     @Autowired
     MilestoneService milestoneService;
-
+    @Autowired
+    LabelService labelService;
     @Autowired
     MockMvc mockMvc;
 
     @Sql(statements = "insert into organization (title) values ('eojjeogojeojjeogo')")
-    @DisplayName("마일스톤 필드 목록 조회 ")
+    @DisplayName("마일스톤 필드 목록 조회 한다")
     @Test
     void readAllMilestoneFilter() throws Exception {
         // given
@@ -44,5 +47,26 @@ class FilterControllerTest {
                 .andDo(print())
                 .andExpect(jsonPath("*.id").exists())
                 .andExpect(jsonPath("*.name").exists());
+    }
+
+    @Sql(statements = "insert into organization (title) values ('eojjeogojeojjeogo')")
+    @DisplayName("레이블 필드 목록 조회 한다")
+    @Test
+    void readAllLabelFilter() throws Exception {
+        // given
+        LabelCreateRequest labelCreateRequest1 = new LabelCreateRequest("레이블1", "레이블 설명1", "#004DE3", true);
+        LabelCreateRequest labelCreateRequest2 = new LabelCreateRequest("레이블2", "레이블 설명2", "#004DE4", false);
+        labelService.create(ORGANIZATION_TITLE, labelCreateRequest1);
+        labelService.create(ORGANIZATION_TITLE, labelCreateRequest2);
+
+        // when
+        mockMvc.perform(get("/api/" + ORGANIZATION_TITLE + "/labels")
+                        .param("type", "filter"))
+                // then
+                .andDo(print())
+                .andExpect(jsonPath("*.id").exists())
+                .andExpect(jsonPath("*.name").exists())
+                .andExpect(jsonPath("*.backgroundColor").exists())
+                .andExpect(jsonPath("*.isDark").exists());
     }
 }

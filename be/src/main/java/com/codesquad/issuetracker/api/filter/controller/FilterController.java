@@ -1,5 +1,6 @@
 package com.codesquad.issuetracker.api.filter.controller;
 
+import com.codesquad.issuetracker.api.filter.dto.LabelFilter;
 import com.codesquad.issuetracker.api.filter.dto.MilestoneFilter;
 import com.codesquad.issuetracker.api.filter.service.FilterService;
 import java.util.List;
@@ -18,8 +19,14 @@ public class FilterController {
     }
 
     @GetMapping(value = "/api/{organizationTitle}/milestones",params = "type=filter")
-    public ResponseEntity<List<MilestoneFilter>> readAll(@PathVariable String organizationTitle) {
+    public ResponseEntity<List<MilestoneFilter>> readAllMilestone(@PathVariable String organizationTitle) {
         List<MilestoneFilter> milestoneFiltersResponse = filterService.readMilestone(organizationTitle);
+        return ResponseEntity.ok(milestoneFiltersResponse);
+    }
+
+    @GetMapping(value = "/api/{organizationTitle}/labels",params = "type=filter")
+    public ResponseEntity<List<LabelFilter>> readAllLabel(@PathVariable String organizationTitle) {
+        List<LabelFilter> milestoneFiltersResponse = filterService.readAllLabel(organizationTitle);
         return ResponseEntity.ok(milestoneFiltersResponse);
     }
 }
