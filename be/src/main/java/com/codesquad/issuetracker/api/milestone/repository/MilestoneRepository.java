@@ -17,4 +17,6 @@ public interface MilestoneRepository {
     List<Milestone> readAllByOrganizationId(Long organizationId);
 
     void updateStatus(Long milestoneId, boolean isClosed);
+
+    Long findCountByOrganizationId(Long organizationId);
 }

@@ -14,4 +14,5 @@ public interface LabelRepository {
 
     void delete(Long labelId);
 
+    Long findCountByOrganizationId(Long organizationId);
 }

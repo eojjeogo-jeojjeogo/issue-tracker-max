@@ -40,11 +40,15 @@ public class MilestoneRepositoryImpl implements MilestoneRepository {
             "SELECT id,title,description,due_date,is_closed,organization_id"
                     + " FROM milestone"
                     + " WHERE organization_id = :organization_id";
-    public static final String DELETE_SQL = "DELETE FROM milestone WHERE id = :id";
+    private static final String DELETE_SQL = "DELETE FROM milestone WHERE id = :id";
     private static final String UPDATE_STATUS_SQL =
             "UPDATE milestone"
                     + " SET is_closed = :is_closed"
                     + " WHERE id = :id";
+    private static final String FIND_COUNT_BY_ORGANIZATION_SQL =
+            "SELECT COUNT(id)"
+            + " FROM milestone"
+            + " WHERE organization_id = :organization_id";
     private final NamedParameterJdbcTemplate jdbcTemplate;
 
     @Override
@@ -85,6 +89,15 @@ public class MilestoneRepositoryImpl implements MilestoneRepository {
     @Override
     public void updateStatus(Long milestoneId, boolean isClosed) {
         jdbcTemplate.update(UPDATE_STATUS_SQL, Map.of(IS_CLOSED, isClosed, ID, milestoneId));
+    }
+
+    @Override
+    public Long findCountByOrganizationId(Long organizationId) {
+        return jdbcTemplate.queryForObject(
+                FIND_COUNT_BY_ORGANIZATION_SQL,
+                Map.of(ORGANIZATION_ID, organizationId),
+                Long.class
+        );
     }
 
     private static MapSqlParameterSource getSaveSqlParameterSource(Milestone milestone) {
