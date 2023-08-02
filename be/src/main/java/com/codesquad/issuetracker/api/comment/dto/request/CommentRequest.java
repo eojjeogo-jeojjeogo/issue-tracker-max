@@ -8,22 +8,30 @@ import lombok.NoArgsConstructor;
 
 @NoArgsConstructor
 @Getter
-public class CommentCreateRequest {
+public class CommentRequest {
 
     private String content;
     private String fileUrl;
 
     @Builder
-    public CommentCreateRequest(String content, String fileUrl) {
+    public CommentRequest(String content, String fileUrl) {
         this.content = content;
         this.fileUrl = fileUrl;
     }
 
-    public static Comment toEntity(Long issueId, CommentCreateRequest commentCreateRequest) {
+    public Comment toEntityWithIssueId(Long issueId) {
         return Comment.builder()
             .issueId(issueId)
-            .content(commentCreateRequest.content)
-            .fileUrl(commentCreateRequest.fileUrl)
+            .content(content)
+            .fileUrl(fileUrl)
+            .build();
+    }
+
+    public Comment toEntityWithCommentId(Long commentId) {
+        return Comment.builder()
+            .id(commentId)
+            .content(content)
+            .fileUrl(fileUrl)
             .build();
     }
 }

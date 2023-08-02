@@ -6,4 +6,6 @@ import java.util.Optional;
 public interface CommentRepository {
 
     Optional<Long> create(Comment comment);
+
+    Long update(Comment comment);
 }

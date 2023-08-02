@@ -27,4 +27,22 @@ public class CommentRepositoryImpl implements CommentRepository {
         template.update(sql, param, keyHolder);
         return Optional.ofNullable(keyHolder.getKey()).map(Number::longValue);
     }
+
+    @Override
+    public Long update(Comment comment) {
+        StringBuilder sql = new StringBuilder("UPDATE issue_comment SET ");
+
+        if (comment.getContent() != null) {
+            sql.append("content = :content,");
+        }
+
+        if (comment.getFileUrl() != null) {
+            sql.append("file_url = :fileUrl,");
+        }
+
+        String finalSql = sql.toString().replaceAll(",$", "") + " WHERE id = :id";
+        SqlParameterSource params = new BeanPropertySqlParameterSource(comment);
+        template.update(finalSql, params);
+        return comment.getId();
+    }
 }
