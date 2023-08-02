@@ -2,7 +2,7 @@ package com.codesquad.issuetracker.api.comment.controller;
 
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 
-import com.codesquad.issuetracker.api.comment.dto.request.CommentCreateRequest;
+import com.codesquad.issuetracker.api.comment.dto.request.CommentRequest;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
+import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
@@ -30,7 +31,7 @@ class CommentControllerTest {
         //given
         String organizationTitle = "testOrganization";
         String issueId = "1";
-        String request = objectMapper.writeValueAsString(dummyCommentCreateRequest());
+        String request = objectMapper.writeValueAsString(dummyCommentRequest());
 
         //when
         ResultActions resultActions =
@@ -44,8 +45,32 @@ class CommentControllerTest {
         resultActions.andExpect(jsonPath("$.id").value(issueId));
     }
 
-    private CommentCreateRequest dummyCommentCreateRequest() {
-        return CommentCreateRequest.builder()
+    @Sql(scripts = "classpath:schemaForDummyData.sql")
+    @Test
+    @DisplayName("comment의 title, fileUrl 수정 요청이 들어오면 해당 comment를 수정한뒤 commentId를 포함한 응답을 전송한다.")
+    void commentUpdateTestRequestWithTitleAndFileUrl() throws Exception {
+        //given
+        String organizationTitle = "testOrganization";
+        String issueId = "1";
+        String commentId = "1";
+        String request = objectMapper.writeValueAsString(
+            dummyCommentRequest());
+
+        //when
+        ResultActions resultActions =
+            mockMvc.perform(
+                MockMvcRequestBuilders.patch(
+                        "/api/{organizationTitle}/issues/{issueId}/comments/{commentId}",
+                        organizationTitle, issueId, commentId)
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(request));
+
+        //then
+        resultActions.andExpect(jsonPath("$.id").value(issueId));
+    }
+
+    private CommentRequest dummyCommentRequest() {
+        return CommentRequest.builder()
             .content("testContent")
             .fileUrl("fileUrl")
             .build();
