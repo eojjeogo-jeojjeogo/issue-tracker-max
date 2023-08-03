@@ -7,7 +7,10 @@ import java.util.Optional;
 public interface IssueRepository {
 
     Optional<Long> countIssuesBy(Long organizationId);
+
     Optional<Long> save(Issue issue);
+
     void save(List<?> options);
 
+    void delete(Long issueId);
 }

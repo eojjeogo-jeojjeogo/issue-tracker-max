@@ -3,9 +3,11 @@ package com.codesquad.issuetracker.api.issue.repository;
 import com.codesquad.issuetracker.api.issue.domain.Issue;
 import com.codesquad.issuetracker.api.issue.domain.IssueAssignee;
 import com.codesquad.issuetracker.api.issue.domain.IssueLabel;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import lombok.RequiredArgsConstructor;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
@@ -13,8 +15,10 @@ import org.springframework.jdbc.core.namedparam.SqlParameterSourceUtils;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 @Repository
+@RequiredArgsConstructor
 public class IssueRepositoryImpl implements IssueRepository {
 
     private final NamedParameterJdbcTemplate template;
@@ -59,6 +63,20 @@ public class IssueRepositoryImpl implements IssueRepository {
     private void saveIssueLabels(List<?> issueLabels) {
         String sql = "INSERT INTO issue_label (issue_id, label_id) VALUES (:issueId, :labelId)";
         template.batchUpdate(sql, SqlParameterSourceUtils.createBatch(issueLabels));
+    }
+
+    @Override
+    @Transactional
+    public void delete(Long issueId) {
+        String queryForDeleteIssue = "DELETE FROM issue WHERE id = :issueId";
+        String queryForDeleteIssueAssignees = "DELETE FROM issue_assignee WHERE issue_id = :issueId";
+        String queryForDeleteIssueLabels = "DELETE FROM issue_label WHERE issue_id = :issueId";
+
+        Map<String, Long> param = Collections.singletonMap("issueId", issueId);
+
+        template.update(queryForDeleteIssue, param);
+        template.update(queryForDeleteIssueAssignees, param);
+        template.update(queryForDeleteIssueLabels, param);
     }
 
 }

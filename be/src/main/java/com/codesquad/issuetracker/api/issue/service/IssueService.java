@@ -55,4 +55,9 @@ public class IssueService {
         issueRepository.save(issueLabels);
     }
 
+    @Transactional
+    public void deleteOne(Long issueId) {
+        issueRepository.delete(issueId);
+        commentRepository.delete(issueId);
+    }
 }
