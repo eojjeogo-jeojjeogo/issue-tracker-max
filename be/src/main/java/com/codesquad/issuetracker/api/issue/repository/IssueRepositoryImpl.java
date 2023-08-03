@@ -23,10 +23,6 @@ public class IssueRepositoryImpl implements IssueRepository {
 
     private final NamedParameterJdbcTemplate template;
 
-    public IssueRepositoryImpl(NamedParameterJdbcTemplate template) {
-        this.template = template;
-    }
-
     @Override
     public Optional<Long> countIssuesBy(Long organizationId) {
         String sql = "SELECT COUNT(id) FROM issue WHERE organization_id = :organizationId";
