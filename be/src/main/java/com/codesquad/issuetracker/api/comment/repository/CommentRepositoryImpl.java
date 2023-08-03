@@ -1,6 +1,7 @@
 package com.codesquad.issuetracker.api.comment.repository;
 
 import com.codesquad.issuetracker.api.comment.domain.Comment;
+import java.util.List;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
@@ -44,5 +45,15 @@ public class CommentRepositoryImpl implements CommentRepository {
         SqlParameterSource params = new BeanPropertySqlParameterSource(comment);
         template.update(finalSql, params);
         return comment.getId();
+    }
+
+    @Override
+    public Long delete(Long commentId) {
+        return null;
+    }
+
+    @Override
+    public List<Comment> findAllByIssueId(Long issueId) {
+        return null;
     }
 }
