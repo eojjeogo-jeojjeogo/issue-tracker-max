@@ -10,7 +10,7 @@ public interface CommentRepository {
 
     Long update(Comment comment);
 
-    Long delete(Long commentId);
+    void delete(Long commentId);
 
     List<Comment> findAllByIssueId(Long issueId);
 }

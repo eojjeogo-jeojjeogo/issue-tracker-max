@@ -48,8 +48,7 @@ public class CommentRepositoryImpl implements CommentRepository {
     }
 
     @Override
-    public Long delete(Long commentId) {
-        return null;
+    public void delete(Long commentId) {
     }
 
     @Override
