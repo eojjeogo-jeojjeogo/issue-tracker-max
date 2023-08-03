@@ -1,7 +1,7 @@
 package com.codesquad.issuetracker.api.issue.service;
 
 import com.codesquad.issuetracker.api.comment.domain.Comment;
-import com.codesquad.issuetracker.api.comment.dto.request.CommentCreateRequest;
+import com.codesquad.issuetracker.api.comment.dto.request.CommentRequest;
 import com.codesquad.issuetracker.api.comment.repository.CommentRepository;
 import com.codesquad.issuetracker.api.issue.domain.Issue;
 import com.codesquad.issuetracker.api.issue.domain.IssueAssignee;
