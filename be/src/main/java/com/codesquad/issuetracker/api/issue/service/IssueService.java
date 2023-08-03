@@ -40,8 +40,11 @@ public class IssueService {
     }
 
     private void saveComment(Long issueId, IssueCreateRequest issueCreateRequest) {
-        CommentCreateRequest commentCreateRequest = issueCreateRequest.getComment();
-        Comment comment = CommentCreateRequest.toEntity(issueId, commentCreateRequest);
+        CommentRequest commentRequest = new CommentRequest(
+                issueCreateRequest.getComment().getContent(),
+                issueCreateRequest.getComment().getFileUrl()
+        );
+        Comment comment = commentRequest.toEntityWithIssueId(issueId);
         commentRepository.create(comment);
     }
 

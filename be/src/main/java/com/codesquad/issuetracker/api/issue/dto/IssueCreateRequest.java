@@ -1,6 +1,6 @@
 package com.codesquad.issuetracker.api.issue.dto;
 
-import com.codesquad.issuetracker.api.comment.dto.request.CommentCreateRequest;
+import com.codesquad.issuetracker.api.comment.dto.request.CommentRequest;
 import com.codesquad.issuetracker.api.issue.domain.Issue;
 import com.codesquad.issuetracker.api.issue.domain.IssueAssignee;
 import com.codesquad.issuetracker.api.issue.domain.IssueLabel;
@@ -18,7 +18,7 @@ public class IssueCreateRequest {
     private Long memberId = 1L; // TODO: 임의로 1을 넣어놓은 상황
 
     private String title;
-    private CommentCreateRequest comment;
+    private CommentRequest comment;
     private List<Long> assignees;
     private List<Long> labels;
     private final Boolean isClosed = false;
