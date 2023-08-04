@@ -2,7 +2,7 @@ name: issue-tracker auto deploy
 
 on:
   pull_request:
-    branches: ["dev", "release"]
+    branches: [ "release" ]
 
 
 permissions:
