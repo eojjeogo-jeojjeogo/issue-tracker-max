@@ -63,6 +63,21 @@ public class IssueRepositoryImpl implements IssueRepository {
 
     @Override
     @Transactional
+    public boolean updateAssignees(List<IssueAssignee> assignees) {
+        deleteAssignees(assignees.get(0).getIssueId()); // TODO: 서비스에서 트랜잭션 걸어서 메서드를 각각 호출하는게 좋을지 여기서 처리하는게 맞는지 모르겠음
+
+        String sql = "INSERT INTO issue_assignee (issue_id, member_id) VALUES (:issueId, :memberId)";
+        int[] result = template.batchUpdate(sql, SqlParameterSourceUtils.createBatch(assignees));
+        return result.length == assignees.size();
+    }
+
+    private void deleteAssignees(Long issueId) {
+        String sql = "DELETE FROM issue_assignee WHERE issue_id = :issueId";
+        template.update(sql, Map.of("issueId", issueId));
+    }
+
+    @Override
+    @Transactional
     public void delete(Long issueId) {
         String queryForDeleteIssue = "DELETE FROM issue WHERE id = :issueId";
         String queryForDeleteIssueAssignees = "DELETE FROM issue_assignee WHERE issue_id = :issueId";

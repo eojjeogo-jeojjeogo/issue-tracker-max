@@ -6,6 +6,7 @@ import com.codesquad.issuetracker.api.comment.repository.CommentRepository;
 import com.codesquad.issuetracker.api.issue.domain.Issue;
 import com.codesquad.issuetracker.api.issue.domain.IssueAssignee;
 import com.codesquad.issuetracker.api.issue.domain.IssueLabel;
+import com.codesquad.issuetracker.api.issue.dto.IssueAssigneeUpdateRequest;
 import com.codesquad.issuetracker.api.issue.dto.IssueCreateRequest;
 import com.codesquad.issuetracker.api.issue.repository.IssueRepository;
 import com.codesquad.issuetracker.api.organization.repository.OrganizationRepository;
@@ -56,6 +57,14 @@ public class IssueService {
     private void saveLabels(Long issueId, IssueCreateRequest issueCreateRequest) {
         List<IssueLabel> issueLabels = issueCreateRequest.extractLabels(issueId);
         issueRepository.save(issueLabels);
+    }
+
+    public void update(Long issueId, IssueAssigneeUpdateRequest issueAssigneeUpdateRequest) {
+        // TODO: 이슈 id가 해당 오가니제이션에 있는지 검증 필요
+        List<IssueAssignee> assignees = issueAssigneeUpdateRequest.toEntity(issueId);
+        if (!issueRepository.updateAssignees(assignees)) {
+            throw new RuntimeException("Assignee update failed for issueId: " + issueId);
+        }
     }
 
     @Transactional
