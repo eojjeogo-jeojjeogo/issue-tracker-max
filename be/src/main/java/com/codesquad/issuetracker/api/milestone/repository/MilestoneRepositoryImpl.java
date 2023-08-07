@@ -27,31 +27,31 @@ public class MilestoneRepositoryImpl implements MilestoneRepository {
     private static final String ORGANIZATION_ID = "organization_id";
     private static final String ID = "id";
     private static final String SAVE_SQL =
-            "INSERT INTO milestone (title,description,due_date,is_closed,organization_id)"
-                    + " values (:title,:description,:due_date,:is_closed,:organization_id)";
+        "INSERT INTO milestone (title,description,due_date,is_closed,organization_id)"
+            + " values (:title,:description,:due_date,:is_closed,:organization_id)";
     private static final String FIND_BY_ID_SQL =
-            "SELECT id,title,description,due_date,is_closed,organization_id"
-                    + " FROM milestone"
-                    + " WHERE id = :id";
+        "SELECT id,title,description,due_date,is_closed,organization_id"
+            + " FROM milestone"
+            + " WHERE id = :id";
     private static final String UPDATE_SQL =
-            "UPDATE milestone"
-                    + " SET title = :title,description = :description ,due_date = :due_date,is_closed = :is_closed"
-                    + " WHERE id = :id";
+        "UPDATE milestone"
+            + " SET title = :title,description = :description ,due_date = :due_date,is_closed = :is_closed"
+            + " WHERE id = :id";
     private static final String FIND_ALL_BY_ORGANIZATION_ID_SQL =
-            "SELECT id,title,description,due_date,is_closed,organization_id"
-                    + " FROM milestone"
-                    + " WHERE organization_id = :organization_id";
+        "SELECT id,title,description,due_date,is_closed,organization_id"
+            + " FROM milestone"
+            + " WHERE organization_id = :organization_id";
     public static final String DELETE_SQL = "DELETE FROM milestone WHERE id = :id";
     private static final String UPDATE_STATUS_SQL =
-            "UPDATE milestone"
-                    + " SET is_closed = :is_closed"
-                    + " WHERE id = :id";
+        "UPDATE milestone"
+            + " SET is_closed = :is_closed"
+            + " WHERE id = :id";
     private static final String FIND_FILTER_BY_ORGANIZATION_ID_SQL =
-            "SELECT id,title"
-                    + " from milestone"
-                    + " WHERE organization_id = :organization_id";
+        "SELECT id,title"
+            + " from milestone"
+            + " WHERE organization_id = :organization_id WHERE is_closed = false";
     private static final String FIND_COUNT_BY_ORGANIZATION_SQL =
-            "SELECT COUNT(id)"
+        "SELECT COUNT(id)"
             + " FROM milestone"
             + " WHERE organization_id = :organization_id";
     private final NamedParameterJdbcTemplate jdbcTemplate;
@@ -68,8 +68,8 @@ public class MilestoneRepositoryImpl implements MilestoneRepository {
     @Override
     public Optional<Milestone> findById(Long milestoneId) {
         Milestone milestone = DataAccessUtils.singleResult(
-                jdbcTemplate.query(FIND_BY_ID_SQL, Map.of(ID, milestoneId), getMilestoneRowMapper()
-                ));
+            jdbcTemplate.query(FIND_BY_ID_SQL, Map.of(ID, milestoneId), getMilestoneRowMapper()
+            ));
         return Optional.ofNullable(milestone);
     }
 
@@ -87,8 +87,8 @@ public class MilestoneRepositoryImpl implements MilestoneRepository {
     @Override
     public List<Milestone> readAllByOrganizationId(Long organizationId) {
         return jdbcTemplate.query(FIND_ALL_BY_ORGANIZATION_ID_SQL,
-                Map.of(ORGANIZATION_ID, organizationId),
-                getMilestoneRowMapper());
+            Map.of(ORGANIZATION_ID, organizationId),
+            getMilestoneRowMapper());
     }
 
     @Override
@@ -100,47 +100,47 @@ public class MilestoneRepositoryImpl implements MilestoneRepository {
     public List<MilestoneFilter> findFilterByOrganizationId(Long organizationId) {
 
         return jdbcTemplate.query(FIND_FILTER_BY_ORGANIZATION_ID_SQL,
-                Map.of(ORGANIZATION_ID,organizationId),
-                getMilestoneFilterRowMapper());
+            Map.of(ORGANIZATION_ID, organizationId),
+            getMilestoneFilterRowMapper());
     }
 
     @Override
     public Long findCountByOrganizationId(Long organizationId) {
         return jdbcTemplate.queryForObject(
-                FIND_COUNT_BY_ORGANIZATION_SQL,
-                Map.of(ORGANIZATION_ID, organizationId),
-                Long.class
+            FIND_COUNT_BY_ORGANIZATION_SQL,
+            Map.of(ORGANIZATION_ID, organizationId),
+            Long.class
         );
     }
 
     private static MapSqlParameterSource getSaveSqlParameterSource(Milestone milestone) {
         return new MapSqlParameterSource()
-                .addValue(TITLE, milestone.getTitle())
-                .addValue(DESCRIPTION, milestone.getDescription())
-                .addValue(DUE_DATE, Date.valueOf(milestone.getDueDate()))
-                .addValue(IS_CLOSED, milestone.isClosed())
-                .addValue(ORGANIZATION_ID, milestone.getOrganizationId());
+            .addValue(TITLE, milestone.getTitle())
+            .addValue(DESCRIPTION, milestone.getDescription())
+            .addValue(DUE_DATE, Date.valueOf(milestone.getDueDate()))
+            .addValue(IS_CLOSED, milestone.isClosed())
+            .addValue(ORGANIZATION_ID, milestone.getOrganizationId());
     }
 
     private static MapSqlParameterSource getUpdateSqlParameterSource(Milestone milestone) {
         return new MapSqlParameterSource()
-                .addValue(TITLE, milestone.getTitle())
-                .addValue(DESCRIPTION, milestone.getDescription())
-                .addValue(DUE_DATE, Date.valueOf(milestone.getDueDate()))
-                .addValue(IS_CLOSED, milestone.isClosed())
-                .addValue(ID, milestone.getId());
+            .addValue(TITLE, milestone.getTitle())
+            .addValue(DESCRIPTION, milestone.getDescription())
+            .addValue(DUE_DATE, Date.valueOf(milestone.getDueDate()))
+            .addValue(IS_CLOSED, milestone.isClosed())
+            .addValue(ID, milestone.getId());
     }
 
     private static RowMapper<Milestone> getMilestoneRowMapper() {
         return (rs, rowNum) ->
-                Milestone.builder()
-                        .id(rs.getLong(ID))
-                        .title(rs.getString(TITLE))
-                        .description(rs.getString(DESCRIPTION))
-                        .dueDate(rs.getDate(DUE_DATE).toLocalDate())
-                        .organizationId(rs.getLong(ORGANIZATION_ID))
-                        .isClosed(rs.getBoolean(IS_CLOSED))
-                        .build();
+            Milestone.builder()
+                .id(rs.getLong(ID))
+                .title(rs.getString(TITLE))
+                .description(rs.getString(DESCRIPTION))
+                .dueDate(rs.getDate(DUE_DATE).toLocalDate())
+                .organizationId(rs.getLong(ORGANIZATION_ID))
+                .isClosed(rs.getBoolean(IS_CLOSED))
+                .build();
     }
 
     private static RowMapper<MilestoneFilter> getMilestoneFilterRowMapper() {
