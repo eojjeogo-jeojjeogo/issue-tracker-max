@@ -4,6 +4,7 @@ import com.codesquad.issuetracker.api.issue.dto.IssueAssigneeUpdateRequest;
 import com.codesquad.issuetracker.api.issue.dto.IssueCreateRequest;
 import com.codesquad.issuetracker.api.issue.dto.IssueLabelUpdateRequest;
 import com.codesquad.issuetracker.api.issue.dto.IssueMilestoneUpdateRequest;
+import com.codesquad.issuetracker.api.issue.dto.IssueTitleUpdateRequest;
 import com.codesquad.issuetracker.api.issue.service.IssueService;
 import java.util.Map;
 import lombok.RequiredArgsConstructor;
@@ -30,6 +31,15 @@ public class IssueController {
         Long issueId = issueService.create(organizationTitle, issueCreateRequest);
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(Map.of("id", issueId));
+    }
+
+    @PatchMapping("/api/{organizationTitle}/issues/{issueId}/title")
+    public ResponseEntity<Map<String, Long>> updateTitle(
+            @RequestBody IssueTitleUpdateRequest issueTitleUpdateRequest,
+            @PathVariable String organizationTitle,
+            @PathVariable Long issueId) {
+        issueService.update(issueId, issueTitleUpdateRequest);
+        return ResponseEntity.ok(Map.of("id", issueId));
     }
 
     @PutMapping("/api/{organizationTitle}/issues/{issueId}/assignees")

@@ -24,4 +24,9 @@ public class Issue {
         this.id = id;
         this.milestoneId = milestoneId;
     }
+
+    public Issue(Long id, String title) {
+        this.id = id;
+        this.title = title;
+    }
 }

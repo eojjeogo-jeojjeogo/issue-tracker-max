@@ -63,6 +63,14 @@ public class IssueRepositoryImpl implements IssueRepository {
     }
 
     @Override
+    public boolean updateTitle(Issue issue) {
+        String sql = "UPDATE issue SET title = :title WHERE id = :issueId";
+        SqlParameterSource parmas = new MapSqlParameterSource().addValue("title", issue.getTitle())
+                .addValue("issueId", issue.getId());
+        return template.update(sql, parmas) == 1;
+    }
+
+    @Override
     @Transactional
     public boolean updateAssignees(List<IssueAssignee> assignees) {
         deleteAssignees(assignees.get(0).getIssueId()); // TODO: 서비스에서 트랜잭션 걸어서 메서드를 각각 호출하는게 좋을지 여기서 처리하는게 맞는지 모르겠음

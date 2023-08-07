@@ -10,6 +10,7 @@ import com.codesquad.issuetracker.api.issue.dto.IssueAssigneeUpdateRequest;
 import com.codesquad.issuetracker.api.issue.dto.IssueCreateRequest;
 import com.codesquad.issuetracker.api.issue.dto.IssueLabelUpdateRequest;
 import com.codesquad.issuetracker.api.issue.dto.IssueMilestoneUpdateRequest;
+import com.codesquad.issuetracker.api.issue.dto.IssueTitleUpdateRequest;
 import com.codesquad.issuetracker.api.issue.repository.IssueRepository;
 import com.codesquad.issuetracker.api.organization.repository.OrganizationRepository;
 import java.util.List;
@@ -59,6 +60,14 @@ public class IssueService {
     private void saveLabels(Long issueId, IssueCreateRequest issueCreateRequest) {
         List<IssueLabel> issueLabels = issueCreateRequest.extractLabels(issueId);
         issueRepository.save(issueLabels);
+    }
+
+    public void update(Long issueId, IssueTitleUpdateRequest issueTitleUpdateRequest) {
+        // TODO: 이슈 id가 해당 오가니제이션에 있는지 검증 필요
+        Issue issue = issueTitleUpdateRequest.toEntity(issueId);
+        if (!issueRepository.updateTitle(issue)) {
+            throw new RuntimeException("Title update failed for issueId: " + issueId);
+        }
     }
 
     public void update(Long issueId, IssueAssigneeUpdateRequest issueAssigneeUpdateRequest) {

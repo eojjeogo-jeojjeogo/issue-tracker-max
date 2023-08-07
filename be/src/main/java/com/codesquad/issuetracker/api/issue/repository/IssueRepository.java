@@ -14,6 +14,8 @@ public interface IssueRepository {
 
     void save(List<?> options);
 
+    boolean updateTitle(Issue issue);
+
     boolean updateAssignees(List<IssueAssignee> assignees);
 
     boolean updateLabels(List<IssueLabel> labels);
