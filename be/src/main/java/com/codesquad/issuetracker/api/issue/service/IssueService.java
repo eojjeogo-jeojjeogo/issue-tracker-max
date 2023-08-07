@@ -28,7 +28,7 @@ public class IssueService {
         // 이슈 저장
         Long organizationId = organizationRepository.findIdByTitle(organizationTitle).orElseThrow();
         Long issuesCount = issueRepository.countIssuesBy(organizationId).orElseThrow();
-        Issue issue = IssueCreateRequest.toEntity(organizationId, issuesCount + 1, issueCreateRequest);
+        Issue issue = issueCreateRequest.toEntity(organizationId, issuesCount + 1);
         Long issueId = issueRepository.save(issue).orElseThrow();
 
         // 코멘트, 담당자, 라벨 저장
@@ -49,12 +49,12 @@ public class IssueService {
     }
 
     private void saveAssignees(Long issueId, IssueCreateRequest issueCreateRequest) {
-        List<IssueAssignee> issueAssignees = IssueCreateRequest.extractAssignees(issueId, issueCreateRequest);
+        List<IssueAssignee> issueAssignees = issueCreateRequest.extractAssignees(issueId);
         issueRepository.save(issueAssignees);
     }
 
     private void saveLabels(Long issueId, IssueCreateRequest issueCreateRequest) {
-        List<IssueLabel> issueLabels = IssueCreateRequest.extractLabels(issueId, issueCreateRequest);
+        List<IssueLabel> issueLabels = issueCreateRequest.extractLabels(issueId);
         issueRepository.save(issueLabels);
     }
 

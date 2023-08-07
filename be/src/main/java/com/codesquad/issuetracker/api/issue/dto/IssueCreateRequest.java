@@ -23,25 +23,25 @@ public class IssueCreateRequest {
     private List<Long> labels;
     private final Boolean isClosed = false;
 
-    public static Issue toEntity(Long organizationId, Long issuesCount, IssueCreateRequest issueCreateRequest) {
+    public Issue toEntity(Long organizationId, Long issuesCount) {
         return Issue.builder()
                 .organizationId(organizationId)
                 .number(issuesCount)
-                .milestoneId(issueCreateRequest.milestonesId)
-                .memberId(issueCreateRequest.memberId)
-                .title(issueCreateRequest.title)
-                .isClosed(issueCreateRequest.isClosed)
+                .milestoneId(milestonesId)
+                .memberId(memberId)
+                .title(title)
+                .isClosed(isClosed)
                 .build();
     }
 
-    public static List<IssueAssignee> extractAssignees(Long issueId, IssueCreateRequest issueCreateRequest) {
-        return issueCreateRequest.assignees.stream()
+    public List<IssueAssignee> extractAssignees(Long issueId) {
+        return assignees.stream()
                 .map(assignee -> new IssueAssignee(issueId, assignee))
                 .collect(Collectors.toList());
     }
 
-    public static List<IssueLabel> extractLabels(Long issueId, IssueCreateRequest issueCreateRequest) {
-        return issueCreateRequest.labels.stream()
+    public List<IssueLabel> extractLabels(Long issueId) {
+        return labels.stream()
                 .map(label -> new IssueLabel(issueId, label))
                 .collect(Collectors.toList());
     }
