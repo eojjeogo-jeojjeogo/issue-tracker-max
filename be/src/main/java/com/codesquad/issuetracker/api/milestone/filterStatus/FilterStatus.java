@@ -1,14 +1,16 @@
 package com.codesquad.issuetracker.api.milestone.filterStatus;
 
+import com.codesquad.issuetracker.api.milestone.domain.Milestone;
+
 public enum FilterStatus {
     OPEN("open", false),
     CLOSED("closed", true);
 
-    private final String stringValue;
+    private final String type;
     private final boolean value;
 
-    FilterStatus(String stringValue, boolean value) {
-        this.stringValue = stringValue;
+    FilterStatus(String type, boolean value) {
+        this.type = type;
         this.value = value;
     }
 
@@ -16,12 +18,16 @@ public enum FilterStatus {
         return value;
     }
 
-    public static FilterStatus fromString(String stringValue) {
+    public static FilterStatus from(String typeFromRequest) {
         for (FilterStatus status : FilterStatus.values()) {
-            if (status.stringValue.equalsIgnoreCase(stringValue)) {
+            if (status.type.equalsIgnoreCase(typeFromRequest)) {
                 return status;
             }
         }
-        throw new IllegalArgumentException(stringValue + ": 적절하지 않은 filter 형태입니다. ");
+        throw new IllegalArgumentException(typeFromRequest + ": 적절하지 않은 type 형태입니다. ");
+    }
+
+    public boolean isStatusMatchingFilter(Milestone milestone) {
+        return milestone.isClosed() == this.getStatus();
     }
 }

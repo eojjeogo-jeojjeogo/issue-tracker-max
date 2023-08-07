@@ -1,6 +1,5 @@
 package com.codesquad.issuetracker.api.milestone.domain;
 
-import com.codesquad.issuetracker.api.milestone.filterStatus.FilterStatus;
 import java.time.LocalDate;
 import lombok.Builder;
 import lombok.Getter;
@@ -24,9 +23,5 @@ public class Milestone {
         this.dueDate = dueDate;
         this.isClosed = isClosed;
         this.organizationId = organizationId;
-    }
-
-    public boolean isStatusMatchingFilter(FilterStatus filterStatus) {
-        return isClosed == filterStatus.getStatus();
     }
 }

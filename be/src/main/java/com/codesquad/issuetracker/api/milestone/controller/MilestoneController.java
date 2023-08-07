@@ -41,7 +41,7 @@ public class MilestoneController {
     @GetMapping("/api/{organizationTitle}/milestones")
     public ResponseEntity<MilestonesResponse> readAll(@PathVariable String organizationTitle,
         @RequestParam String filter) {
-        FilterStatus filterStatus = FilterStatus.fromString(filter);
+        FilterStatus filterStatus = FilterStatus.from(filter);
         MilestonesResponse mileStonesResponse = milestoneService.readAll(organizationTitle,
             filterStatus);
         return ResponseEntity.ok(mileStonesResponse);

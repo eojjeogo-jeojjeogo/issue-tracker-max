@@ -37,7 +37,7 @@ public class MilestoneResponse {
     public static List<MilestoneResponse> from(List<Milestone> milestones,
         FilterStatus filterStatus) {
         return milestones.stream()
-            .filter(milestone -> milestone.isStatusMatchingFilter(filterStatus))
+            .filter(milestone -> filterStatus.isStatusMatchingFilter(milestone))
             .map(MilestoneResponse::from)
             .collect(Collectors.toList());
     }
