@@ -2,6 +2,7 @@ package com.codesquad.issuetracker.api.issue.controller;
 
 import com.codesquad.issuetracker.api.issue.dto.IssueAssigneeUpdateRequest;
 import com.codesquad.issuetracker.api.issue.dto.IssueCreateRequest;
+import com.codesquad.issuetracker.api.issue.dto.IssueLabelUpdateRequest;
 import com.codesquad.issuetracker.api.issue.service.IssueService;
 import java.util.Map;
 import lombok.RequiredArgsConstructor;
@@ -30,10 +31,20 @@ public class IssueController {
     }
 
     @PutMapping("/api/{organizationTitle}/issues/{issueId}/assignees")
-    public ResponseEntity<Map<String, Long>> updateAssignees(@RequestBody IssueAssigneeUpdateRequest issueAssigneeUpdateRequest,
-                                                @PathVariable String organizationTitle,
-                                                @PathVariable Long issueId) {
+    public ResponseEntity<Map<String, Long>> updateAssignees(
+            @RequestBody IssueAssigneeUpdateRequest issueAssigneeUpdateRequest,
+            @PathVariable String organizationTitle,
+            @PathVariable Long issueId) {
         issueService.update(issueId, issueAssigneeUpdateRequest);
+        return ResponseEntity.ok(Map.of("id", issueId));
+    }
+
+    @PutMapping("/api/{organizationTitle}/issues/{issueId}/labels")
+    public ResponseEntity<Map<String, Long>> updateLabels(
+            @RequestBody IssueLabelUpdateRequest issueLabelUpdateRequest,
+            @PathVariable String organizationTitle,
+            @PathVariable Long issueId) {
+        issueService.update(issueId, issueLabelUpdateRequest);
         return ResponseEntity.ok(Map.of("id", issueId));
     }
 

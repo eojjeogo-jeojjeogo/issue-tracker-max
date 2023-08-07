@@ -78,6 +78,21 @@ public class IssueRepositoryImpl implements IssueRepository {
 
     @Override
     @Transactional
+    public boolean updateLabels(List<IssueLabel> labels) {
+        deleteLabels(labels.get(0).getIssueId());
+
+        String sql = "INSERT INTO issue_label (issue_id, label_id) VALUES (:issueId, :labelId)";
+        int[] result = template.batchUpdate(sql, SqlParameterSourceUtils.createBatch(labels));
+        return result.length == labels.size();
+    }
+
+    private void deleteLabels(Long issueId) {
+        String sql = "DELETE FROM issue_label WHERE issue_id = :issueId";
+        template.update(sql, Map.of("issueId", issueId));
+    }
+
+    @Override
+    @Transactional
     public void delete(Long issueId) {
         String queryForDeleteIssue = "DELETE FROM issue WHERE id = :issueId";
         String queryForDeleteIssueAssignees = "DELETE FROM issue_assignee WHERE issue_id = :issueId";

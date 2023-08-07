@@ -8,6 +8,7 @@ import com.codesquad.issuetracker.api.issue.domain.IssueAssignee;
 import com.codesquad.issuetracker.api.issue.domain.IssueLabel;
 import com.codesquad.issuetracker.api.issue.dto.IssueAssigneeUpdateRequest;
 import com.codesquad.issuetracker.api.issue.dto.IssueCreateRequest;
+import com.codesquad.issuetracker.api.issue.dto.IssueLabelUpdateRequest;
 import com.codesquad.issuetracker.api.issue.repository.IssueRepository;
 import com.codesquad.issuetracker.api.organization.repository.OrganizationRepository;
 import java.util.List;
@@ -64,6 +65,13 @@ public class IssueService {
         List<IssueAssignee> assignees = issueAssigneeUpdateRequest.toEntity(issueId);
         if (!issueRepository.updateAssignees(assignees)) {
             throw new RuntimeException("Assignee update failed for issueId: " + issueId);
+        }
+    }
+
+    public void update(Long issueId, IssueLabelUpdateRequest issueLabelUpdateRequest) {
+        List<IssueLabel> labels = issueLabelUpdateRequest.toEntity(issueId);
+        if (!issueRepository.updateLabels(labels)) {
+            throw new RuntimeException("Label update failed for issueId: " + issueId);
         }
     }
 
