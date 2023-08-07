@@ -36,6 +36,14 @@ public class CommentResponse {
             .build();
     }
 
+    /**
+     * commentEmoticonResponses 가 Map 인 이유는 어떤 commentId에 CommentEmoticonResponse 가 할당되야하는지 확인하기
+     * 위해서이다.
+     *
+     * @param issueCommentVos
+     * @param commentEmoticonResponses
+     * @return
+     */
     public static List<CommentResponse> of(List<IssueCommentVo> issueCommentVos,
         Map<Long, List<CommentEmoticonResponse>> commentEmoticonResponses) {
         return issueCommentVos.stream()
