@@ -10,6 +10,7 @@ import com.codesquad.issuetracker.api.issue.dto.IssueAssigneeUpdateRequest;
 import com.codesquad.issuetracker.api.issue.dto.IssueCreateRequest;
 import com.codesquad.issuetracker.api.issue.dto.IssueLabelUpdateRequest;
 import com.codesquad.issuetracker.api.issue.dto.IssueMilestoneUpdateRequest;
+import com.codesquad.issuetracker.api.issue.dto.IssueStatusUpdateRequest;
 import com.codesquad.issuetracker.api.issue.dto.IssueTitleUpdateRequest;
 import com.codesquad.issuetracker.api.issue.repository.IssueRepository;
 import com.codesquad.issuetracker.api.organization.repository.OrganizationRepository;
@@ -90,6 +91,11 @@ public class IssueService {
         if (!issueRepository.updateMilestone(issue)) {
             throw new RuntimeException("Label update failed for issueId: " + issueId);
         }
+    }
+
+    public void update(Long issueId, IssueStatusUpdateRequest issueStatusUpdateRequest) {
+        Issue issue = issueStatusUpdateRequest.toEntity(issueId);
+        issueRepository.updateStatus(issue);
     }
 
     @Transactional

@@ -4,8 +4,10 @@ import com.codesquad.issuetracker.api.issue.dto.IssueAssigneeUpdateRequest;
 import com.codesquad.issuetracker.api.issue.dto.IssueCreateRequest;
 import com.codesquad.issuetracker.api.issue.dto.IssueLabelUpdateRequest;
 import com.codesquad.issuetracker.api.issue.dto.IssueMilestoneUpdateRequest;
+import com.codesquad.issuetracker.api.issue.dto.IssueStatusUpdateRequest;
 import com.codesquad.issuetracker.api.issue.dto.IssueTitleUpdateRequest;
 import com.codesquad.issuetracker.api.issue.service.IssueService;
+import java.util.Collections;
 import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -67,6 +69,15 @@ public class IssueController {
             @PathVariable Long issueId) {
         issueService.update(issueId, issueMilestoneUpdateRequest);
         return ResponseEntity.ok(Map.of("id", issueId));
+    }
+
+    @PatchMapping("/api/{organizationTitle}/issues/{issueId}/status")
+    public ResponseEntity<Map<String, Long>> updateOneStatus(
+            @RequestBody IssueStatusUpdateRequest issueStatusUpdateRequest,
+            @PathVariable String organizationTitle,
+            @PathVariable Long issueId) {
+        issueService.update(issueId, issueStatusUpdateRequest);
+        return ResponseEntity.ok(Collections.singletonMap("id", issueId));
     }
 
     @DeleteMapping("/api/{organizationTitle}/issues/{issueId}")

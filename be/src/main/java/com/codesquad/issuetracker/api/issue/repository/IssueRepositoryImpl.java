@@ -65,9 +65,10 @@ public class IssueRepositoryImpl implements IssueRepository {
     @Override
     public boolean updateTitle(Issue issue) {
         String sql = "UPDATE issue SET title = :title WHERE id = :issueId";
-        SqlParameterSource parmas = new MapSqlParameterSource().addValue("title", issue.getTitle())
+        SqlParameterSource params = new MapSqlParameterSource()
+                .addValue("title", issue.getTitle())
                 .addValue("issueId", issue.getId());
-        return template.update(sql, parmas) == 1;
+        return template.update(sql, params) == 1;
     }
 
     @Override
@@ -106,6 +107,15 @@ public class IssueRepositoryImpl implements IssueRepository {
         SqlParameterSource parmas = new MapSqlParameterSource().addValue("milestoneId", issue.getMilestoneId())
                 .addValue("issueId", issue.getId());
         return template.update(sql, parmas) == 1;
+    }
+
+    @Override
+    public void updateStatus(Issue issue) {
+        String sql = "UPDATE issue SET is_closed = :isClosed WHERE id = :issueId";
+        SqlParameterSource params = new MapSqlParameterSource()
+                .addValue("isClosed", issue.getIsClosed())
+                .addValue("issueId", issue.getId());
+        template.update(sql, params);
     }
 
     @Override
