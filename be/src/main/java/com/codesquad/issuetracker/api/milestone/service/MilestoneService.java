@@ -4,6 +4,7 @@ import com.codesquad.issuetracker.api.milestone.domain.Milestone;
 import com.codesquad.issuetracker.api.milestone.dto.request.MilestoneRequest;
 import com.codesquad.issuetracker.api.milestone.dto.response.EditMileStoneResponse;
 import com.codesquad.issuetracker.api.milestone.dto.response.MilestonesResponse;
+import com.codesquad.issuetracker.api.milestone.filterStatus.FilterStatus;
 import com.codesquad.issuetracker.api.milestone.repository.MilestoneRepository;
 import com.codesquad.issuetracker.api.organization.repository.OrganizationRepository;
 import java.util.List;
@@ -21,10 +22,10 @@ public class MilestoneService {
     @Transactional
     public long create(String organizationTitle, MilestoneRequest mileStoneRequest) {
         Long organizationId = organizationRepository.findIdByTitle(organizationTitle)
-                .orElseThrow();
+            .orElseThrow();
         Milestone milestone = MilestoneRequest.toEntity(mileStoneRequest, organizationId);
         return milestoneRepository.save(milestone)
-                .orElseThrow();
+            .orElseThrow();
     }
 
     @Transactional(readOnly = true)
@@ -35,7 +36,7 @@ public class MilestoneService {
 
     @Transactional
     public long update(Long milestoneId, MilestoneRequest mileStoneRequest) {
-        Milestone milestone = MilestoneRequest.toEntity(milestoneId,mileStoneRequest);
+        Milestone milestone = MilestoneRequest.toEntity(milestoneId, mileStoneRequest);
         milestoneRepository.update(milestone);
         return milestoneId;
     }
@@ -45,11 +46,12 @@ public class MilestoneService {
         milestoneRepository.deleteById(milestoneId);
     }
 
-    public MilestonesResponse readAll(String organizationTitle) {
+    @Transactional
+    public MilestonesResponse readAll(String organizationTitle, FilterStatus filterStatus) {
         Long organizationId = organizationRepository.findIdByTitle(organizationTitle)
-                .orElseThrow();
+            .orElseThrow();
         List<Milestone> milestones = milestoneRepository.readAllByOrganizationId(organizationId);
-        return MilestonesResponse.from(milestones);
+        return MilestonesResponse.from(milestones, filterStatus);
     }
 
     @Transactional

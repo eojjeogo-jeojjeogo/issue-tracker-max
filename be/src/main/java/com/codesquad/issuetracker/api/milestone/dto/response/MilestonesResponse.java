@@ -1,6 +1,7 @@
 package com.codesquad.issuetracker.api.milestone.dto.response;
 
 import com.codesquad.issuetracker.api.milestone.domain.Milestone;
+import com.codesquad.issuetracker.api.milestone.filterStatus.FilterStatus;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.List;
 
@@ -12,16 +13,17 @@ public class MilestonesResponse {
     private List<MilestoneResponse> milestoneResponseCollection;
 
     public MilestonesResponse(long milestoneOpenedCount, long milestoneClosedCount,
-            List<MilestoneResponse> milestoneResponseCollection) {
+        List<MilestoneResponse> milestoneResponseCollection) {
         this.milestoneOpenedCount = milestoneOpenedCount;
         this.milestoneClosedCount = milestoneClosedCount;
         this.milestoneResponseCollection = milestoneResponseCollection;
     }
 
-    public static MilestonesResponse from(List<Milestone> milestones) {
+    public static MilestonesResponse from(List<Milestone> milestones, FilterStatus filterStatus) {
         long closedCount = getClosedCount(milestones);
         long openedCount = getOpenedCount(closedCount, milestones);
-        List<MilestoneResponse> mileStonesResponse = MilestoneResponse.from(milestones);
+        List<MilestoneResponse> mileStonesResponse = MilestoneResponse.from(milestones,
+            filterStatus);
         return new MilestonesResponse(openedCount, closedCount, mileStonesResponse);
     }
 
@@ -31,8 +33,8 @@ public class MilestonesResponse {
 
     private static long getClosedCount(List<Milestone> milestones) {
         return milestones.stream()
-                .filter(Milestone::isClosed)
-                .count();
+            .filter(Milestone::isClosed)
+            .count();
     }
 
     public long getMilestoneOpenedCount() {
@@ -41,9 +43,5 @@ public class MilestonesResponse {
 
     public long getMilestoneClosedCount() {
         return milestoneClosedCount;
-    }
-
-    public List<MilestoneResponse> getMileStoneResponseCollection() {
-        return milestoneResponseCollection;
     }
 }

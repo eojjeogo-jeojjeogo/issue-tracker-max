@@ -1,6 +1,7 @@
 package com.codesquad.issuetracker.api.milestone.dto.response;
 
 import com.codesquad.issuetracker.api.milestone.domain.Milestone;
+import com.codesquad.issuetracker.api.milestone.filterStatus.FilterStatus;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import java.time.LocalDate;
 import java.util.List;
@@ -16,8 +17,9 @@ public class MilestoneResponse {
     private Long issueClosedCount;
     private Long issueOpenedCount;
 
-    public MilestoneResponse(Long id, String title, String description, LocalDate dueDate, Long issueClosedCount,
-            Long issueOpenedCount) {
+    public MilestoneResponse(Long id, String title, String description, LocalDate dueDate,
+        Long issueClosedCount,
+        Long issueOpenedCount) {
         this.id = id;
         this.title = title;
         this.description = description;
@@ -27,14 +29,17 @@ public class MilestoneResponse {
     }
 
     public static MilestoneResponse from(Milestone milestone) {
-        return new MilestoneResponse(milestone.getId(), milestone.getTitle(), milestone.getDescription(),
-                milestone.getDueDate(), 0L, 0L);
+        return new MilestoneResponse(milestone.getId(), milestone.getTitle(),
+            milestone.getDescription(),
+            milestone.getDueDate(), 0L, 0L);
     }
 
-    public static List<MilestoneResponse> from(List<Milestone> milestones) {
+    public static List<MilestoneResponse> from(List<Milestone> milestones,
+        FilterStatus filterStatus) {
         return milestones.stream()
-                .map(MilestoneResponse::from)
-                .collect(Collectors.toList());
+            .filter(milestone -> milestone.isStatusMatchingFilter(filterStatus))
+            .map(MilestoneResponse::from)
+            .collect(Collectors.toList());
     }
 
     public Long getId() {
