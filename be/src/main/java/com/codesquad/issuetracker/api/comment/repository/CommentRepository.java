@@ -1,6 +1,7 @@
 package com.codesquad.issuetracker.api.comment.repository;
 
 import com.codesquad.issuetracker.api.comment.domain.Comment;
+import com.codesquad.issuetracker.api.comment.domain.IssueCommentVo;
 import java.util.List;
 import java.util.Optional;
 
@@ -12,5 +13,5 @@ public interface CommentRepository {
 
     void delete(Long commentId);
 
-    List<Comment> findAllByIssueId(Long issueId);
+    List<IssueCommentVo> findAllByIssueId(Long issueId, String issueAuthor);
 }
