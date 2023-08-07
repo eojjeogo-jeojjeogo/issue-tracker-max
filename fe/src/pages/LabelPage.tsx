@@ -1,7 +1,10 @@
 import { Header } from "../components/Header/Header";
 import { Background } from "../components/common/Background";
 import { TabButton } from "../components/common/TabButton";
+
 import { useContext, useEffect, useState } from "react";
+
+
 import { Button } from "../components/common/Button";
 import { LabelDetail } from "../components/Label/LabelDetail";
 import { LabelElement } from "../components/Label/LabelElement";
@@ -15,7 +18,9 @@ import { MainArea } from "../components/common/MainArea";
 import { TotalCount } from "./MilestonePage";
 import { LoadingBar } from "../components/common/LoadingBar";
 import { COMMON_URL, LABEL_URL, SERVER } from "../constants/url";
+
 import { AlertContext } from "../contexts/AlertContext";
+
 
 const tableContainer = css`
   display: flex;
@@ -43,6 +48,7 @@ export function LabelPage() {
   const [isLeftSelected, setIsLeftSelected] = useState(true);
   const [isAddLabelOpen, setIsAddLabelOpen] = useState(false);
 
+
   const alertContextValue = useContext(AlertContext)!;
   const { shouldFetchAgain, setShouldFetchAgain } = alertContextValue;
 
@@ -65,8 +71,10 @@ export function LabelPage() {
     };
 
     fetchData();
+
     setShouldFetchAgain(false);
   }, [shouldFetchAgain]);
+
 
   const navigate = useNavigate();
   const color = useTheme() as ColorScheme;

@@ -109,8 +109,10 @@ export function LabelDetail({
   const dropdownRef = useRef<HTMLDivElement>(null);
   const dropdownOpenRef = useRef<HTMLDivElement>(null);
 
+
   const alertContextValue = useContext(AlertContext)!;
   const { setShouldFetchAgain } = alertContextValue;
+
 
   const color = useTheme() as ColorScheme;
   const [selectedColor, setSelectedColor] = useState<string>(
@@ -169,6 +171,7 @@ export function LabelDetail({
 
   const handleClickCompleteButton = async () => {
     if (isEditCompleted) {
+
       const payload = {
         title: inputTitle,
         description: inputDesc,
@@ -197,10 +200,12 @@ export function LabelDetail({
         console.error("API 요청 중 에러 발생:", error);
       } finally {
         setIsEditCompleted(false);
+
       }
     }
     setShouldFetchAgain(true);
     onClickCompleteButton && onClickCompleteButton();
+
   };
 
   return (

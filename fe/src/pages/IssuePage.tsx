@@ -25,6 +25,7 @@ import {
 import { IssueDropdownTab } from "../components/Issue/IssueDropdownTab";
 import { Icon } from "../components/common/Icon";
 import { Txt } from "../components/util/Txt";
+
 import { COMMON_URL, SERVER } from "../constants/url";
 
 // const ISSUE_URL = API 연결 시 사용
@@ -94,7 +95,9 @@ export function IssuePage() {
     const fetchData = async () => {
       try {
         setLoading(true);
+
         const totalCountResponse = await fetch(`${SERVER}${COMMON_URL}`);
+
         // const issueResponse = await fetch(ISSUE_URL); // API 연결 시 사용
         const totalCountData = await totalCountResponse.json();
         // const issueData = await issueResponse.json(); // API 연결 시 사용

@@ -33,6 +33,7 @@ export function Header() {
 
   const onClickLogo = () => {
     navigate("/issues");
+
   };
   return (
     <div css={headerStyle}>

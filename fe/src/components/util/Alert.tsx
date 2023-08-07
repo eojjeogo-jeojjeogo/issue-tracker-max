@@ -49,7 +49,9 @@ export function Alert() {
     deleteElementId,
     currentType,
     setCurrentType,
+
     setShouldFetchAgain,
+
   } = AlertContextValue!;
 
   if (isLabelAlertOpen === false) return;
@@ -77,7 +79,9 @@ export function Alert() {
 
     setIsLabelAlertOpen(false);
     setCurrentType(undefined);
+
     setShouldFetchAgain(true);
+
   };
 
   const getSelectedUrl = (currentType: string) => {
