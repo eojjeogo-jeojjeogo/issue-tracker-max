@@ -6,6 +6,7 @@ import com.codesquad.issuetracker.api.issue.dto.IssueLabelUpdateRequest;
 import com.codesquad.issuetracker.api.issue.dto.IssueMilestoneUpdateRequest;
 import com.codesquad.issuetracker.api.issue.dto.IssueStatusUpdateRequest;
 import com.codesquad.issuetracker.api.issue.dto.IssueTitleUpdateRequest;
+import com.codesquad.issuetracker.api.issue.dto.IssuesStatusUpdateRequest;
 import com.codesquad.issuetracker.api.issue.service.IssueService;
 import java.util.Collections;
 import java.util.Map;
@@ -72,12 +73,21 @@ public class IssueController {
     }
 
     @PatchMapping("/api/{organizationTitle}/issues/{issueId}/status")
-    public ResponseEntity<Map<String, Long>> updateOneStatus(
+    public ResponseEntity<Map<String, Long>> updateStatus(
             @RequestBody IssueStatusUpdateRequest issueStatusUpdateRequest,
             @PathVariable String organizationTitle,
             @PathVariable Long issueId) {
         issueService.update(issueId, issueStatusUpdateRequest);
         return ResponseEntity.ok(Collections.singletonMap("id", issueId));
+    }
+
+    @PatchMapping("/api/{organizationTitle}/issues")
+    public ResponseEntity<Map<String, Long>> updateStatuses(
+            @RequestBody IssuesStatusUpdateRequest issuesStatusUpdateRequest,
+            @PathVariable String organizationTitle) {
+        issueService.update(issuesStatusUpdateRequest);
+        return ResponseEntity.ok()
+                .build();
     }
 
     @DeleteMapping("/api/{organizationTitle}/issues/{issueId}")

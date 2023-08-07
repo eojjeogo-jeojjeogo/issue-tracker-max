@@ -24,5 +24,7 @@ public interface IssueRepository {
 
     void updateStatus(Issue issue);
 
+    void updateStatuses(List<Issue> issues);
+
     void delete(Long issueId);
 }

@@ -12,6 +12,7 @@ import com.codesquad.issuetracker.api.issue.dto.IssueLabelUpdateRequest;
 import com.codesquad.issuetracker.api.issue.dto.IssueMilestoneUpdateRequest;
 import com.codesquad.issuetracker.api.issue.dto.IssueStatusUpdateRequest;
 import com.codesquad.issuetracker.api.issue.dto.IssueTitleUpdateRequest;
+import com.codesquad.issuetracker.api.issue.dto.IssuesStatusUpdateRequest;
 import com.codesquad.issuetracker.api.issue.repository.IssueRepository;
 import com.codesquad.issuetracker.api.organization.repository.OrganizationRepository;
 import java.util.List;
@@ -96,6 +97,11 @@ public class IssueService {
     public void update(Long issueId, IssueStatusUpdateRequest issueStatusUpdateRequest) {
         Issue issue = issueStatusUpdateRequest.toEntity(issueId);
         issueRepository.updateStatus(issue);
+    }
+
+    public void update(IssuesStatusUpdateRequest issuesStatusUpdateRequest) {
+        List<Issue> issues = issuesStatusUpdateRequest.toEntity();
+        issueRepository.updateStatuses(issues);
     }
 
     @Transactional

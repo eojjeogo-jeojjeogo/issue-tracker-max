@@ -119,6 +119,12 @@ public class IssueRepositoryImpl implements IssueRepository {
     }
 
     @Override
+    public void updateStatuses(List<Issue> issues) {
+        String sql = "UPDATE issue SET is_closed = :isClosed WHERE id = :id";
+        template.batchUpdate(sql, SqlParameterSourceUtils.createBatch(issues));
+    }
+
+    @Override
     @Transactional
     public void delete(Long issueId) {
         String queryForDeleteIssue = "DELETE FROM issue WHERE id = :issueId";
