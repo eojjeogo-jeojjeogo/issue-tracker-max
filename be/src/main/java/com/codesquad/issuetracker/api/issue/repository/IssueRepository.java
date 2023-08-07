@@ -18,5 +18,7 @@ public interface IssueRepository {
 
     boolean updateLabels(List<IssueLabel> labels);
 
+    boolean updateMilestone(Issue issue);
+
     void delete(Long issueId);
 }

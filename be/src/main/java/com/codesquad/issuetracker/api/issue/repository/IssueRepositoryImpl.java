@@ -9,6 +9,7 @@ import java.util.Map;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.core.namedparam.SqlParameterSourceUtils;
@@ -89,6 +90,14 @@ public class IssueRepositoryImpl implements IssueRepository {
     private void deleteLabels(Long issueId) {
         String sql = "DELETE FROM issue_label WHERE issue_id = :issueId";
         template.update(sql, Map.of("issueId", issueId));
+    }
+
+    @Override
+    public boolean updateMilestone(Issue issue) {
+        String sql = "UPDATE issue SET milestone_id = :milestoneId WHERE id = :issueId";
+        SqlParameterSource parmas = new MapSqlParameterSource().addValue("milestoneId", issue.getMilestoneId())
+                .addValue("issueId", issue.getId());
+        return template.update(sql, parmas) == 1;
     }
 
     @Override
