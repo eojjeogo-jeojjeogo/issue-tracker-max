@@ -1,5 +1,6 @@
 package com.codesquad.issuetracker.api.comment.controller;
 
+import com.codesquad.issuetracker.api.comment.dto.request.CommentEmoticonAddRequest;
 import com.codesquad.issuetracker.api.comment.dto.request.CommentRequest;
 import com.codesquad.issuetracker.api.comment.service.CommentService;
 import java.util.Map;
@@ -32,5 +33,14 @@ public class CommentController {
         Long updatedCommentId = commentService.update(commentId, commentRequest);
         return ResponseEntity.ok()
             .body(Map.of("id", updatedCommentId));
+    }
+
+    @PostMapping("/api/{organizationTitle}/issues/{issueId}/comments/{commentId}/emoticons")
+    public ResponseEntity<Void> addEmoticon(@PathVariable Long commentId,
+        @RequestBody CommentEmoticonAddRequest commentEmoticonAddRequest) {
+        //todo 로그인 된 유저 정보가 필요함
+        Long memberId = 1L;
+        commentService.addEmoticon(commentId, memberId, commentEmoticonAddRequest);
+        return ResponseEntity.ok().build();
     }
 }

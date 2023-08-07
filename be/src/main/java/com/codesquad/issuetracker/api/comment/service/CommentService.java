@@ -1,7 +1,9 @@
 package com.codesquad.issuetracker.api.comment.service;
 
 import com.codesquad.issuetracker.api.comment.domain.Comment;
+import com.codesquad.issuetracker.api.comment.domain.Emoticon;
 import com.codesquad.issuetracker.api.comment.domain.IssueCommentVo;
+import com.codesquad.issuetracker.api.comment.dto.request.CommentEmoticonAddRequest;
 import com.codesquad.issuetracker.api.comment.dto.request.CommentRequest;
 import com.codesquad.issuetracker.api.comment.dto.response.CommentEmoticonResponse;
 import com.codesquad.issuetracker.api.comment.dto.response.CommentResponse;
@@ -48,5 +50,11 @@ public class CommentService {
     public Long update(Long commentId, CommentRequest commentRequest) {
         Comment comment = commentRequest.toEntityWithCommentId(commentId);
         return commentRepository.update(comment);
+    }
+
+    public void addEmoticon(Long commentId, Long memberId,
+        CommentEmoticonAddRequest commentEmoticonAddRequest) {
+        Emoticon emoticon = commentEmoticonAddRequest.toEntity();
+        commentEmoticonRepository.addEmoticon(commentId, memberId, emoticon);
     }
 }

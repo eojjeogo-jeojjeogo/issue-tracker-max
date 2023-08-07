@@ -8,4 +8,8 @@ public class Emoticon {
     private Long id;
     private String unicode;
 
+    public Emoticon(Long id) {
+        this.id = id;
+    }
+
 }
