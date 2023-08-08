@@ -7,7 +7,6 @@ public class MilestoneStatusRequest {
 
     private boolean isClosed;
 
-
     public boolean isClosed() {
         return isClosed;
     }

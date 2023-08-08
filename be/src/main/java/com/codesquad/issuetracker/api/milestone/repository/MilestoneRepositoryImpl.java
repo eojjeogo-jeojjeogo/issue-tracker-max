@@ -36,7 +36,10 @@ public class MilestoneRepositoryImpl implements MilestoneRepository {
 
     @Override
     public Optional<Long> save(Milestone milestone) {
-        SqlParameterSource sqlParameterSource = getSaveSqlParameterSource(milestone);
+        String sql = "INSERT INTO milestone (title, description, due_date, is_closed, organization_id)"
+                + " VALUES (:title, :description, :dueDate, :isClosed, :organizationId)";
+
+        SqlParameterSource sqlParameterSource = new BeanPropertySqlParameterSource(milestone);
         KeyHolder keyHolder = new GeneratedKeyHolder();
         jdbcTemplate.update(sql, sqlParameterSource, keyHolder);
         Number key = keyHolder.getKey();
@@ -60,8 +63,12 @@ public class MilestoneRepositoryImpl implements MilestoneRepository {
 
     @Override
     public void update(Milestone milestone) {
-        SqlParameterSource sqlParameterSource = getUpdateSqlParameterSource(milestone);
-        jdbcTemplate.update(UPDATE_SQL, sqlParameterSource);
+        String sql = "UPDATE milestone"
+                + " SET title = :title,description = :description ,due_date = :dueDate,is_closed = :isClosed"
+                + " WHERE id = :id";
+
+        SqlParameterSource sqlParameterSource = new BeanPropertySqlParameterSource(milestone);
+        jdbcTemplate.update(sql, sqlParameterSource);
     }
 
     @Override
