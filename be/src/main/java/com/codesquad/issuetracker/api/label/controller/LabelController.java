@@ -4,6 +4,7 @@ import com.codesquad.issuetracker.api.label.dto.LabelCreateRequest;
 import com.codesquad.issuetracker.api.label.dto.LabelResponse;
 import com.codesquad.issuetracker.api.label.dto.LabelUpdateRequest;
 import com.codesquad.issuetracker.api.label.service.LabelService;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import lombok.RequiredArgsConstructor;
@@ -36,7 +37,7 @@ public class LabelController {
         // TODO: 로그인 관련 처리 필요
         Long labelId = labelService.create(organizationTitle, labelCreateRequest);
         return ResponseEntity.status(HttpStatus.CREATED)
-            .body(Map.of("id", labelId));
+                .body(Collections.singletonMap("id", labelId));
     }
 
     @PatchMapping("/api/{organizationTitle}/labels/{labelId}")
@@ -46,13 +47,15 @@ public class LabelController {
         // TODO: 로그인 관련 처리 필요
         Long updatedLabelId = labelService.update(organizationTitle, labelUpdateRequest, labelId);
         return ResponseEntity.ok()
-            .body(Map.of("id", updatedLabelId));
+                .body(Collections.singletonMap("id", updatedLabelId));
     }
 
     @DeleteMapping("/api/{organizationTitle}/labels/{labelId}")
     public ResponseEntity<Void> delete(@PathVariable Long labelId) {
         // TODO: 로그인 관련 처리 필요
         labelService.delete(labelId);
-        return ResponseEntity.noContent().build();
+        return ResponseEntity
+                .noContent()
+                .build();
     }
 }
