@@ -3,6 +3,7 @@ package com.codesquad.issuetracker.api.issue.repository;
 import com.codesquad.issuetracker.api.issue.domain.Issue;
 import com.codesquad.issuetracker.api.issue.domain.IssueAssignee;
 import com.codesquad.issuetracker.api.issue.domain.IssueLabel;
+import com.codesquad.issuetracker.api.issue.domain.IssueVo;
 import java.util.List;
 import java.util.Optional;
 
@@ -13,6 +14,8 @@ public interface IssueRepository {
     Optional<Long> save(Issue issue);
 
     void save(List<?> options);
+
+    IssueVo findBy(Long issueId);
 
     boolean updateTitle(Issue issue);
 

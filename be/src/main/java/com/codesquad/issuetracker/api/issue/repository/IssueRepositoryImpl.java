@@ -3,11 +3,13 @@ package com.codesquad.issuetracker.api.issue.repository;
 import com.codesquad.issuetracker.api.issue.domain.Issue;
 import com.codesquad.issuetracker.api.issue.domain.IssueAssignee;
 import com.codesquad.issuetracker.api.issue.domain.IssueLabel;
+import com.codesquad.issuetracker.api.issue.domain.IssueVo;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
@@ -21,6 +23,14 @@ import org.springframework.transaction.annotation.Transactional;
 @Repository
 @RequiredArgsConstructor
 public class IssueRepositoryImpl implements IssueRepository {
+
+    private static final String ID = "id";
+    private static final String MILESTONE_ID = "milestone_id";
+    private static final String NUMBER = "number";
+    private static final String TITLE = "title";
+    private static final String IS_CLOSED = "is_closed";
+    private static final String CREATED_TIME = "created_time";
+    private static final String AUTHOR = "author";
 
     private final NamedParameterJdbcTemplate template;
 
@@ -61,6 +71,15 @@ public class IssueRepositoryImpl implements IssueRepository {
     private void saveIssueLabels(List<?> issueLabels) {
         String sql = "INSERT INTO issue_label (issue_id, label_id) VALUES (:issueId, :labelId)";
         template.batchUpdate(sql, SqlParameterSourceUtils.createBatch(issueLabels));
+    }
+
+    @Override
+    public IssueVo findBy(Long issueId) {
+        String sql = "SELECT issue.id, milestone_id, number, title, is_closed, issue.created_time, member.nickname AS author "
+                + "FROM issue "
+                + "JOIN member ON issue.member_id = member.id "
+                + "WHERE issue.id = :issueId";
+        return template.queryForObject(sql, Collections.singletonMap("issueId", issueId), issueVoRowMapper());
     }
 
     @Override
@@ -138,5 +157,18 @@ public class IssueRepositoryImpl implements IssueRepository {
         template.update(queryForDeleteIssue, param);
         template.update(queryForDeleteIssueAssignees, param);
         template.update(queryForDeleteIssueLabels, param);
+    }
+
+    private RowMapper<IssueVo> issueVoRowMapper() {
+        return (rs, rowNum) ->
+                IssueVo.builder()
+                        .id(rs.getLong(ID))
+                        .milestone_id(rs.getLong(MILESTONE_ID))
+                        .number(rs.getLong(NUMBER))
+                        .title(rs.getString(TITLE))
+                        .isClosed(rs.getBoolean(IS_CLOSED))
+                        .createdTime(rs.getTimestamp(CREATED_TIME).toLocalDateTime())
+                        .author(rs.getString(AUTHOR))
+                        .build();
     }
 }

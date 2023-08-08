@@ -4,6 +4,7 @@ import com.codesquad.issuetracker.api.issue.dto.IssueAssigneeUpdateRequest;
 import com.codesquad.issuetracker.api.issue.dto.IssueCreateRequest;
 import com.codesquad.issuetracker.api.issue.dto.IssueLabelUpdateRequest;
 import com.codesquad.issuetracker.api.issue.dto.IssueMilestoneUpdateRequest;
+import com.codesquad.issuetracker.api.issue.dto.IssueResponse;
 import com.codesquad.issuetracker.api.issue.dto.IssueStatusUpdateRequest;
 import com.codesquad.issuetracker.api.issue.dto.IssueTitleUpdateRequest;
 import com.codesquad.issuetracker.api.issue.dto.IssuesStatusUpdateRequest;
@@ -15,6 +16,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -36,11 +38,16 @@ public class IssueController {
                 .body(Map.of("id", issueId));
     }
 
+    @GetMapping("/api/{organizationTitle}/issues/{issueId}")
+    public ResponseEntity<IssueResponse> read(@PathVariable String organizationTitle, @PathVariable Long issueId) {
+        IssueResponse issueResponse = issueService.read(issueId);
+        return ResponseEntity.ok(issueResponse);
+    }
+
     @PatchMapping("/api/{organizationTitle}/issues/{issueId}/title")
-    public ResponseEntity<Map<String, Long>> updateTitle(
-            @RequestBody IssueTitleUpdateRequest issueTitleUpdateRequest,
-            @PathVariable String organizationTitle,
-            @PathVariable Long issueId) {
+    public ResponseEntity<Map<String, Long>> updateTitle(@RequestBody IssueTitleUpdateRequest issueTitleUpdateRequest,
+                                                         @PathVariable String organizationTitle,
+                                                         @PathVariable Long issueId) {
         issueService.update(issueId, issueTitleUpdateRequest);
         return ResponseEntity.ok(Map.of("id", issueId));
     }
@@ -55,10 +62,9 @@ public class IssueController {
     }
 
     @PutMapping("/api/{organizationTitle}/issues/{issueId}/labels")
-    public ResponseEntity<Map<String, Long>> updateLabels(
-            @RequestBody IssueLabelUpdateRequest issueLabelUpdateRequest,
-            @PathVariable String organizationTitle,
-            @PathVariable Long issueId) {
+    public ResponseEntity<Map<String, Long>> updateLabels(@RequestBody IssueLabelUpdateRequest issueLabelUpdateRequest,
+                                                          @PathVariable String organizationTitle,
+                                                          @PathVariable Long issueId) {
         issueService.update(issueId, issueLabelUpdateRequest);
         return ResponseEntity.ok(Map.of("id", issueId));
     }

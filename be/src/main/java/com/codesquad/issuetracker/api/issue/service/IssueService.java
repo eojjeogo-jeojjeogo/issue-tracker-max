@@ -1,19 +1,32 @@
 package com.codesquad.issuetracker.api.issue.service;
 
 import com.codesquad.issuetracker.api.comment.domain.Comment;
+import com.codesquad.issuetracker.api.comment.domain.Emoticon;
 import com.codesquad.issuetracker.api.comment.dto.request.CommentRequest;
+import com.codesquad.issuetracker.api.comment.dto.response.CommentResponse;
+import com.codesquad.issuetracker.api.comment.repository.CommentEmoticonRepository;
 import com.codesquad.issuetracker.api.comment.repository.CommentRepository;
+import com.codesquad.issuetracker.api.comment.repository.EmoticonRepository;
+import com.codesquad.issuetracker.api.comment.service.CommentService;
 import com.codesquad.issuetracker.api.issue.domain.Issue;
 import com.codesquad.issuetracker.api.issue.domain.IssueAssignee;
+import com.codesquad.issuetracker.api.issue.domain.IssueAssigneeVo;
 import com.codesquad.issuetracker.api.issue.domain.IssueLabel;
+import com.codesquad.issuetracker.api.issue.domain.IssueLabelVo;
+import com.codesquad.issuetracker.api.issue.domain.IssueVo;
 import com.codesquad.issuetracker.api.issue.dto.IssueAssigneeUpdateRequest;
 import com.codesquad.issuetracker.api.issue.dto.IssueCreateRequest;
 import com.codesquad.issuetracker.api.issue.dto.IssueLabelUpdateRequest;
 import com.codesquad.issuetracker.api.issue.dto.IssueMilestoneUpdateRequest;
+import com.codesquad.issuetracker.api.issue.dto.IssueResponse;
 import com.codesquad.issuetracker.api.issue.dto.IssueStatusUpdateRequest;
 import com.codesquad.issuetracker.api.issue.dto.IssueTitleUpdateRequest;
 import com.codesquad.issuetracker.api.issue.dto.IssuesStatusUpdateRequest;
+import com.codesquad.issuetracker.api.issue.repository.IssueAssigneeRepository;
+import com.codesquad.issuetracker.api.issue.repository.IssueLabelRepository;
 import com.codesquad.issuetracker.api.issue.repository.IssueRepository;
+import com.codesquad.issuetracker.api.milestone.domain.MilestoneVo;
+import com.codesquad.issuetracker.api.milestone.service.MilestoneService;
 import com.codesquad.issuetracker.api.organization.repository.OrganizationRepository;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -27,6 +40,13 @@ public class IssueService {
     private final OrganizationRepository organizationRepository;
     private final IssueRepository issueRepository;
     private final CommentRepository commentRepository;
+    private final CommentEmoticonRepository commentEmoticonRepository;
+    private final IssueLabelRepository issueLabelRepository;
+    private final IssueAssigneeRepository issueAssigneeRepository;
+    private final EmoticonRepository emoticonRepository;
+
+    private final CommentService commentService;
+    private final MilestoneService milestoneService;
 
     @Transactional
     public Long create(String organizationTitle, IssueCreateRequest issueCreateRequest) {
@@ -62,6 +82,23 @@ public class IssueService {
     private void saveLabels(Long issueId, IssueCreateRequest issueCreateRequest) {
         List<IssueLabel> issueLabels = issueCreateRequest.extractLabels(issueId);
         issueRepository.save(issueLabels);
+    }
+
+
+    public IssueResponse read(Long issueId) {
+        // 이슈
+        IssueVo issueVo = issueRepository.findBy(issueId);
+        // 코멘트
+        List<CommentResponse> comments = commentService.readAll(issueId, issueVo.getAuthor());
+        // 마일스톤
+        MilestoneVo milestone = milestoneService.read(issueVo.getMilestone_id());
+        // 담당자
+        List<IssueAssigneeVo> assignees = issueAssigneeRepository.findAllBy(issueId);
+        // 라벨
+        List<IssueLabelVo> labels = issueLabelRepository.findAllBy(issueId);
+        // 이모티콘
+        List<Emoticon> emoticons = emoticonRepository.findAll();
+        return IssueResponse.of(issueVo, comments, milestone, assignees, labels, emoticons);
     }
 
     public void update(Long issueId, IssueTitleUpdateRequest issueTitleUpdateRequest) {
