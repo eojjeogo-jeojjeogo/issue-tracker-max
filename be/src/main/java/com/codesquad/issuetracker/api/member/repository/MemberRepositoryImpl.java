@@ -12,6 +12,10 @@ import org.springframework.stereotype.Repository;
 @RequiredArgsConstructor
 public class MemberRepositoryImpl implements MemberRepository {
 
+    private static final String ID = "id";
+    private static final String NICKNAME = "nickname";
+    private static final String URL = "url";
+
     private final NamedParameterJdbcTemplate template;
 
     @Override
@@ -29,9 +33,9 @@ public class MemberRepositoryImpl implements MemberRepository {
     private RowMapper<MemberFilter> memberFilterRowMapper() {
         return (rs, rowNum) ->
                 MemberFilter.builder()
-                        .id(rs.getLong("id"))
-                        .name(rs.getString("nickname"))
-                        .imgUrl(rs.getString("url"))
+                        .id(rs.getLong(ID))
+                        .name(rs.getString(NICKNAME))
+                        .imgUrl(rs.getString(URL))
                         .build();
     }
 }
