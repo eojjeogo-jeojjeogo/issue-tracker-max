@@ -31,7 +31,7 @@ public class MilestoneService {
 
     @Transactional(readOnly = true)
     public MilestoneVo read(Long milestoneId) {
-        MilestoneVo milestone = milestoneRepository.findById(milestoneId).orElseThrow();
+        MilestoneVo milestone = milestoneRepository.findBy(milestoneId).orElseThrow();
         return milestone;
     }
 
@@ -44,19 +44,19 @@ public class MilestoneService {
 
     @Transactional
     public void delete(Long milestoneId) {
-        milestoneRepository.deleteById(milestoneId);
+        milestoneRepository.delete(milestoneId);
     }
 
     @Transactional
     public MilestonesResponse readAll(String organizationTitle, FilterStatus filterStatus) {
         Long organizationId = organizationRepository.findIdByTitle(organizationTitle)
             .orElseThrow();
-        List<MilestonesVo> milestones = milestoneRepository.readAllByOrganizationId(organizationId);
+        List<MilestonesVo> milestones = milestoneRepository.findAllBy(organizationId);
         return MilestonesResponse.from(milestones, filterStatus);
     }
 
     @Transactional
     public void updateStatus(Long milestoneId, boolean isClosed) {
-        milestoneRepository.updateStatus(milestoneId, isClosed);
+        milestoneRepository.update(milestoneId, isClosed);
     }
 }

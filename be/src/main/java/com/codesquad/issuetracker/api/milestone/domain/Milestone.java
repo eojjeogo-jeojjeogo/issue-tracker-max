@@ -11,7 +11,7 @@ public class Milestone {
     private String title;
     private String description;
     private LocalDate dueDate;
-    private boolean isClosed;
+    private Boolean isClosed;
     private Long organizationId;
 
     @Builder

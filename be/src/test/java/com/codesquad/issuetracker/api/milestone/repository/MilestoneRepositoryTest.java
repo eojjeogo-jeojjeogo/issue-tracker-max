@@ -58,13 +58,13 @@ class MilestoneRepositoryTest {
 
             @BeforeEach
             void setUp() {
-                milestoneRepository.deleteById(milestoneId);
+                milestoneRepository.delete(milestoneId);
             }
 
             @DisplayName("해당 마일스톤을 찾을 수 없다")
             @Test
             void cannotFindMilestone() {
-                assertThat(milestoneRepository.findById(milestoneId)).isEmpty();
+                assertThat(milestoneRepository.findBy(milestoneId)).isEmpty();
             }
         }
 

@@ -24,7 +24,7 @@ public class FilterService {
     @Transactional(readOnly = true)
     public List<MilestoneFilter> readMilestone(String organizationTitle) {
         Long organizationId = organizationRepository.findIdByTitle(organizationTitle).orElseThrow();
-        return milestoneRepository.findFilterByOrganizationId(organizationId);
+        return milestoneRepository.findFiltersBy(organizationId);
     }
 
     @Transactional(readOnly = true)
