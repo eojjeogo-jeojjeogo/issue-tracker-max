@@ -17,5 +17,5 @@ public interface LabelRepository {
 
     void delete(Long labelId);
 
-    long CountBy(Long organizationId);
+    long countBy(Long organizationId);
 }

@@ -92,7 +92,7 @@ public class LabelRepositoryImpl implements LabelRepository {
     }
 
     @Override
-    public long CountBy(Long organizationId) {
+    public long countBy(Long organizationId) {
         String sql = "SELECT COUNT(id)"
                 + " FROM label"
                 + " WHERE organization_id = :organization_id";
