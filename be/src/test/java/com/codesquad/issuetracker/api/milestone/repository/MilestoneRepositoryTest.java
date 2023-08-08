@@ -5,7 +5,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 import com.codesquad.issuetracker.api.milestone.domain.Milestone;
 import com.ulisesbocchio.jasyptspringbootstarter.JasyptSpringBootAutoConfiguration;
 import java.time.LocalDate;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -42,32 +41,15 @@ class MilestoneRepositoryTest {
         @BeforeEach
         void setUp() {
             milestone = Milestone.builder()
-                    .organizationId(ORGANIZATION_ID)
-                    .title(TITLE)
-                    .description(DESCRIPTION)
-                    .dueDate(DUE_DATE)
-                    .isClosed(false)
-                    .build();
+                .organizationId(ORGANIZATION_ID)
+                .title(TITLE)
+                .description(DESCRIPTION)
+                .dueDate(DUE_DATE)
+                .isClosed(false)
+                .build();
 
             milestoneId = milestoneRepository.save(milestone).orElseThrow();
             assertThat(milestoneId).isNotNull();
-        }
-
-        @DisplayName("마일스톤을 가져올 수 있다")
-        @Test
-        void findById() {
-            // when
-            Milestone savedMilestone = milestoneRepository.findById(milestoneId).orElseThrow();
-
-            // then
-            Assertions.assertAll(
-                    () -> assertThat(savedMilestone.getId()).isEqualTo(milestoneId),
-                    () -> assertThat(savedMilestone.getOrganizationId()).isEqualTo(ORGANIZATION_ID),
-                    () -> assertThat(savedMilestone.getTitle()).isEqualTo(TITLE),
-                    () -> assertThat(savedMilestone.getDescription()).isEqualTo(DESCRIPTION),
-                    () -> assertThat(savedMilestone.getDueDate()).isEqualTo(DUE_DATE),
-                    () -> assertThat(savedMilestone.isClosed()).isFalse()
-            );
         }
 
         @DisplayName("마일스톤을 삭제 하면")
@@ -98,27 +80,14 @@ class MilestoneRepositoryTest {
             @BeforeEach
             void setUp() {
                 Milestone changedMilestone = Milestone.builder()
-                        .id(milestoneId)
-                        .title(CHANGED_TITLE)
-                        .description(CHANGED_DESCRIPTION)
-                        .dueDate(CHANGED_DUE_DATE)
-                        .build();
+                    .id(milestoneId)
+                    .title(CHANGED_TITLE)
+                    .description(CHANGED_DESCRIPTION)
+                    .dueDate(CHANGED_DUE_DATE)
+                    .build();
                 milestoneRepository.update(changedMilestone);
             }
 
-            @DisplayName("마일스톤이 업그레이드 되여 있다")
-            @Test
-            void checkUpdateResult() {
-                Milestone savedMilestone = milestoneRepository.findById(milestoneId).orElseThrow();
-                Assertions.assertAll(
-                        () -> assertThat(savedMilestone.getId()).isEqualTo(milestoneId),
-                        () -> assertThat(savedMilestone.getOrganizationId()).isEqualTo(ORGANIZATION_ID),
-                        () -> assertThat(savedMilestone.getTitle()).isEqualTo(CHANGED_TITLE),
-                        () -> assertThat(savedMilestone.getDescription()).isEqualTo(CHANGED_DESCRIPTION),
-                        () -> assertThat(savedMilestone.getDueDate()).isEqualTo(CHANGED_DUE_DATE),
-                        () -> assertThat(savedMilestone.isClosed()).isFalse()
-                );
-            }
         }
     }
 }

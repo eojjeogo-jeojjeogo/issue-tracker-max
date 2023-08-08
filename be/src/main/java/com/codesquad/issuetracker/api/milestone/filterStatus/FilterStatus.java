@@ -1,6 +1,6 @@
 package com.codesquad.issuetracker.api.milestone.filterStatus;
 
-import com.codesquad.issuetracker.api.milestone.domain.Milestone;
+import com.codesquad.issuetracker.api.milestone.domain.MilestonesVo;
 
 public enum FilterStatus {
     OPEN("open", false),
@@ -27,7 +27,7 @@ public enum FilterStatus {
         throw new IllegalArgumentException(typeFromRequest + ": 적절하지 않은 type 형태입니다. ");
     }
 
-    public boolean isStatusMatchingFilter(Milestone milestone) {
-        return milestone.isClosed() == this.getStatus();
+    public boolean isStatusMatchingFilter(MilestonesVo milestonesVo) {
+        return milestonesVo.getIsClosed() == this.getStatus();
     }
 }

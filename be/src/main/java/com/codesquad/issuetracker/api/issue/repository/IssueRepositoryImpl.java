@@ -27,14 +27,15 @@ public class IssueRepositoryImpl implements IssueRepository {
     @Override
     public Optional<Long> countIssuesBy(Long organizationId) {
         String sql = "SELECT COUNT(id) FROM issue WHERE organization_id = :organizationId";
-        return Optional.ofNullable(template.queryForObject(sql, Map.of("organizationId", organizationId), Long.class));
+        return Optional.ofNullable(
+            template.queryForObject(sql, Map.of("organizationId", organizationId), Long.class));
     }
 
     @Override
     public Optional<Long> save(Issue issue) {
         String queryForIssueSaved =
-                "INSERT INTO issue (organization_id, milestone_id, member_id, title, number, is_closed, created_time) "
-                        + "VALUES (:organizationId, :milestoneId, :memberId, :title, :number, :isClosed, now())";
+            "INSERT INTO issue (organization_id, milestone_id, member_id, title, number, is_closed, created_time) "
+                + "VALUES (:organizationId, :milestoneId, :memberId, :title, :number, :isClosed, now())";
 
         SqlParameterSource params = new BeanPropertySqlParameterSource(issue);
         KeyHolder keyHolder = new GeneratedKeyHolder();
@@ -66,14 +67,15 @@ public class IssueRepositoryImpl implements IssueRepository {
     public boolean updateTitle(Issue issue) {
         String sql = "UPDATE issue SET title = :title WHERE id = :issueId";
         SqlParameterSource parmas = new MapSqlParameterSource().addValue("title", issue.getTitle())
-                .addValue("issueId", issue.getId());
+            .addValue("issueId", issue.getId());
         return template.update(sql, parmas) == 1;
     }
 
     @Override
     @Transactional
     public boolean updateAssignees(List<IssueAssignee> assignees) {
-        deleteAssignees(assignees.get(0).getIssueId()); // TODO: 서비스에서 트랜잭션 걸어서 메서드를 각각 호출하는게 좋을지 여기서 처리하는게 맞는지 모르겠음
+        deleteAssignees(assignees.get(0)
+            .getIssueId()); // TODO: 서비스에서 트랜잭션 걸어서 메서드를 각각 호출하는게 좋을지 여기서 처리하는게 맞는지 모르겠음
 
         String sql = "INSERT INTO issue_assignee (issue_id, member_id) VALUES (:issueId, :memberId)";
         int[] result = template.batchUpdate(sql, SqlParameterSourceUtils.createBatch(assignees));
@@ -103,8 +105,9 @@ public class IssueRepositoryImpl implements IssueRepository {
     @Override
     public boolean updateMilestone(Issue issue) {
         String sql = "UPDATE issue SET milestone_id = :milestoneId WHERE id = :issueId";
-        SqlParameterSource parmas = new MapSqlParameterSource().addValue("milestoneId", issue.getMilestoneId())
-                .addValue("issueId", issue.getId());
+        SqlParameterSource parmas = new MapSqlParameterSource().addValue("milestoneId",
+                issue.getMilestoneId())
+            .addValue("issueId", issue.getId());
         return template.update(sql, parmas) == 1;
     }
 
@@ -121,5 +124,4 @@ public class IssueRepositoryImpl implements IssueRepository {
         template.update(queryForDeleteIssueAssignees, param);
         template.update(queryForDeleteIssueLabels, param);
     }
-
 }

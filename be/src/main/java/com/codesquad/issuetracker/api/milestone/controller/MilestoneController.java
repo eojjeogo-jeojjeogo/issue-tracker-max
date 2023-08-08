@@ -1,8 +1,8 @@
 package com.codesquad.issuetracker.api.milestone.controller;
 
+import com.codesquad.issuetracker.api.milestone.domain.MilestoneVo;
 import com.codesquad.issuetracker.api.milestone.dto.request.MilestoneRequest;
 import com.codesquad.issuetracker.api.milestone.dto.request.MilestoneStatusRequest;
-import com.codesquad.issuetracker.api.milestone.dto.response.EditMileStoneResponse;
 import com.codesquad.issuetracker.api.milestone.dto.response.MilestonesResponse;
 import com.codesquad.issuetracker.api.milestone.filterStatus.FilterStatus;
 import com.codesquad.issuetracker.api.milestone.service.MilestoneService;
@@ -33,8 +33,8 @@ public class MilestoneController {
     }
 
     @GetMapping("/api/{organizationTitle}/milestones/{milestoneId}")
-    public ResponseEntity<EditMileStoneResponse> read(@PathVariable Long milestoneId) {
-        EditMileStoneResponse mileStoneResponse = milestoneService.read(milestoneId);
+    public ResponseEntity<MilestoneVo> read(@PathVariable Long milestoneId) {
+        MilestoneVo mileStoneResponse = milestoneService.read(milestoneId);
         return ResponseEntity.ok(mileStoneResponse);
     }
 

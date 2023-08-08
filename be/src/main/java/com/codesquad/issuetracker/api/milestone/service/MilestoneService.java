@@ -1,8 +1,9 @@
 package com.codesquad.issuetracker.api.milestone.service;
 
 import com.codesquad.issuetracker.api.milestone.domain.Milestone;
+import com.codesquad.issuetracker.api.milestone.domain.MilestoneVo;
+import com.codesquad.issuetracker.api.milestone.domain.MilestonesVo;
 import com.codesquad.issuetracker.api.milestone.dto.request.MilestoneRequest;
-import com.codesquad.issuetracker.api.milestone.dto.response.EditMileStoneResponse;
 import com.codesquad.issuetracker.api.milestone.dto.response.MilestonesResponse;
 import com.codesquad.issuetracker.api.milestone.filterStatus.FilterStatus;
 import com.codesquad.issuetracker.api.milestone.repository.MilestoneRepository;
@@ -29,9 +30,9 @@ public class MilestoneService {
     }
 
     @Transactional(readOnly = true)
-    public EditMileStoneResponse read(Long milestoneId) {
-        Milestone milestone = milestoneRepository.findById(milestoneId).orElseThrow();
-        return EditMileStoneResponse.from(milestone);
+    public MilestoneVo read(Long milestoneId) {
+        MilestoneVo milestone = milestoneRepository.findById(milestoneId).orElseThrow();
+        return milestone;
     }
 
     @Transactional
@@ -50,7 +51,7 @@ public class MilestoneService {
     public MilestonesResponse readAll(String organizationTitle, FilterStatus filterStatus) {
         Long organizationId = organizationRepository.findIdByTitle(organizationTitle)
             .orElseThrow();
-        List<Milestone> milestones = milestoneRepository.readAllByOrganizationId(organizationId);
+        List<MilestonesVo> milestones = milestoneRepository.readAllByOrganizationId(organizationId);
         return MilestonesResponse.from(milestones, filterStatus);
     }
 
