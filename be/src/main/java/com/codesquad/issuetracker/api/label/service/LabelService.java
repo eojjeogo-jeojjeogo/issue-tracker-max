@@ -20,7 +20,7 @@ public class LabelService {
 
     public List<LabelResponse> readAll(String organizationTitle) {
         Long organizationId = organizationRepository.findIdByTitle(organizationTitle).orElseThrow();
-        return labelRepository.findAll(organizationId).stream()
+        return labelRepository.findAllBy(organizationId).stream()
             .map(LabelResponse::from)
             .collect(Collectors.toUnmodifiableList());
     }

@@ -7,14 +7,15 @@ import java.util.Optional;
 
 public interface LabelRepository {
 
-    List<Label> findAll(Long organizationId);
+    List<Label> findAllBy(Long organizationId);
+
+    List<LabelFilter> findFiltersBy(Long organizationId);
 
     Optional<Long> save(Label label);
 
-    Optional<Long> update(Label label);
+    Long update(Label label);
 
     void delete(Long labelId);
 
-    Long findCountByOrganizationId(Long organizationId);
-    List<LabelFilter> findFilterByOrganizationId(Long organizationId);
+    long CountBy(Long organizationId);
 }

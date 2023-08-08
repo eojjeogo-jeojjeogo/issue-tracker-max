@@ -19,7 +19,7 @@ public class CommonService {
     @Transactional(readOnly = true)
     public NavigationResponse getNavigationInfo(String organizationTitle) {
         Long organizationId = organizationRepository.findIdByTitle(organizationTitle).orElseThrow();
-        Long labelsCount = labelRepository.findCountByOrganizationId(organizationId);
+        Long labelsCount = labelRepository.CountBy(organizationId);
         Long milestonesCount = milestoneRepository.findCountByOrganizationId(organizationId);
         return new NavigationResponse(labelsCount, milestonesCount);
     }

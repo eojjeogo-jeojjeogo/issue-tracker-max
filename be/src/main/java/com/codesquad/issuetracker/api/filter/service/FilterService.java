@@ -30,7 +30,7 @@ public class FilterService {
     @Transactional(readOnly = true)
     public List<LabelFilter> readAllLabel(String organizationTitle) {
         Long organizationId = organizationRepository.findIdByTitle(organizationTitle).orElseThrow();
-        return labelRepository.findFilterByOrganizationId(organizationId);
+        return labelRepository.findFiltersBy(organizationId);
     }
 
     @Transactional(readOnly = true)

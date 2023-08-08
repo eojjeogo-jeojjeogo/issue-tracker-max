@@ -2,9 +2,11 @@ package com.codesquad.issuetracker.api.label.repository;
 
 import com.codesquad.issuetracker.api.filter.dto.LabelFilter;
 import com.codesquad.issuetracker.api.label.domain.Label;
+import java.util.Collections;
 import java.util.List;
-import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
+import lombok.RequiredArgsConstructor;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
@@ -13,12 +15,10 @@ import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
+@RequiredArgsConstructor
 @Repository
 public class LabelRepositoryImpl implements LabelRepository {
 
-    private static final String FIND_COUNT_BY_ORGANIZATION_SQL = "SELECT COUNT(id)"
-            + " FROM label"
-            + " WHERE organization_id = :organization_id";
     private static final String ORGANIZATION_ID = "organization_id";
     private static final String FIND_FILTER_BY_ORGANIZATION_ID_SQL =
             "SELECT id,title,background_color, is_dark"
@@ -31,11 +31,7 @@ public class LabelRepositoryImpl implements LabelRepository {
 
     private final NamedParameterJdbcTemplate template;
 
-    public LabelRepositoryImpl(NamedParameterJdbcTemplate template) {
-        this.template = template;
-    }
-
-    public List<Label> findAll(Long organizationId) {
+    public List<Label> findAllBy(Long organizationId) {
         String sql = "SELECT id, organization_id, title, description, background_color, is_dark "
                 + "FROM label "
                 + "WHERE organization_id = :organizationId";
@@ -43,9 +39,8 @@ public class LabelRepositoryImpl implements LabelRepository {
     }
 
     public Optional<Long> save(Label label) {
-        String sql =
-                "INSERT INTO label (organization_id, title, description, background_color, is_dark) "
-                        + "VALUES (:organizationId, :title, :description, :backgroundColor, :isDark)";
+        String sql = "INSERT INTO label (organization_id, title, description, background_color, is_dark) "
+                + "VALUES (:organizationId, :title, :description, :backgroundColor, :isDark)";
         SqlParameterSource param = new MapSqlParameterSource()
                 .addValue("organizationId", label.getOrganizationId())
                 .addValue("title", label.getTitle())
@@ -88,23 +83,24 @@ public class LabelRepositoryImpl implements LabelRepository {
 
     public void delete(Long labelId) {
         String sql = "DELETE FROM label WHERE id = :id";
-
-        template.update(sql, Map.of("id", labelId));
+        template.update(sql, Collections.singletonMap("id", labelId));
     }
 
     @Override
-    public List<LabelFilter> findFilterByOrganizationId(Long organizationId) {
-        return template.query(FIND_FILTER_BY_ORGANIZATION_ID_SQL,
-                Map.of(ORGANIZATION_ID, organizationId),
-                getLabelFilterRowMapper());
+    public List<LabelFilter> findFiltersBy(Long organizationId) {
+        String sql = "SELECT id,title,background_color, is_dark "
+                + "FROM label "
+                + "WHERE organization_id = :organization_id ";
+        return template.query(sql, Collections.singletonMap(ORGANIZATION_ID, organizationId), labelFilterRowMapper());
     }
 
     @Override
-    public Long findCountByOrganizationId(Long organizationId) {
-        return template.queryForObject(
-                FIND_COUNT_BY_ORGANIZATION_SQL,
-                Map.of(ORGANIZATION_ID, organizationId),
-                Long.class
+    public long CountBy(Long organizationId) {
+        String sql = "SELECT COUNT(id)"
+                + " FROM label"
+                + " WHERE organization_id = :organization_id";
+        return Objects.requireNonNull(
+                template.queryForObject(sql, Collections.singletonMap(ORGANIZATION_ID, organizationId), Long.class)
         );
     }
 
@@ -119,7 +115,7 @@ public class LabelRepositoryImpl implements LabelRepository {
                 .build();
     }
 
-    private RowMapper<LabelFilter> getLabelFilterRowMapper() {
+    private RowMapper<LabelFilter> labelFilterRowMapper() {
         return (rs, rowNum) -> LabelFilter.builder()
                 .id(rs.getLong(ID))
                 .name(rs.getString(TITLE))
