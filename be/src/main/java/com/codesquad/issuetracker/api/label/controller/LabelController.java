@@ -1,8 +1,8 @@
 package com.codesquad.issuetracker.api.label.controller;
 
-import com.codesquad.issuetracker.api.label.dto.LabelCreateRequest;
-import com.codesquad.issuetracker.api.label.dto.LabelResponse;
-import com.codesquad.issuetracker.api.label.dto.LabelUpdateRequest;
+import com.codesquad.issuetracker.api.label.dto.request.LabelCreateRequest;
+import com.codesquad.issuetracker.api.label.dto.request.LabelUpdateRequest;
+import com.codesquad.issuetracker.api.label.dto.response.LabelResponse;
 import com.codesquad.issuetracker.api.label.service.LabelService;
 import java.util.Collections;
 import java.util.List;
@@ -24,13 +24,6 @@ public class LabelController {
 
     private final LabelService labelService;
 
-    @GetMapping("/api/{organizationTitle}/labels")
-    public ResponseEntity<List<LabelResponse>> readLabels(@PathVariable String organizationTitle) {
-        List<LabelResponse> labels = labelService.readAll(organizationTitle);
-        return ResponseEntity.ok()
-                .body(labels);
-    }
-
     @PostMapping("/api/{organizationTitle}/labels")
     public ResponseEntity<Map<String, Long>> create(@RequestBody LabelCreateRequest labelCreateRequest,
                                                     @PathVariable String organizationTitle) {
@@ -38,6 +31,13 @@ public class LabelController {
         Long labelId = labelService.create(organizationTitle, labelCreateRequest);
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(Collections.singletonMap("id", labelId));
+    }
+
+    @GetMapping("/api/{organizationTitle}/labels")
+    public ResponseEntity<List<LabelResponse>> readAll(@PathVariable String organizationTitle) {
+        List<LabelResponse> labels = labelService.readAll(organizationTitle);
+        return ResponseEntity.ok()
+                .body(labels);
     }
 
     @PatchMapping("/api/{organizationTitle}/labels/{labelId}")

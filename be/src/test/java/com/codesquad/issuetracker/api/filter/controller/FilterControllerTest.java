@@ -4,7 +4,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 
-import com.codesquad.issuetracker.api.label.dto.LabelCreateRequest;
+import com.codesquad.issuetracker.api.label.dto.request.LabelCreateRequest;
 import com.codesquad.issuetracker.api.label.service.LabelService;
 import com.codesquad.issuetracker.api.milestone.dto.request.MilestoneRequest;
 import com.codesquad.issuetracker.api.milestone.service.MilestoneService;

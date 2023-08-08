@@ -7,11 +7,11 @@ import lombok.Getter;
 @Getter
 public class Label {
 
-    private Long id;
-    private Long organizationId;
-    private String title;
-    private String description;
-    private String backgroundColor;
-    private Boolean isDark;
+    private final Long id;
+    private final Long organizationId;
+    private final String title;
+    private final String description;
+    private final String backgroundColor;
+    private final Boolean isDark;
 
 }
