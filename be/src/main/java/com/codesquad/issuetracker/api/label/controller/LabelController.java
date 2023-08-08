@@ -24,16 +24,15 @@ public class LabelController {
     private final LabelService labelService;
 
     @GetMapping("/api/{organizationTitle}/labels")
-    public ResponseEntity<List<LabelResponse>> readAll(@PathVariable String organizationTitle) {
+    public ResponseEntity<List<LabelResponse>> readLabels(@PathVariable String organizationTitle) {
         List<LabelResponse> labels = labelService.readAll(organizationTitle);
         return ResponseEntity.ok()
-            .body(labels);
+                .body(labels);
     }
 
     @PostMapping("/api/{organizationTitle}/labels")
-    public ResponseEntity<Map<String, Long>> create(
-        @RequestBody LabelCreateRequest labelCreateRequest,
-        @PathVariable String organizationTitle) {
+    public ResponseEntity<Map<String, Long>> create(@RequestBody LabelCreateRequest labelCreateRequest,
+                                                    @PathVariable String organizationTitle) {
         // TODO: 로그인 관련 처리 필요
         Long labelId = labelService.create(organizationTitle, labelCreateRequest);
         return ResponseEntity.status(HttpStatus.CREATED)
@@ -41,10 +40,9 @@ public class LabelController {
     }
 
     @PatchMapping("/api/{organizationTitle}/labels/{labelId}")
-    public ResponseEntity<Map<String, Long>> update(
-        @RequestBody LabelUpdateRequest labelUpdateRequest,
-        @PathVariable Long labelId,
-        @PathVariable String organizationTitle) {
+    public ResponseEntity<Map<String, Long>> update(@RequestBody LabelUpdateRequest labelUpdateRequest,
+                                                    @PathVariable Long labelId,
+                                                    @PathVariable String organizationTitle) {
         // TODO: 로그인 관련 처리 필요
         Long updatedLabelId = labelService.update(organizationTitle, labelUpdateRequest, labelId);
         return ResponseEntity.ok()
