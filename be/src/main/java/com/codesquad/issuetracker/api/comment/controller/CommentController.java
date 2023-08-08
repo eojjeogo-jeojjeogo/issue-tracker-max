@@ -3,6 +3,7 @@ package com.codesquad.issuetracker.api.comment.controller;
 import com.codesquad.issuetracker.api.comment.dto.request.CommentEmoticonAddRequest;
 import com.codesquad.issuetracker.api.comment.dto.request.CommentRequest;
 import com.codesquad.issuetracker.api.comment.service.CommentService;
+import java.util.Collections;
 import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
