@@ -75,10 +75,10 @@ public class CommentRepositoryImpl implements CommentRepository {
                         + "WHERE ic.issue_id = :issueId "
                         + "ORDER BY ic.created_time ASC ";
 
-        return template.query(sql, Collections.singletonMap(ISSUE_ID, issueId), voCommentRowMapper(issueAuthor));
+        return template.query(sql, Collections.singletonMap(ISSUE_ID, issueId), issueCommentRowMapper(issueAuthor));
     }
 
-    private RowMapper<IssueCommentVo> voCommentRowMapper(String author) {
+    private RowMapper<IssueCommentVo> issueCommentRowMapper(String author) {
         return (rs, rowNum) ->
                 IssueCommentVo.builder()
                         .id(rs.getLong(ID))
