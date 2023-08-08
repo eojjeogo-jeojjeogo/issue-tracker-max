@@ -17,10 +17,10 @@ public class CommentEmoticonResponse {
 
     public static CommentEmoticonResponse from(CommentEmoticonVo CommentEmoticonVo) {
         return CommentEmoticonResponse.builder()
-            .id(CommentEmoticonVo.getId())
-            .unicode(CommentEmoticonVo.getEmoticon())
-            .memberNickname(CommentEmoticonVo.getMemberNickname())
-            .build();
+                .id(CommentEmoticonVo.getId())
+                .unicode(CommentEmoticonVo.getEmoticon())
+                .memberNickname(CommentEmoticonVo.getMemberNickname())
+                .build();
     }
 
 }

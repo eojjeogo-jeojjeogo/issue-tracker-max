@@ -21,17 +21,17 @@ public class CommentRequest {
 
     public Comment toEntityWithIssueId(Long issueId) {
         return Comment.builder()
-            .issueId(issueId)
-            .content(content)
-            .fileUrl(fileUrl)
-            .build();
+                .issueId(issueId)
+                .content(content)
+                .fileUrl(fileUrl)
+                .build();
     }
 
     public Comment toEntityWithCommentId(Long commentId) {
         return Comment.builder()
-            .id(commentId)
-            .content(content)
-            .fileUrl(fileUrl)
-            .build();
+                .id(commentId)
+                .content(content)
+                .fileUrl(fileUrl)
+                .build();
     }
 }

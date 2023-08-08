@@ -23,7 +23,7 @@ public class CommentService {
     private final CommentRepository commentRepository;
     private final CommentEmoticonRepository commentEmoticonRepository;
 
-    public Long create(Long issueId, CommentRequest commentRequest) {
+    public Long createComment(Long issueId, CommentRequest commentRequest) {
         Comment comment = commentRequest.toEntityWithIssueId(issueId);
         return commentRepository.save(comment).orElseThrow();
     }
@@ -31,29 +31,29 @@ public class CommentService {
     @Transactional
     public List<CommentResponse> readAll(Long issueId, String issueAuthor) {
         List<IssueCommentVo> issueCommentVos = commentRepository.findAllBy(issueId,
-            issueAuthor);
+                issueAuthor);
 
         //comment 안에 존재하는 emoticon 정보를 가져온다.
         Map<Long, List<CommentEmoticonResponse>> commentEmoticonResponses = issueCommentVos.stream()
-            .collect(Collectors.toMap(
-                issueCommentVo -> issueCommentVo.getId(),
-                issueCommentVo -> commentEmoticonRepository.findAllBy(
-                        issueCommentVo.getId())
-                    .stream()
-                    .map(CommentEmoticonResponse::from)
-                    .collect(Collectors.toList())
-            ));
+                .collect(Collectors.toMap(
+                        issueCommentVo -> issueCommentVo.getId(),
+                        issueCommentVo -> commentEmoticonRepository.findAllBy(
+                                        issueCommentVo.getId())
+                                .stream()
+                                .map(CommentEmoticonResponse::from)
+                                .collect(Collectors.toList())
+                ));
 
         return CommentResponse.of(issueCommentVos, commentEmoticonResponses);
     }
 
-    public Long update(Long commentId, CommentRequest commentRequest) {
+    public Long updateComment(Long commentId, CommentRequest commentRequest) {
         Comment comment = commentRequest.toEntityWithCommentId(commentId);
         return commentRepository.update(comment);
     }
 
-    public void addEmoticon(Long commentId, Long memberId,
-        CommentEmoticonAddRequest commentEmoticonAddRequest) {
+    public void createCommentEmoticon(Long commentId, Long memberId,
+                                      CommentEmoticonAddRequest commentEmoticonAddRequest) {
         Emoticon emoticon = commentEmoticonAddRequest.toEntity();
         commentEmoticonRepository.save(commentId, memberId, emoticon);
     }

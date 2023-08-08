@@ -23,7 +23,7 @@ public class CommentController {
     @PostMapping("/api/{organizationTitle}/issues/{issueId}/comments")
     public ResponseEntity<Map<String, Long>> createComment(@PathVariable Long issueId,
                                                            @RequestBody CommentRequest commentRequest) {
-        Long commentId = commentService.create(issueId, commentRequest);
+        Long commentId = commentService.createComment(issueId, commentRequest);
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(Collections.singletonMap("id", commentId));
     }
@@ -31,7 +31,7 @@ public class CommentController {
     @PatchMapping("/api/{organizationTitle}/issues/{issueId}/comments/{commentId}")
     public ResponseEntity<Map<String, Long>> updateComment(@PathVariable Long commentId,
                                                            @RequestBody CommentRequest commentRequest) {
-        Long updatedCommentId = commentService.update(commentId, commentRequest);
+        Long updatedCommentId = commentService.updateComment(commentId, commentRequest);
         return ResponseEntity.ok()
                 .body(Collections.singletonMap("id", updatedCommentId));
     }
@@ -41,7 +41,7 @@ public class CommentController {
                                                       @RequestBody CommentEmoticonAddRequest commentEmoticonAddRequest) {
         //todo 로그인 된 유저 정보가 필요함
         Long memberId = 1L;
-        commentService.addEmoticon(commentId, memberId, commentEmoticonAddRequest);
+        commentService.createCommentEmoticon(commentId, memberId, commentEmoticonAddRequest);
         return ResponseEntity.status(HttpStatus.CREATED)
                 .build();
     }
