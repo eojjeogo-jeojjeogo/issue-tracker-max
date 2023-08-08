@@ -35,7 +35,7 @@ public class IssueController {
         // TODO: 로그인 관련 처리 필요
         Long issueId = issueService.create(organizationTitle, issueCreateRequest);
         return ResponseEntity.status(HttpStatus.CREATED)
-                .body(Map.of("id", issueId));
+                .body(Collections.singletonMap("id", issueId));
     }
 
     @GetMapping("/api/{organizationTitle}/issues/{issueId}")
@@ -49,7 +49,7 @@ public class IssueController {
                                                          @PathVariable String organizationTitle,
                                                          @PathVariable Long issueId) {
         issueService.update(issueId, issueTitleUpdateRequest);
-        return ResponseEntity.ok(Map.of("id", issueId));
+        return ResponseEntity.ok(Collections.singletonMap("id", issueId));
     }
 
     @PutMapping("/api/{organizationTitle}/issues/{issueId}/assignees")
@@ -58,7 +58,7 @@ public class IssueController {
             @PathVariable String organizationTitle,
             @PathVariable Long issueId) {
         issueService.update(issueId, issueAssigneeUpdateRequest);
-        return ResponseEntity.ok(Map.of("id", issueId));
+        return ResponseEntity.ok(Collections.singletonMap("id", issueId));
     }
 
     @PutMapping("/api/{organizationTitle}/issues/{issueId}/labels")
@@ -97,7 +97,7 @@ public class IssueController {
     }
 
     @DeleteMapping("/api/{organizationTitle}/issues/{issueId}")
-    public ResponseEntity<Void> deleteOne(@PathVariable String organizationTitle, @PathVariable Long issueId) {
+    public ResponseEntity<Void> delete(@PathVariable String organizationTitle, @PathVariable Long issueId) {
         // TODO: 로그인 관련 처리 필요
         issueService.deleteOne(issueId);
         return ResponseEntity.status(HttpStatus.OK)
