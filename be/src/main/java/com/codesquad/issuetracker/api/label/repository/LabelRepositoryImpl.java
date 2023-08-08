@@ -88,9 +88,9 @@ public class LabelRepositoryImpl implements LabelRepository {
 
     @Override
     public long countBy(Long organizationId) {
-        String sql = "SELECT COUNT(id)"
-                + " FROM label"
-                + " WHERE organization_id = :organization_id";
+        String sql = "SELECT COUNT(id) "
+                + "FROM label "
+                + "WHERE organization_id = :organization_id";
         return Objects.requireNonNull(
                 template.queryForObject(sql, Collections.singletonMap(ORGANIZATION_ID, organizationId), Long.class)
         );
