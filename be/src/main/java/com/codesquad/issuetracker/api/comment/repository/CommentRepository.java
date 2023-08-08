@@ -7,11 +7,11 @@ import java.util.Optional;
 
 public interface CommentRepository {
 
-    Optional<Long> create(Comment comment);
+    Optional<Long> save(Comment comment);
 
     Long update(Comment comment);
 
     void delete(Long commentId);
 
-    List<IssueCommentVo> findAllByIssueId(Long issueId, String issueAuthor);
+    List<IssueCommentVo> findAllBy(Long issueId, String issueAuthor);
 }

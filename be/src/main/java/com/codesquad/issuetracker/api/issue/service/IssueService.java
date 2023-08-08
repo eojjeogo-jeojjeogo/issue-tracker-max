@@ -71,7 +71,7 @@ public class IssueService {
                 issueCreateRequest.getComment().getFileUrl()
         );
         Comment comment = commentRequest.toEntityWithIssueId(issueId);
-        commentRepository.create(comment);
+        commentRepository.save(comment);
     }
 
     private void saveAssignees(Long issueId, IssueCreateRequest issueCreateRequest) {

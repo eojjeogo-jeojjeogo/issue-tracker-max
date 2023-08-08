@@ -25,19 +25,19 @@ public class CommentService {
 
     public Long create(Long issueId, CommentRequest commentRequest) {
         Comment comment = commentRequest.toEntityWithIssueId(issueId);
-        return commentRepository.create(comment).orElseThrow();
+        return commentRepository.save(comment).orElseThrow();
     }
 
     @Transactional
     public List<CommentResponse> readAll(Long issueId, String issueAuthor) {
-        List<IssueCommentVo> issueCommentVos = commentRepository.findAllByIssueId(issueId,
+        List<IssueCommentVo> issueCommentVos = commentRepository.findAllBy(issueId,
             issueAuthor);
 
         //comment 안에 존재하는 emoticon 정보를 가져온다.
         Map<Long, List<CommentEmoticonResponse>> commentEmoticonResponses = issueCommentVos.stream()
             .collect(Collectors.toMap(
                 issueCommentVo -> issueCommentVo.getId(),
-                issueCommentVo -> commentEmoticonRepository.findAllEmoticonsByCommentId(
+                issueCommentVo -> commentEmoticonRepository.findAllBy(
                         issueCommentVo.getId())
                     .stream()
                     .map(CommentEmoticonResponse::from)
@@ -55,6 +55,6 @@ public class CommentService {
     public void addEmoticon(Long commentId, Long memberId,
         CommentEmoticonAddRequest commentEmoticonAddRequest) {
         Emoticon emoticon = commentEmoticonAddRequest.toEntity();
-        commentEmoticonRepository.addEmoticon(commentId, memberId, emoticon);
+        commentEmoticonRepository.save(commentId, memberId, emoticon);
     }
 }

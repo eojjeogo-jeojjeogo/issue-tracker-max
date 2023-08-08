@@ -6,7 +6,7 @@ import java.util.List;
 
 public interface CommentEmoticonRepository {
 
-    List<CommentEmoticonVo> findAllEmoticonsByCommentId(Long commentId);
+    void save(Long commentId, Long memberId, Emoticon emoticon);
 
-    void addEmoticon(Long commentId, Long memberId, Emoticon emoticon);
+    List<CommentEmoticonVo> findAllBy(Long commentId);
 }

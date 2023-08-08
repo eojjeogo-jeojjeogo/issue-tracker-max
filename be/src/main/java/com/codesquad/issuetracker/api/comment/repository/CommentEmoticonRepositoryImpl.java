@@ -19,41 +19,42 @@ import org.springframework.stereotype.Repository;
 @RequiredArgsConstructor
 public class CommentEmoticonRepositoryImpl implements CommentEmoticonRepository {
 
-    private final String ID = "id";
-    private final String EMOTICON_ID = "emoticonId";
-    private final String EMOTICON_UNICODE = "emoticon";
-    private final String MEMBER_NICKNAME = "memberNickname";
-    private final String MEMBER_ID = "memberId";
-    private final String COMMENT_ID = "commentId";
+    private final static String ID = "id";
+    private final static String EMOTICON_ID = "emoticonId";
+    private final static String EMOTICON_UNICODE = "emoticon";
+    private final static String MEMBER_NICKNAME = "memberNickname";
+    private final static String MEMBER_ID = "memberId";
+    private final static String COMMENT_ID = "commentId";
+
     private final NamedParameterJdbcTemplate template;
 
     @Override
-    public List<CommentEmoticonVo> findAllEmoticonsByCommentId(Long commentId) {
+    public List<CommentEmoticonVo> findAllBy(Long commentId) {
         String sql =
-            "SELECT m.nickname AS memberNickname, e.unicode AS emoticon, e.id FROM comment_emoticon AS ce "
-                + "JOIN emoticon AS e ON ce.emoticon_id = e.id "
-                + "JOIN member AS m ON ce.member_id = m.id "
-                + "WHERE ce.comment_id = :commentId";
+                "SELECT m.nickname AS memberNickname, e.unicode AS emoticon, e.id "
+                        + "FROM comment_emoticon AS ce "
+                        + "JOIN emoticon AS e ON ce.emoticon_id = e.id "
+                        + "JOIN member AS m ON ce.member_id = m.id "
+                        + "WHERE ce.comment_id = :commentId";
 
-        return template.query(sql, Collections.singletonMap(COMMENT_ID, commentId),
-            new CommentEmoticonExtractor());
+        return template.query(sql, Collections.singletonMap(COMMENT_ID, commentId), new CommentEmoticonExtractor());
     }
 
     @Override
-    public void addEmoticon(Long commentId, Long memberId, Emoticon emoticon) {
-        String sql = "INSERT INTO comment_emoticon VALUES (:commentId, :emoticonId, :memberId)";
+    public void save(Long commentId, Long memberId, Emoticon emoticon) {
+        String sql = "INSERT INTO comment_emoticon "
+                + "VALUES (:commentId, :emoticonId, :memberId)";
 
         MapSqlParameterSource params = new MapSqlParameterSource()
-            .addValue(COMMENT_ID, commentId)
-            .addValue(EMOTICON_ID, emoticon.getId())
-            .addValue(MEMBER_ID, memberId);
+                .addValue(COMMENT_ID, commentId)
+                .addValue(EMOTICON_ID, emoticon.getId())
+                .addValue(MEMBER_ID, memberId);
 
         template.update(sql, params);
     }
 
     /**
-     * Comment에 달린 Emoticon의 정보를 가져올때 MemberNickname은 List 형태일수 있기떄문에 조회 결과 테이블을 한번에 다룰수 있는
-     * ResultSetExtractor를 사용한다.
+     * Comment에 달린 Emoticon의 정보를 가져올때 MemberNickname은 List 형태일수 있기떄문에 조회 결과 테이블을 한번에 다룰수 있는 ResultSetExtractor를 사용한다.
      */
     private class CommentEmoticonExtractor implements ResultSetExtractor<List<CommentEmoticonVo>> {
 
@@ -62,8 +63,7 @@ public class CommentEmoticonRepositoryImpl implements CommentEmoticonRepository 
             Map<Long, CommentEmoticonVo> map = new LinkedHashMap<>();
             while (rs.next()) {
                 Long id = rs.getLong(ID);
-                map.putIfAbsent(id,
-                    new CommentEmoticonVo(id, rs.getString(EMOTICON_UNICODE), new ArrayList<>()));
+                map.putIfAbsent(id, new CommentEmoticonVo(id, rs.getString(EMOTICON_UNICODE), new ArrayList<>()));
                 CommentEmoticonVo info = map.get(id);
                 info.getMemberNickname().add(rs.getString(MEMBER_NICKNAME));
             }

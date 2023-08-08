@@ -18,21 +18,22 @@ import org.springframework.stereotype.Repository;
 @RequiredArgsConstructor
 public class CommentRepositoryImpl implements CommentRepository {
 
-    private final String ID = "id";
-    private final String CONTENT = "content";
-    private final String AUTHOR = "author";
-    private final String AUTHOR_IMG = "authorImg";
-    private final String CREATED_TIME = "created_time";
-    private final String FILES = "files";
-    private final String ISSUE_ID = "issueId";
-    private final String COMMENT_ID = "comment_id";
+    private final static String ID = "id";
+    private final static String CONTENT = "content";
+    private final static String AUTHOR = "author";
+    private final static String AUTHOR_IMG = "authorImg";
+    private final static String CREATED_TIME = "created_time";
+    private final static String FILES = "files";
+    private final static String ISSUE_ID = "issueId";
+    private final static String COMMENT_ID = "comment_id";
+
     private final NamedParameterJdbcTemplate template;
 
     @Override
-    public Optional<Long> create(Comment comment) {
+    public Optional<Long> save(Comment comment) {
         String sql =
-            "INSERT INTO issue_comment (content, file_url, issue_id, member_id, created_time) "
-                + "VALUES (:content, :fileUrl, :issueId, :memberId, now())";
+                "INSERT INTO issue_comment (content, file_url, issue_id, member_id, created_time) "
+                        + "VALUES (:content, :fileUrl, :issueId, :memberId, now())";
 
         SqlParameterSource param = new BeanPropertySqlParameterSource(comment);
         KeyHolder keyHolder = new GeneratedKeyHolder();
@@ -61,34 +62,32 @@ public class CommentRepositoryImpl implements CommentRepository {
     @Override
     public void delete(Long commentId) {
         String sql = "DELETE FROM comment WHERE id = :commentId";
-
         template.update(sql, Collections.singletonMap(COMMENT_ID, commentId));
     }
 
     @Override
-    public List<IssueCommentVo> findAllByIssueId(Long issueId, String issueAuthor) {
+    public List<IssueCommentVo> findAllBy(Long issueId, String issueAuthor) {
         String sql =
-            "SELECT c.id, c.content, c.created_time, c.file_url AS files, m.nickname AS author, pi.url AS authorImg "
-                + "FROM issue_comment AS c "
-                + "JOIN member AS m ON c.member_id = m.id "
-                + "JOIN profile_img AS pi ON m.profile_img_id = pi.id "
-                + "WHERE c.issue_id = :issueId "
-                + "ORDER BY c.created_time ASC ";
+                "SELECT ic.id, ic.content, ic.created_time, ic.file_url AS files, m.nickname AS author, pi.url AS authorImg "
+                        + "FROM issue_comment AS ic "
+                        + "JOIN member AS m ON ic.member_id = m.id "
+                        + "JOIN profile_img AS pi ON m.profile_img_id = pi.id "
+                        + "WHERE ic.issue_id = :issueId "
+                        + "ORDER BY ic.created_time ASC ";
 
-        return template.query(sql, Collections.singletonMap(ISSUE_ID, issueId),
-            voCommentRowMapper(issueAuthor));
+        return template.query(sql, Collections.singletonMap(ISSUE_ID, issueId), voCommentRowMapper(issueAuthor));
     }
 
     private RowMapper<IssueCommentVo> voCommentRowMapper(String author) {
         return (rs, rowNum) ->
-            IssueCommentVo.builder()
-                .id(rs.getLong(ID))
-                .content(rs.getString(CONTENT))
-                .author(rs.getString(AUTHOR))
-                .authorImg(rs.getString(AUTHOR_IMG))
-                .isIssueAuthor(author.equals(rs.getString(AUTHOR)))
-                .createdTime(rs.getTimestamp(CREATED_TIME).toLocalDateTime())
-                .files(rs.getString(FILES))
-                .build();
+                IssueCommentVo.builder()
+                        .id(rs.getLong(ID))
+                        .content(rs.getString(CONTENT))
+                        .author(rs.getString(AUTHOR))
+                        .authorImg(rs.getString(AUTHOR_IMG))
+                        .isIssueAuthor(author.equals(rs.getString(AUTHOR)))
+                        .createdTime(rs.getTimestamp(CREATED_TIME).toLocalDateTime())
+                        .files(rs.getString(FILES))
+                        .build();
     }
 }
