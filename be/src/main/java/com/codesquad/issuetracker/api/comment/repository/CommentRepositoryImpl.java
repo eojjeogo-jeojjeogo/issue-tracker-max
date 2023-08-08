@@ -22,7 +22,7 @@ public class CommentRepositoryImpl implements CommentRepository {
     private final String CONTENT = "content";
     private final String AUTHOR = "author";
     private final String AUTHOR_IMG = "authorImg";
-    private final String CREATED_TIME = "createdTime";
+    private final String CREATED_TIME = "created_time";
     private final String FILES = "files";
     private final String ISSUE_ID = "issueId";
     private final String COMMENT_ID = "comment_id";
