@@ -66,7 +66,7 @@ public class IssueController {
                                                           @PathVariable String organizationTitle,
                                                           @PathVariable Long issueId) {
         issueService.update(issueId, issueLabelUpdateRequest);
-        return ResponseEntity.ok(Map.of("id", issueId));
+        return ResponseEntity.ok(Collections.singletonMap("id", issueId));
     }
 
     @PatchMapping("/api/{organizationTitle}/issues/{issueId}/milestones")
@@ -75,7 +75,7 @@ public class IssueController {
             @PathVariable String organizationTitle,
             @PathVariable Long issueId) {
         issueService.update(issueId, issueMilestoneUpdateRequest);
-        return ResponseEntity.ok(Map.of("id", issueId));
+        return ResponseEntity.ok(Collections.singletonMap("id", issueId));
     }
 
     @PatchMapping("/api/{organizationTitle}/issues/{issueId}/status")
