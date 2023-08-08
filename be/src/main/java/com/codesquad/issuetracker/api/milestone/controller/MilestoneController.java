@@ -55,17 +55,17 @@ public class MilestoneController {
         return ResponseEntity.ok(Collections.singletonMap("id", id));
     }
 
+    @PatchMapping("/api/{organizationTitle}/milestones/{milestoneId}/status")
+    public ResponseEntity<Map<String, Long>> updateStatus(@PathVariable Long milestoneId,
+                                                          @RequestBody MilestoneStatusRequest milestoneStatusRequest) {
+        milestoneService.updateStatus(milestoneId, milestoneStatusRequest.getIsClosed());
+        return ResponseEntity.ok(Collections.singletonMap("id", milestoneId));
+    }
+
     @DeleteMapping("/api/{organizationTitle}/milestones/{milestoneId}")
     public ResponseEntity<Void> delete(@PathVariable Long milestoneId) {
         milestoneService.delete(milestoneId);
         return ResponseEntity.noContent()
                 .build();
-    }
-
-    @PatchMapping("/api/{organizationTitle}/milestones/{milestoneId}/status")
-    public ResponseEntity<Map<String, Long>> updateStatus(@PathVariable Long milestoneId,
-                                                          @RequestBody MilestoneStatusRequest milestoneStatusRequest) {
-        milestoneService.updateStatus(milestoneId, milestoneStatusRequest.isClosed());
-        return ResponseEntity.ok(Collections.singletonMap("id", milestoneId));
     }
 }

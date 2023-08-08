@@ -23,40 +23,36 @@ public class MilestoneService {
     @Transactional
     public long create(String organizationTitle, MilestoneRequest mileStoneRequest) {
         Long organizationId = organizationRepository.findBy(organizationTitle)
-            .orElseThrow();
-        Milestone milestone = MilestoneRequest.toEntity(mileStoneRequest, organizationId);
+                .orElseThrow();
+        Milestone milestone = mileStoneRequest.toEntityByOrganizationId(organizationId);
         return milestoneRepository.save(milestone)
-            .orElseThrow();
+                .orElseThrow();
     }
 
-    @Transactional(readOnly = true)
     public MilestoneVo read(Long milestoneId) {
         MilestoneVo milestone = milestoneRepository.findBy(milestoneId).orElseThrow();
         return milestone;
     }
 
     @Transactional
-    public long update(Long milestoneId, MilestoneRequest mileStoneRequest) {
-        Milestone milestone = MilestoneRequest.toEntity(milestoneId, mileStoneRequest);
-        milestoneRepository.update(milestone);
-        return milestoneId;
-    }
-
-    @Transactional
-    public void delete(Long milestoneId) {
-        milestoneRepository.delete(milestoneId);
-    }
-
-    @Transactional
     public MilestonesResponse readAll(String organizationTitle, FilterStatus filterStatus) {
         Long organizationId = organizationRepository.findBy(organizationTitle)
-            .orElseThrow();
+                .orElseThrow();
         List<MilestonesVo> milestones = milestoneRepository.findAllBy(organizationId);
         return MilestonesResponse.from(milestones, filterStatus);
     }
 
-    @Transactional
-    public void updateStatus(Long milestoneId, boolean isClosed) {
+    public long update(Long milestoneId, MilestoneRequest mileStoneRequest) {
+        Milestone milestone = mileStoneRequest.toEntityByMilestoneId(milestoneId);
+        milestoneRepository.update(milestone);
+        return milestoneId;
+    }
+
+    public void updateStatus(Long milestoneId, Boolean isClosed) {
         milestoneRepository.update(milestoneId, isClosed);
+    }
+
+    public void delete(Long milestoneId) {
+        milestoneRepository.delete(milestoneId);
     }
 }

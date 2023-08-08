@@ -7,12 +7,10 @@ import java.util.List;
 import java.util.stream.Collectors;
 import lombok.Builder;
 import lombok.Getter;
-import lombok.RequiredArgsConstructor;
 
 
 @Getter
 @Builder
-@RequiredArgsConstructor
 public class MilestonesVo {
 
     private final Long id;
@@ -25,10 +23,10 @@ public class MilestonesVo {
     private final Boolean isClosed;
 
     public static List<MilestonesVo> classifyByFilterStatus(List<MilestonesVo> milestonesVos,
-        FilterStatus filterStatus) {
+                                                            FilterStatus filterStatus) {
         return milestonesVos.stream()
-            .filter(milestonesVo -> filterStatus.isStatusMatchingFilter(milestonesVo))
-            .collect(Collectors.toUnmodifiableList());
+                .filter(milestonesVo -> filterStatus.isStatusMatchingFilter(milestonesVo))
+                .collect(Collectors.toUnmodifiableList());
     }
 
 }

@@ -5,23 +5,14 @@ import lombok.Builder;
 import lombok.Getter;
 
 @Getter
+@Builder
 public class Milestone {
 
-    private Long id;
-    private String title;
-    private String description;
-    private LocalDate dueDate;
-    private Boolean isClosed;
-    private Long organizationId;
-
-    @Builder
-    public Milestone(Long id, String title, String description, LocalDate dueDate, boolean isClosed,
-        Long organizationId) {
-        this.id = id;
-        this.title = title;
-        this.description = description;
-        this.dueDate = dueDate;
-        this.isClosed = isClosed;
-        this.organizationId = organizationId;
-    }
+    private final Long id;
+    private final String title;
+    private final String description;
+    private final LocalDate dueDate;
+    private final Boolean isClosed;
+    private final Long organizationId;
+    
 }

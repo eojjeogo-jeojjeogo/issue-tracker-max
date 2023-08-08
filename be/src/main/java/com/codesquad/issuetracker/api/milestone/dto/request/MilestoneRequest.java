@@ -5,15 +5,16 @@ import static com.codesquad.issuetracker.common.unit.ConverterFormatter.DATE_TIM
 import com.codesquad.issuetracker.api.milestone.domain.Milestone;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
+@Getter
+@NoArgsConstructor
 public class MilestoneRequest {
 
     private String title;
     private String description;
     private String dueDate;
-
-    public MilestoneRequest() {
-    }
 
     public MilestoneRequest(String title, String description, String dueDate) {
         this.title = title;
@@ -21,39 +22,27 @@ public class MilestoneRequest {
         this.dueDate = dueDate;
     }
 
-    public static Milestone toEntity(MilestoneRequest mileStoneRequest, Long organizationId) {
+    public Milestone toEntityByOrganizationId(Long organizationId) {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern(DATE_TIME_PATTERN);
-        LocalDate localDate = LocalDate.parse(mileStoneRequest.getDueDate(), formatter);
+        LocalDate localDate = LocalDate.parse(this.dueDate, formatter);
         return Milestone.builder()
                 .organizationId(organizationId)
-                .title(mileStoneRequest.getTitle())
-                .description(mileStoneRequest.getDescription())
+                .title(this.title)
+                .description(this.description)
                 .isClosed(false)
                 .dueDate(localDate)
                 .build();
     }
 
-    public static Milestone toEntity(Long milestoneId, MilestoneRequest mileStoneRequest) {
+    public Milestone toEntityByMilestoneId(Long milestoneId) {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern(DATE_TIME_PATTERN);
-        LocalDate localDate = LocalDate.parse(mileStoneRequest.getDueDate(), formatter);
+        LocalDate localDate = LocalDate.parse(this.dueDate, formatter);
         return Milestone.builder()
                 .id(milestoneId)
-                .title(mileStoneRequest.getTitle())
-                .description(mileStoneRequest.getDescription())
+                .title(this.title)
+                .description(this.description)
                 .isClosed(false)
                 .dueDate(localDate)
                 .build();
-    }
-
-    public String getTitle() {
-        return title;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public String getDueDate() {
-        return dueDate;
     }
 }
