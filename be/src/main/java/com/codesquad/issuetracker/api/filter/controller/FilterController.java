@@ -19,19 +19,19 @@ public class FilterController {
 
     @GetMapping(value = "/api/{organizationTitle}/milestones", params = "type=filter")
     public ResponseEntity<List<MilestoneFilter>> readMilestones(@PathVariable String organizationTitle) {
-        List<MilestoneFilter> milestoneFiltersResponse = filterService.readMilestone(organizationTitle);
+        List<MilestoneFilter> milestoneFiltersResponse = filterService.readMilestones(organizationTitle);
         return ResponseEntity.ok(milestoneFiltersResponse);
     }
 
     @GetMapping(value = "/api/{organizationTitle}/labels", params = "type=filter")
     public ResponseEntity<List<LabelFilter>> readLabels(@PathVariable String organizationTitle) {
-        List<LabelFilter> labelFiltersResponse = filterService.readAllLabel(organizationTitle);
+        List<LabelFilter> labelFiltersResponse = filterService.readLabels(organizationTitle);
         return ResponseEntity.ok(labelFiltersResponse);
     }
 
     @GetMapping(value = "/api/{organizationTitle}/assignees", params = "type=filter")
     public ResponseEntity<List<MemberFilter>> readAssignees(@PathVariable String organizationTitle) {
-        List<MemberFilter> memberFiltersResponse = filterService.readAllMember(organizationTitle);
+        List<MemberFilter> memberFiltersResponse = filterService.readAssignees(organizationTitle);
         return ResponseEntity.ok(memberFiltersResponse);
     }
 }
