@@ -36,6 +36,6 @@ public class FilterService {
     @Transactional(readOnly = true)
     public List<MemberFilter> readAllMember(String organizationTitle) {
         Long organizationId = organizationRepository.findIdByTitle(organizationTitle).orElseThrow();
-        return memberRepository.findFilterByOrganizationId(organizationId);
+        return memberRepository.findFiltersBy(organizationId);
     }
 }

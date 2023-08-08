@@ -15,7 +15,7 @@ public class MemberRepositoryImpl implements MemberRepository {
     private final NamedParameterJdbcTemplate template;
 
     @Override
-    public List<MemberFilter> findFilterByOrganizationId(Long organizationId) {
+    public List<MemberFilter> findFiltersBy(Long organizationId) {
         String sql = "SELECT m.id, m.nickname, pi.url FROM member AS m "
                 + "JOIN profile_img AS pi "
                 + "ON m.profile_img_id = pi.id "

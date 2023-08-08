@@ -5,5 +5,5 @@ import java.util.List;
 
 public interface MemberRepository {
 
-    List<MemberFilter> findFilterByOrganizationId(Long organizationId);
+    List<MemberFilter> findFiltersBy(Long organizationId);
 }
