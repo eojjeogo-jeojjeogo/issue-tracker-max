@@ -22,5 +22,9 @@ public interface IssueRepository {
 
     boolean updateMilestone(Issue issue);
 
+    void updateStatus(Issue issue);
+
+    void updateStatuses(List<Issue> issues);
+
     void delete(Long issueId);
 }
