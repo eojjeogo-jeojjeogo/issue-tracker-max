@@ -20,14 +20,11 @@ import org.springframework.stereotype.Repository;
 public class LabelRepositoryImpl implements LabelRepository {
 
     private static final String ORGANIZATION_ID = "organization_id";
-    private static final String FIND_FILTER_BY_ORGANIZATION_ID_SQL =
-            "SELECT id,title,background_color, is_dark"
-                    + " FROM label"
-                    + " WHERE organization_id = :organization_id";
-    public static final String ID = "id";
-    public static final String TITLE = "title";
-    public static final String BACKGROUND_COLOR = "background_color";
-    public static final String IS_DARK = "is_dark";
+    private static final String ID = "id";
+    private static final String TITLE = "title";
+    private static final String BACKGROUND_COLOR = "background_color";
+    private static final String IS_DARK = "is_dark";
+    private static final String DESCRIPTION = "description";
 
     private final NamedParameterJdbcTemplate template;
 
@@ -35,7 +32,7 @@ public class LabelRepositoryImpl implements LabelRepository {
         String sql = "SELECT id, organization_id, title, description, background_color, is_dark "
                 + "FROM label "
                 + "WHERE organization_id = :organizationId";
-        return template.query(sql, Map.of("organizationId", organizationId), labelRowMapper());
+        return template.query(sql, Collections.singletonMap("organizationId", organizationId), labelRowMapper());
     }
 
     public Optional<Long> save(Label label) {
@@ -53,7 +50,7 @@ public class LabelRepositoryImpl implements LabelRepository {
         return Optional.ofNullable(keyHolder.getKey()).map(Number::longValue);
     }
 
-    public Optional<Long> update(Label label) {
+    public Long update(Label label) {
         // TODO: 추후에 시간되면 마이바티스로 수정
         MapSqlParameterSource params = new MapSqlParameterSource();
         StringBuilder sql = new StringBuilder("UPDATE label SET ");
@@ -78,7 +75,7 @@ public class LabelRepositoryImpl implements LabelRepository {
         String finalSql = sql.toString().replaceAll(",$", "") + " WHERE id = :id";
         params.addValue("id", label.getId());
         template.update(finalSql, params);
-        return Optional.ofNullable(label.getId());
+        return label.getId();
     }
 
     public void delete(Long labelId) {
@@ -106,12 +103,12 @@ public class LabelRepositoryImpl implements LabelRepository {
 
     private RowMapper<Label> labelRowMapper() {
         return (rs, rowNum) -> Label.builder()
-                .id(rs.getLong("id"))
-                .organizationId(rs.getLong("organization_id"))
-                .title(rs.getString("title"))
-                .description(rs.getString("description"))
-                .backgroundColor(rs.getString("background_color"))
-                .isDark(rs.getBoolean("is_dark"))
+                .id(rs.getLong(ID))
+                .organizationId(rs.getLong(ORGANIZATION_ID))
+                .title(rs.getString(TITLE))
+                .description(rs.getString(DESCRIPTION))
+                .backgroundColor(rs.getString(BACKGROUND_COLOR))
+                .isDark(rs.getBoolean(IS_DARK))
                 .build();
     }
 

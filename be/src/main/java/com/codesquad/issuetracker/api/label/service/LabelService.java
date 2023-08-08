@@ -35,7 +35,7 @@ public class LabelService {
         Long labelId) {
         Long organizationId = organizationRepository.findIdByTitle(organizationTitle).orElseThrow();
         Label label = LabelUpdateRequest.toEntity(labelUpdateRequest, organizationId, labelId);
-        return labelRepository.update(label).orElseThrow();
+        return labelRepository.update(label);
     }
 
     public void delete(Long labelId) {
