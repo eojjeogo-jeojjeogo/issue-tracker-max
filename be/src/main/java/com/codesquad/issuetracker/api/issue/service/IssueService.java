@@ -52,7 +52,7 @@ public class IssueService {
     public Long create(String organizationTitle, IssueCreateRequest issueCreateRequest) {
         // TODO: 회원 확인 로직 추가 필요, orElseThrow() 예외 처리 필요
         // 이슈 저장
-        Long organizationId = organizationRepository.findIdByTitle(organizationTitle).orElseThrow();
+        Long organizationId = organizationRepository.findBy(organizationTitle).orElseThrow();
         Long issuesCount = issueRepository.countIssuesBy(organizationId).orElseThrow();
         Issue issue = issueCreateRequest.toEntity(organizationId, issuesCount + 1);
         Long issueId = issueRepository.save(issue).orElseThrow();

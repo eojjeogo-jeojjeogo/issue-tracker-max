@@ -22,7 +22,7 @@ public class MilestoneService {
 
     @Transactional
     public long create(String organizationTitle, MilestoneRequest mileStoneRequest) {
-        Long organizationId = organizationRepository.findIdByTitle(organizationTitle)
+        Long organizationId = organizationRepository.findBy(organizationTitle)
             .orElseThrow();
         Milestone milestone = MilestoneRequest.toEntity(mileStoneRequest, organizationId);
         return milestoneRepository.save(milestone)
@@ -49,7 +49,7 @@ public class MilestoneService {
 
     @Transactional
     public MilestonesResponse readAll(String organizationTitle, FilterStatus filterStatus) {
-        Long organizationId = organizationRepository.findIdByTitle(organizationTitle)
+        Long organizationId = organizationRepository.findBy(organizationTitle)
             .orElseThrow();
         List<MilestonesVo> milestones = milestoneRepository.findAllBy(organizationId);
         return MilestonesResponse.from(milestones, filterStatus);

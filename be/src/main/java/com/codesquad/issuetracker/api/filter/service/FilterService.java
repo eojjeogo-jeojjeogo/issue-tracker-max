@@ -23,19 +23,19 @@ public class FilterService {
 
     @Transactional(readOnly = true)
     public List<MilestoneFilter> readMilestone(String organizationTitle) {
-        Long organizationId = organizationRepository.findIdByTitle(organizationTitle).orElseThrow();
+        Long organizationId = organizationRepository.findBy(organizationTitle).orElseThrow();
         return milestoneRepository.findFiltersBy(organizationId);
     }
 
     @Transactional(readOnly = true)
     public List<LabelFilter> readAllLabel(String organizationTitle) {
-        Long organizationId = organizationRepository.findIdByTitle(organizationTitle).orElseThrow();
+        Long organizationId = organizationRepository.findBy(organizationTitle).orElseThrow();
         return labelRepository.findFiltersBy(organizationId);
     }
 
     @Transactional(readOnly = true)
     public List<MemberFilter> readAllMember(String organizationTitle) {
-        Long organizationId = organizationRepository.findIdByTitle(organizationTitle).orElseThrow();
+        Long organizationId = organizationRepository.findBy(organizationTitle).orElseThrow();
         return memberRepository.findFiltersBy(organizationId);
     }
 }

@@ -4,6 +4,6 @@ import java.util.Optional;
 
 public interface OrganizationRepository {
 
-    Optional<Long> findIdByTitle(String organizationTitle);
+    Optional<Long> findBy(String organizationTitle);
 
 }
