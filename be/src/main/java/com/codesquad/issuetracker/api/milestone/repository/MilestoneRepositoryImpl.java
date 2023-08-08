@@ -50,7 +50,7 @@ public class MilestoneRepositoryImpl implements MilestoneRepository {
     private static final String FIND_COUNT_BY_ORGANIZATION_SQL =
         "SELECT COUNT(id)"
             + " FROM milestone"
-            + " WHERE organization_id = :organization_id";
+            + " WHERE organization_id = :organization_id AND is_closed = false";
     private final NamedParameterJdbcTemplate jdbcTemplate;
 
     @Override
