@@ -8,6 +8,7 @@ import java.util.Objects;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
@@ -38,15 +39,9 @@ public class LabelRepositoryImpl implements LabelRepository {
     public Optional<Long> save(Label label) {
         String sql = "INSERT INTO label (organization_id, title, description, background_color, is_dark) "
                 + "VALUES (:organizationId, :title, :description, :backgroundColor, :isDark)";
-        SqlParameterSource param = new MapSqlParameterSource()
-                .addValue("organizationId", label.getOrganizationId())
-                .addValue("title", label.getTitle())
-                .addValue("description", label.getDescription())
-                .addValue("backgroundColor", label.getBackgroundColor())
-                .addValue("isDark", label.getIsDark());
-
+        SqlParameterSource params = new BeanPropertySqlParameterSource(label);
         KeyHolder keyHolder = new GeneratedKeyHolder();
-        template.update(sql, param, keyHolder);
+        template.update(sql, params, keyHolder);
         return Optional.ofNullable(keyHolder.getKey()).map(Number::longValue);
     }
 
