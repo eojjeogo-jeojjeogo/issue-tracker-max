@@ -38,14 +38,18 @@ public class MemberService {
         Member member = userProfile.toEntity();
 
         Optional<Long> memberId = memberRepository.findBy(member.getEmail());
-        if (memberId.isPresent()) {
+        if (!memberId.isPresent()) {
             memberId = memberRepository.save(member, providerName);
         }
         // 토큰 발급
         Jwt tokens = jwtProvider.createTokens(Map.of("memberId", memberId));
 
-        // refresh토큰 저장
         //todo 로그인을 할때마다 사용자에게 새로운 refresh 토큰을 만들어줄거면 DB에 저장된 refresh 토큰은 삭제해야할듯?
+        if (memberId.isPresent()) {
+            tokenRepository.deleteRefreshToken(memberId.get());
+        }
+
+        // refresh토큰 저장
         tokenRepository.save(memberId.get(), tokens.getRefreshToken());
         return new OauthSignInResponse(tokens);
     }
