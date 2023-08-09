@@ -1,6 +1,7 @@
 package com.codesquad.issuetracker.api.member.Service;
 
 import com.codesquad.issuetracker.api.member.domain.Member;
+import com.codesquad.issuetracker.api.member.dto.SignUpRequest;
 import com.codesquad.issuetracker.api.member.repository.MemberRepository;
 import com.codesquad.issuetracker.api.member.repository.TokenRepository;
 import com.codesquad.issuetracker.api.oauth.dto.OauthSignInResponse;
@@ -52,6 +53,24 @@ public class MemberService {
         // refresh토큰 저장
         tokenRepository.save(memberId.get(), tokens.getRefreshToken());
         return new OauthSignInResponse(tokens);
+    }
+
+    public Long signUp(SignUpRequest signUpRequest, String providerName) {
+        //member 테이블에 저장된 email 인지 또는 저장된 nickname인지 확인
+        if (memberRepository.findBy(signUpRequest.getEmail()).isPresent()) {
+            // 예외처리
+        }
+
+        Boolean isNicknameExists = memberRepository.existsNickname(signUpRequest.getNickname());
+        if (isNicknameExists) {
+            //예외처리
+        }
+
+        //member 테이블에 저장
+        Member member = signUpRequest.toEntity();
+        Long memberId = memberRepository.save(member, providerName).orElseThrow();
+
+        return memberId;
     }
 
 }

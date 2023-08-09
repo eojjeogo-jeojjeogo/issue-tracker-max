@@ -26,15 +26,17 @@ public class MemberRepositoryImpl implements MemberRepository {
 
     @Override
     public Optional<Long> save(Member member, String providerName) {
-        String sql = "INSERT INTO member (email, nickname, profile_img_url, created_time, sign_in_type_id) "
-                + "VALUES (:email, :nickname, :profileImgUrl, now(), (SELECT id FROM sign_in_type WHERE provider = :provider))";
+        String sql = "INSERT INTO member (email, password, nickname, profile_img_url, created_time, sign_in_type_id) "
+                + "VALUES (:email,:password, :nickname, :profileImgUrl, now(), (SELECT id FROM sign_in_type WHERE provider = :provider))";
 
         SqlParameterSource params = new MapSqlParameterSource()
                 .addValue("email", member.getEmail())
                 .addValue("nickname", member.getNickname())
+                .addValue("password", member.getPassword())
                 .addValue("profileImgUrl", member.getProfileImgUrl())
                 .addValue("provider", providerName);
 
+        //todo profileImgUrl 에 기본값
         KeyHolder keyHolder = new GeneratedKeyHolder();
         template.update(sql, params, keyHolder);
         return Optional.ofNullable(keyHolder.getKey()).map(Number::longValue);
@@ -63,6 +65,14 @@ public class MemberRepositoryImpl implements MemberRepository {
         );
 
         return results.stream().findFirst();
+    }
+
+    @Override
+    public boolean existsNickname(String nickname) {
+        String sql = "SELECT COUNT(nickname) FROM member WHERE nickname = :nickname";
+
+        int count = template.queryForObject(sql, Collections.singletonMap("nickname", nickname), Integer.class);
+        return count > 0;
     }
 
     private RowMapper<MemberFilter> memberFilterRowMapper() {
