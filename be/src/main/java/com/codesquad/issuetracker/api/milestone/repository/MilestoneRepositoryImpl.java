@@ -26,11 +26,9 @@ public class MilestoneRepositoryImpl implements MilestoneRepository {
     private static final String DESCRIPTION = "description";
     private static final String DUE_DATE = "due_date";
     private static final String IS_CLOSED = "is_closed";
-    private static final String ORGANIZATION_ID = "organization_id";
     private static final String ID = "id";
     private static final String ISSUE_OPENED_COUNT = "issueOpenedCount";
     private static final String ISSUE_CLOSED_COUNT = "issueClosedCount";
-    private static final String MILESTONE_ID = "milestoneId";
 
     private final NamedParameterJdbcTemplate jdbcTemplate;
 
@@ -56,7 +54,7 @@ public class MilestoneRepositoryImpl implements MilestoneRepository {
                 + "WHERE m.is_closed = FALSE AND m.id = :milestoneId "
                 + "GROUP BY m.id ";
 
-        return jdbcTemplate.query(sql, Collections.singletonMap(MILESTONE_ID, milestoneId), milestoneVoRowMapper())
+        return jdbcTemplate.query(sql, Collections.singletonMap("milestoneId", milestoneId), milestoneVoRowMapper())
                 .stream()
                 .findFirst();
     }
@@ -75,7 +73,7 @@ public class MilestoneRepositoryImpl implements MilestoneRepository {
     public void delete(Long milestoneId) {
         String sql = "DELETE FROM milestone WHERE id = :id";
 
-        jdbcTemplate.update(sql, Collections.singletonMap(ID, milestoneId));
+        jdbcTemplate.update(sql, Collections.singletonMap("id", milestoneId));
     }
 
     @Override
@@ -85,12 +83,12 @@ public class MilestoneRepositoryImpl implements MilestoneRepository {
                 + "SUM(CASE WHEN i.is_closed = true THEN 1 ELSE 0 END) AS issueClosedCount "
                 + "FROM milestone m "
                 + "LEFT JOIN issue i ON m.id = i.milestone_id "
-                + "WHERE m.organization_id = :organization_id "
+                + "WHERE m.organization_id = :organizationId "
                 + "GROUP BY m.id ";
 
         return jdbcTemplate.query(
                 sql,
-                Collections.singletonMap(ORGANIZATION_ID, organizationId),
+                Collections.singletonMap("organizationId", organizationId),
                 milestonesVoRowMapper()
         );
     }
@@ -98,21 +96,21 @@ public class MilestoneRepositoryImpl implements MilestoneRepository {
     @Override
     public void update(Long milestoneId, boolean isClosed) {
         String sql = "UPDATE milestone "
-                + "SET is_closed = :is_closed "
+                + "SET is_closed = :isClosed "
                 + "WHERE id = :id";
 
-        jdbcTemplate.update(sql, Map.of(IS_CLOSED, isClosed, ID, milestoneId));
+        jdbcTemplate.update(sql, Map.of("isClosed", isClosed, "id", milestoneId));
     }
 
     @Override
     public List<MilestoneFilter> findFiltersBy(Long organizationId) {
         String sql = "SELECT id,title "
                 + "FROM milestone "
-                + "WHERE organization_id = :organization_id AND is_closed = false";
+                + "WHERE organization_id = :organizationId AND is_closed = false";
 
         return jdbcTemplate.query(
                 sql,
-                Collections.singletonMap(ORGANIZATION_ID, organizationId),
+                Collections.singletonMap("organizationId", organizationId),
                 milestoneFilterRowMapper()
         );
     }
@@ -121,11 +119,11 @@ public class MilestoneRepositoryImpl implements MilestoneRepository {
     public long countBy(Long organizationId) {
         String sql = "SELECT COUNT(id) "
                 + "FROM milestone "
-                + "WHERE organization_id = :organization_id AND is_closed = false";
+                + "WHERE organization_id = :organizationId AND is_closed = false";
         return Objects.requireNonNull(
                 jdbcTemplate.queryForObject(
                         sql,
-                        Collections.singletonMap(ORGANIZATION_ID, organizationId),
+                        Collections.singletonMap("organizationId", organizationId),
                         Long.class)
         );
     }
