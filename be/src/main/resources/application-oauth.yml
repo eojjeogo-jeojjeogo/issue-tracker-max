@@ -1,0 +1,13 @@
+oauth2:
+  user:
+    github:
+      client-id: f3baa022e59aef7557ea
+      client-secret: ENC(GCxz5azwg+WmshpvuitkvrFFKknKMBUCaqJiQGIWPC/yFyo5o1rsYRREF2ntQduqLVbImzjDUOI=)
+      redirect-uri: http://localhost:8080/login/oauth2/code/github
+  provider:
+    github:
+      token-uri: https://github.com/login/oauth/access_token
+      user-info-uri: https://api.github.com/user
+jwt:
+  token:
+    secret-key: ENC(nmcpbdHR2R0X8UwTLbWf8MYjumzyZGufoSdg/3Ij5n5vuOztB3/vZphG4uFfZE51)

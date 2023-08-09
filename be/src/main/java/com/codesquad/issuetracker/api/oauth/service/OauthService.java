@@ -3,11 +3,8 @@ package com.codesquad.issuetracker.api.oauth.service;
 import com.codesquad.issuetracker.api.oauth.InMemoryProviderRepository;
 import com.codesquad.issuetracker.api.oauth.OauthAttributes;
 import com.codesquad.issuetracker.api.oauth.OauthProvider;
-import com.codesquad.issuetracker.api.oauth.dto.LoginResponse;
 import com.codesquad.issuetracker.api.oauth.dto.OauthTokenResponse;
 import com.codesquad.issuetracker.api.oauth.dto.UserProfile;
-import com.codesquad.issuetracker.api.oauth.jwt.Jwt;
-import com.codesquad.issuetracker.api.oauth.jwt.JwtProvider;
 import java.nio.charset.StandardCharsets;
 import java.util.Collections;
 import java.util.Map;
@@ -24,9 +21,8 @@ import org.springframework.web.reactive.function.client.WebClient;
 public class OauthService {
 
     private final InMemoryProviderRepository inMemoryProviderRepository;
-    private final JwtProvider jwtProvider;
 
-    public LoginResponse login(String providerName, String code) {
+    public UserProfile login(String providerName, String code) {
         // 프론트에서 넘어온 provider 이름을 통해 InMemoryProviderRepository에서 OauthProvider 가져오기
         OauthProvider provider = inMemoryProviderRepository.findByProviderName(providerName);
 
@@ -36,12 +32,7 @@ public class OauthService {
         // 유저 정보 가져오기
         UserProfile userProfile = getUserProfile(providerName, tokenResponse, provider);
 
-        // TODO OAuth 로 로그인한 유저 DB에 저장 (회원가입)
-
-        Map<String, Object> map = Map.of("memberId", "1");
-        Jwt jwtToken = jwtProvider.createJwt(map);
-
-        return null;
+        return userProfile;
     }
 
     private OauthTokenResponse getToken(String code, OauthProvider provider) {
