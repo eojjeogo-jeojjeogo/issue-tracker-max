@@ -25,6 +25,5 @@ public class OauthProperties {
     public static class Provider {
         private String tokenUri;
         private String userInfoUri;
-        private String userNameAttribute;
     }
 }
