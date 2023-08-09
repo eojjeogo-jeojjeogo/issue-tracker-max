@@ -1,7 +1,7 @@
 spring:
   profiles:
     group:
-      test: testDB, jasypt
+      test: testDB, jasypt, oauth
     active: test
   sql:
     init:
