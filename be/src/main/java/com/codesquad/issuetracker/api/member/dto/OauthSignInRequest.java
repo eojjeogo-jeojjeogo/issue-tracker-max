@@ -5,9 +5,6 @@ import lombok.Getter;
 @Getter
 public class OauthSignInRequest {
 
-    public OauthSignInRequest() {
-    }
-
     private String accessCode;
 
 }
