@@ -1,19 +1,13 @@
 package com.codesquad.issuetracker.api.comment.domain;
 
+import lombok.Builder;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
 
-@NoArgsConstructor
-@Setter
+@Builder
 @Getter
 public class Emoticon {
 
-    private Long id;
-    private String unicode;
-
-    public Emoticon(Long id) {
-        this.id = id;
-    }
+    private final Long id;
+    private final String unicode;
 
 }

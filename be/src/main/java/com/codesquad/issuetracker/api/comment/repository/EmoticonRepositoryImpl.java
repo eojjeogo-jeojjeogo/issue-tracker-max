@@ -3,7 +3,6 @@ package com.codesquad.issuetracker.api.comment.repository;
 import com.codesquad.issuetracker.api.comment.domain.Emoticon;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
-import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
@@ -11,6 +10,9 @@ import org.springframework.stereotype.Repository;
 @Repository
 @RequiredArgsConstructor
 public class EmoticonRepositoryImpl implements EmoticonRepository {
+
+    private static final String ID = "id";
+    private static final String UNICODE = "unicode";
 
     private final NamedParameterJdbcTemplate template;
 
@@ -21,6 +23,11 @@ public class EmoticonRepositoryImpl implements EmoticonRepository {
     }
 
     private RowMapper<Emoticon> emoticonRowMapper() {
-        return BeanPropertyRowMapper.newInstance(Emoticon.class);
+        return (rs, rowNum) ->
+                Emoticon.builder()
+                        .id(rs.getLong(ID))
+                        .unicode(rs.getString(UNICODE))
+                        .build();
+
     }
 }

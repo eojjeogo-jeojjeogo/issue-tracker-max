@@ -24,8 +24,6 @@ public class CommentRepositoryImpl implements CommentRepository {
     private final static String AUTHOR_IMG = "authorImg";
     private final static String CREATED_TIME = "created_time";
     private final static String FILES = "files";
-    private final static String ISSUE_ID = "issueId";
-    private final static String COMMENT_ID = "comment_id";
 
     private final NamedParameterJdbcTemplate template;
 
@@ -62,7 +60,7 @@ public class CommentRepositoryImpl implements CommentRepository {
     @Override
     public void delete(Long commentId) {
         String sql = "DELETE FROM comment WHERE id = :commentId";
-        template.update(sql, Collections.singletonMap(COMMENT_ID, commentId));
+        template.update(sql, Collections.singletonMap("commentId", commentId));
     }
 
     @Override
@@ -75,7 +73,7 @@ public class CommentRepositoryImpl implements CommentRepository {
                         + "WHERE ic.issue_id = :issueId "
                         + "ORDER BY ic.created_time ASC ";
 
-        return template.query(sql, Collections.singletonMap(ISSUE_ID, issueId), issueCommentRowMapper(issueAuthor));
+        return template.query(sql, Collections.singletonMap("issueId", issueId), issueCommentRowMapper(issueAuthor));
     }
 
     private RowMapper<IssueCommentVo> issueCommentRowMapper(String author) {

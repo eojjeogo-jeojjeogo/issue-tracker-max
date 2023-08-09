@@ -20,11 +20,8 @@ import org.springframework.stereotype.Repository;
 public class CommentEmoticonRepositoryImpl implements CommentEmoticonRepository {
 
     private final static String ID = "id";
-    private final static String EMOTICON_ID = "emoticonId";
     private final static String EMOTICON_UNICODE = "emoticon";
     private final static String MEMBER_NICKNAME = "memberNickname";
-    private final static String MEMBER_ID = "memberId";
-    private final static String COMMENT_ID = "commentId";
 
     private final NamedParameterJdbcTemplate template;
 
@@ -37,18 +34,18 @@ public class CommentEmoticonRepositoryImpl implements CommentEmoticonRepository 
                         + "JOIN member AS m ON ce.member_id = m.id "
                         + "WHERE ce.comment_id = :commentId";
 
-        return template.query(sql, Collections.singletonMap(COMMENT_ID, commentId), new CommentEmoticonExtractor());
+        return template.query(sql, Collections.singletonMap("commentId", commentId), new CommentEmoticonExtractor());
     }
 
     @Override
     public void save(Long commentId, Long memberId, Emoticon emoticon) {
         String sql = "INSERT INTO comment_emoticon "
-                + "VALUES (:commentId, :emoticonId, :memberId)";
+                + "VALUES (:commentId, :memberId, :emoticonId)";
 
         MapSqlParameterSource params = new MapSqlParameterSource()
-                .addValue(COMMENT_ID, commentId)
-                .addValue(EMOTICON_ID, emoticon.getId())
-                .addValue(MEMBER_ID, memberId);
+                .addValue("commentId", commentId)
+                .addValue("memberId", memberId)
+                .addValue("emoticonId", emoticon.getId());
 
         template.update(sql, params);
     }

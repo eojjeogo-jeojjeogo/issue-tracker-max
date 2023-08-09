@@ -9,6 +9,8 @@ public class CommentEmoticonAddRequest {
     private Long id;
 
     public Emoticon toEntity() {
-        return new Emoticon(id);
+        return Emoticon.builder()
+                .id(this.id)
+                .build();
     }
 }
