@@ -1,5 +1,6 @@
 package com.codesquad.issuetracker.api.member.repository;
 
+import java.util.Collections;
 import lombok.RequiredArgsConstructor;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
@@ -22,5 +23,12 @@ public class TokenRepositoryImpl implements TokenRepository {
                 .addValue("refreshToken", refreshToken);
 
         template.update(sql, params);
+    }
+
+    @Override
+    public void deleteRefreshToken(Long memberId) {
+        String sql = "DELETE FROM token WHERE member_id = :memberId";
+
+        template.update(sql, Collections.singletonMap("memberId", memberId));
     }
 }
