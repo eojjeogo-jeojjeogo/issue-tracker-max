@@ -82,17 +82,17 @@ public class LabelRepositoryImpl implements LabelRepository {
     public List<LabelFilter> findFiltersBy(Long organizationId) {
         String sql = "SELECT id,title,background_color, is_dark "
                 + "FROM label "
-                + "WHERE organization_id = :organization_id ";
-        return template.query(sql, Collections.singletonMap(ORGANIZATION_ID, organizationId), labelFilterRowMapper());
+                + "WHERE organization_id = :organizationId ";
+        return template.query(sql, Collections.singletonMap("organizationId", organizationId), labelFilterRowMapper());
     }
 
     @Override
     public long countBy(Long organizationId) {
         String sql = "SELECT COUNT(id) "
                 + "FROM label "
-                + "WHERE organization_id = :organization_id";
+                + "WHERE organization_id = :organizationId";
         return Objects.requireNonNull(
-                template.queryForObject(sql, Collections.singletonMap(ORGANIZATION_ID, organizationId), Long.class)
+                template.queryForObject(sql, Collections.singletonMap("organizationId", organizationId), Long.class)
         );
     }
 
