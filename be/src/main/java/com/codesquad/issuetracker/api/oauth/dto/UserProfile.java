@@ -1,5 +1,6 @@
 package com.codesquad.issuetracker.api.oauth.dto;
 
+import com.codesquad.issuetracker.api.member.domain.Member;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -14,6 +15,14 @@ public class UserProfile {
         this.email = email;
         this.name = name;
         this.imageUrl = imageUrl;
+    }
+
+    public Member toEntity() {
+        return Member.builder()
+                .email(this.email)
+                .nickname(this.name)
+                .profileImgUrl(this.imageUrl)
+                .build();
     }
 
 }

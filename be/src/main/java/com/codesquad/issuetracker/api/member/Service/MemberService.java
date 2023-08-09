@@ -33,16 +33,12 @@ public class MemberService {
     private final TokenRepository tokenRepository;
 
     public OauthSignInResponse oAuthSignIn(String providerName, String code) {
-        //github에서 email 가져오기
+        //github에서 사용자 정보 가져오기
         UserProfile userProfile = oauthService.login(providerName, code);
-        Member member = Member.builder()
-                .email(userProfile.getEmail())
-                .nickname(userProfile.getName())
-                .profileImgUrl(userProfile.getImageUrl())
-                .build();
+        Member member = userProfile.toEntity();
 
         Optional<Long> memberId = memberRepository.findBy(member.getEmail());
-        if (memberId.isEmpty()) {
+        if (memberId.isPresent()) {
             memberId = memberRepository.save(member, providerName);
         }
         // 토큰 발급
