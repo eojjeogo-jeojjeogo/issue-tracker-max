@@ -1,12 +1,12 @@
 package com.codesquad.issuetracker.api.filter.dto;
 
-import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 
 @Getter
-@AllArgsConstructor
+@Builder
 public class MilestoneFilter {
 
-    private long id;
+    private Long id;
     private String name;
 }

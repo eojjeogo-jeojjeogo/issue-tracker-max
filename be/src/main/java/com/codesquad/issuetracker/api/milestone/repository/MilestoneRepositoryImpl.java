@@ -154,9 +154,9 @@ public class MilestoneRepositoryImpl implements MilestoneRepository {
     }
 
     private RowMapper<MilestoneFilter> milestoneFilterRowMapper() {
-        return (rs, rowNum) -> new MilestoneFilter(
-                rs.getLong(ID),
-                rs.getString(TITLE)
-        );
+        return (rs, rowNum) -> MilestoneFilter.builder()
+                .id(rs.getLong(ID))
+                .name(rs.getString(TITLE))
+                .build();
     }
 }
