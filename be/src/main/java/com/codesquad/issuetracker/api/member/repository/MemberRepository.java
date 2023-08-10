@@ -13,6 +13,8 @@ public interface MemberRepository {
 
     Optional<Long> findBy(String email);
 
+    Optional<Member> findMemberBy(String email);
+
     boolean existsNickname(String nickname);
 
 }

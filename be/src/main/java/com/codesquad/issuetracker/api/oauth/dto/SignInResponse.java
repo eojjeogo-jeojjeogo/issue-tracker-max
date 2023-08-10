@@ -7,12 +7,12 @@ import lombok.NoArgsConstructor;
 
 @Getter
 @NoArgsConstructor
-public class OauthSignInResponse {
+public class SignInResponse {
 
     private Jwt tokens;
 
     @Builder
-    public OauthSignInResponse(Jwt tokens) {
+    public SignInResponse(Jwt tokens) {
         this.tokens = tokens;
     }
 }

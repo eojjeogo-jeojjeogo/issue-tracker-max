@@ -2,8 +2,9 @@ package com.codesquad.issuetracker.api.member.controller;
 
 import com.codesquad.issuetracker.api.member.Service.MemberService;
 import com.codesquad.issuetracker.api.member.dto.OauthSignInRequest;
+import com.codesquad.issuetracker.api.member.dto.SignInRequest;
 import com.codesquad.issuetracker.api.member.dto.SignUpRequest;
-import com.codesquad.issuetracker.api.oauth.dto.OauthSignInResponse;
+import com.codesquad.issuetracker.api.oauth.dto.SignInResponse;
 import java.util.Collections;
 import java.util.Map;
 import lombok.RequiredArgsConstructor;
@@ -20,9 +21,9 @@ public class MemberController {
     private final MemberService memberService;
 
     @PostMapping("/api/oauth/sign-up/{provider}")
-    public ResponseEntity<OauthSignInResponse> oAuthSignIn(@RequestBody OauthSignInRequest oauthSignInRequest,
-                                                           @PathVariable String provider) {
-        OauthSignInResponse oAuthSignInResponse = memberService.oAuthSignIn(
+    public ResponseEntity<SignInResponse> oAuthSignIn(@RequestBody OauthSignInRequest oauthSignInRequest,
+                                                      @PathVariable String provider) {
+        SignInResponse oAuthSignInResponse = memberService.oAuthSignIn(
                 provider,
                 oauthSignInRequest.getAccessCode()
         );
@@ -36,5 +37,12 @@ public class MemberController {
         Long memberId = memberService.signUp(signUpRequest, provider);
         return ResponseEntity.ok()
                 .body(Collections.singletonMap("id", memberId));
+    }
+
+    @PostMapping("/api/sign-In")
+    public ResponseEntity<SignInResponse> signIn(@RequestBody SignInRequest signInRequest) {
+        SignInResponse oAuthSignInResponse = memberService.signIn(signInRequest);
+        return ResponseEntity.ok()
+                .body(oAuthSignInResponse);
     }
 }
