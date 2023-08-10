@@ -11,7 +11,7 @@ public interface CommentRepository {
 
     Long update(Comment comment);
 
-    void delete(Long commentId);
+    void deleteBy(Long issueId); // 이거 이슈 아이디로 수정??
 
     List<IssueCommentVo> findAllBy(Long issueId, String issueAuthor);
 }
