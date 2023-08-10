@@ -68,6 +68,18 @@ public class MemberRepositoryImpl implements MemberRepository {
     }
 
     @Override
+    public Optional<Member> findMemberBy(String email) {
+        String sql = "SELECT id, email, password FROM member WHERE email = :email";
+
+        List<Member> member = template.query(
+                sql,
+                Collections.singletonMap("email", email),
+                memberRowMapper()
+        );
+        return member.stream().findFirst();
+    }
+
+    @Override
     public boolean existsNickname(String nickname) {
         String sql = "SELECT COUNT(nickname) FROM member WHERE nickname = :nickname";
 
@@ -81,6 +93,15 @@ public class MemberRepositoryImpl implements MemberRepository {
                         .id(rs.getLong(ID))
                         .name(rs.getString(NICKNAME))
                         .imgUrl(rs.getString(URL))
+                        .build();
+    }
+
+    private RowMapper<Member> memberRowMapper() {
+        return (rs, rowNum) ->
+                Member.builder()
+                        .id(rs.getLong("id"))
+                        .email(rs.getString("email"))
+                        .password(rs.getString("password"))
                         .build();
     }
 }
