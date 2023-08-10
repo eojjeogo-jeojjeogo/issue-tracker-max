@@ -9,6 +9,7 @@ import com.codesquad.issuetracker.api.issue.dto.IssuesStatusUpdateRequest;
 import com.codesquad.issuetracker.api.issue.service.IssueService;
 import java.util.Collections;
 import java.util.Map;
+import javax.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -31,8 +32,9 @@ public class IssueController {
 
     @PostMapping("/api/{organizationTitle}/issues")
     public ResponseEntity<Map<String, Long>> create(@RequestBody IssueCreateRequest issueCreateRequest,
-                                                    @PathVariable String organizationTitle) {
-        // TODO: 로그인 관련 처리 필요
+                                                    @PathVariable String organizationTitle,
+                                                    HttpServletRequest httpServletRequest) {
+        issueCreateRequest.setMemberId(getSignInId(httpServletRequest));
         Long issueId = issueService.create(organizationTitle, issueCreateRequest);
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(Collections.singletonMap("id", issueId));
@@ -85,5 +87,9 @@ public class IssueController {
         issueService.deleteOne(issueId);
         return ResponseEntity.status(HttpStatus.OK)
                 .build();
+    }
+
+    private Long getSignInId(HttpServletRequest request) {
+        return  Long.parseLong(request.getAttribute("memberId").toString());
     }
 }
