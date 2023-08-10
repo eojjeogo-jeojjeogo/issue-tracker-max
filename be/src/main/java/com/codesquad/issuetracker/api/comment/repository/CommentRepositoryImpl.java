@@ -66,10 +66,9 @@ public class CommentRepositoryImpl implements CommentRepository {
     @Override
     public List<IssueCommentVo> findAllBy(Long issueId, String issueAuthor) {
         String sql =
-                "SELECT ic.id, ic.content, ic.created_time, ic.file_url AS files, m.nickname AS author, pi.url AS authorImg "
+                "SELECT ic.id, ic.content, ic.created_time, ic.file_url AS files, m.nickname AS author, m.profile_img_url AS authorImg "
                         + "FROM issue_comment AS ic "
                         + "JOIN member AS m ON ic.member_id = m.id "
-                        + "JOIN profile_img AS pi ON m.profile_img_id = pi.id "
                         + "WHERE ic.issue_id = :issueId "
                         + "ORDER BY ic.created_time ASC ";
 

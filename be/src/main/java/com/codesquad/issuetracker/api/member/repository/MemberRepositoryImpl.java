@@ -20,7 +20,7 @@ public class MemberRepositoryImpl implements MemberRepository {
 
     private static final String ID = "id";
     private static final String NICKNAME = "nickname";
-    private static final String URL = "url";
+    private static final String URL = "profile_img_url";
 
     private final NamedParameterJdbcTemplate template;
 
@@ -44,9 +44,7 @@ public class MemberRepositoryImpl implements MemberRepository {
 
     @Override
     public List<MemberFilter> findFiltersBy(Long organizationId) {
-        String sql = "SELECT m.id, m.nickname, pi.url FROM member AS m "
-                + "JOIN profile_img AS pi "
-                + "ON m.profile_img_id = pi.id "
+        String sql = "SELECT m.id, m.nickname, m.profile_img_url FROM member AS m "
                 + "JOIN organization_member AS om "
                 + "ON om.member_id = m.id "
                 + "WHERE om.organization_id = :organizationId";
