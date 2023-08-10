@@ -9,7 +9,7 @@ public enum OauthAttributes {
         @Override
         public OauthUserProfile of(Map<String, Object> attributes) {
             return OauthUserProfile.builder()
-                    .email((String) attributes.get("email"))
+                    .id((String) attributes.get("login"))
                     .name((String) attributes.get("name"))
                     .imageUrl((String) attributes.get("avatar_url"))
                     .build();
