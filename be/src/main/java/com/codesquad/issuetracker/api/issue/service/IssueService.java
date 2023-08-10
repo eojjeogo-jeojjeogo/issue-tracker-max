@@ -1,29 +1,16 @@
 package com.codesquad.issuetracker.api.issue.service;
 
-import com.codesquad.issuetracker.api.comment.domain.Comment;
-import com.codesquad.issuetracker.api.comment.domain.Emoticon;
-import com.codesquad.issuetracker.api.comment.dto.request.CommentRequest;
 import com.codesquad.issuetracker.api.comment.dto.response.CommentResponse;
-import com.codesquad.issuetracker.api.comment.repository.CommentEmoticonRepository;
-import com.codesquad.issuetracker.api.comment.repository.CommentRepository;
-import com.codesquad.issuetracker.api.comment.repository.EmoticonRepository;
 import com.codesquad.issuetracker.api.comment.service.CommentService;
 import com.codesquad.issuetracker.api.issue.domain.Issue;
-import com.codesquad.issuetracker.api.issue.domain.IssueAssignee;
-import com.codesquad.issuetracker.api.issue.domain.IssueAssigneeVo;
-import com.codesquad.issuetracker.api.issue.domain.IssueLabel;
-import com.codesquad.issuetracker.api.issue.domain.IssueLabelVo;
 import com.codesquad.issuetracker.api.issue.domain.IssueVo;
-import com.codesquad.issuetracker.api.issue.dto.IssueAssigneeUpdateRequest;
 import com.codesquad.issuetracker.api.issue.dto.IssueCreateRequest;
-import com.codesquad.issuetracker.api.issue.dto.IssueLabelUpdateRequest;
+import com.codesquad.issuetracker.api.issue.dto.IssueInfoResponse;
 import com.codesquad.issuetracker.api.issue.dto.IssueMilestoneUpdateRequest;
 import com.codesquad.issuetracker.api.issue.dto.IssueResponse;
 import com.codesquad.issuetracker.api.issue.dto.IssueStatusUpdateRequest;
 import com.codesquad.issuetracker.api.issue.dto.IssueTitleUpdateRequest;
 import com.codesquad.issuetracker.api.issue.dto.IssuesStatusUpdateRequest;
-import com.codesquad.issuetracker.api.issue.repository.IssueAssigneeRepository;
-import com.codesquad.issuetracker.api.issue.repository.IssueLabelRepository;
 import com.codesquad.issuetracker.api.issue.repository.IssueRepository;
 import com.codesquad.issuetracker.api.milestone.domain.MilestoneVo;
 import com.codesquad.issuetracker.api.milestone.service.MilestoneService;
@@ -37,20 +24,17 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class IssueService {
 
-    private final OrganizationRepository organizationRepository;
-    private final IssueRepository issueRepository;
-    private final CommentRepository commentRepository;
-    private final CommentEmoticonRepository commentEmoticonRepository;
-    private final IssueLabelRepository issueLabelRepository;
-    private final IssueAssigneeRepository issueAssigneeRepository;
-    private final EmoticonRepository emoticonRepository;
-
+    // TODO: 도메인 설계 개선 필요(상위 개념을 만들어서 중구난방으로 서비스와 레포지토리를 가져오지 않게)
+    // TODO: 코멘트 관련 내용도 어떤 것은 IssueInfo 어떤 것은 Issue에서 처리하고 있음
+    private final IssueInfoService issueInfoService;
     private final CommentService commentService;
     private final MilestoneService milestoneService;
 
+    private final OrganizationRepository organizationRepository;
+    private final IssueRepository issueRepository;
+
     @Transactional
     public Long create(String organizationTitle, IssueCreateRequest issueCreateRequest) {
-        // TODO: 회원 확인 로직 추가 필요, orElseThrow() 예외 처리 필요
         // 이슈 저장
         Long organizationId = organizationRepository.findBy(organizationTitle).orElseThrow();
         Long issuesCount = issueRepository.countIssuesBy(organizationId).orElseThrow();
@@ -58,69 +42,27 @@ public class IssueService {
         Long issueId = issueRepository.save(issue).orElseThrow();
 
         // 코멘트, 담당자, 라벨 저장
-        saveComment(issueId, issueCreateRequest);
-        saveAssignees(issueId, issueCreateRequest);
-        saveLabels(issueId, issueCreateRequest);
-
+        issueInfoService.saveIssueInfo(issueId, issueCreateRequest);
         return issueId;
     }
 
-    private void saveComment(Long issueId, IssueCreateRequest issueCreateRequest) {
-        CommentRequest commentRequest = new CommentRequest(
-                issueCreateRequest.getComment().getContent(),
-                issueCreateRequest.getComment().getFileUrl()
-        );
-        Comment comment = commentRequest.toEntityWithIssueId(issueId);
-        commentRepository.save(comment);
-    }
-
-    private void saveAssignees(Long issueId, IssueCreateRequest issueCreateRequest) {
-        List<IssueAssignee> issueAssignees = issueCreateRequest.extractAssignees(issueId);
-        issueRepository.save(issueAssignees);
-    }
-
-    private void saveLabels(Long issueId, IssueCreateRequest issueCreateRequest) {
-        List<IssueLabel> issueLabels = issueCreateRequest.extractLabels(issueId);
-        issueRepository.save(issueLabels);
-    }
-
-
+    @Transactional
     public IssueResponse read(Long issueId) {
         // 이슈
         IssueVo issueVo = issueRepository.findBy(issueId);
+        // 마일스톤
+        MilestoneVo milestone = milestoneService.read(issueVo.getMilestoneId()); // TODO 이거는 마일스톤 서비스보다 이슈 서비스에서 하는 것이 나을 듯
         // 코멘트
         List<CommentResponse> comments = commentService.readAll(issueId, issueVo.getAuthor());
-        // 마일스톤
-        MilestoneVo milestone = milestoneService.read(issueVo.getMilestone_id());
-        // 담당자
-        List<IssueAssigneeVo> assignees = issueAssigneeRepository.findAllBy(issueId);
-        // 라벨
-        List<IssueLabelVo> labels = issueLabelRepository.findAllBy(issueId);
-        // 이모티콘
-        List<Emoticon> emoticons = emoticonRepository.findAll();
-        return IssueResponse.of(issueVo, comments, milestone, assignees, labels, emoticons);
+        // 담당자, 라벨, 이모티콘 목록
+        IssueInfoResponse issueInfoResponse = issueInfoService.readIssueInfo(issueId);
+        return IssueResponse.of(issueVo, comments, milestone, issueInfoResponse);
     }
 
     public void update(Long issueId, IssueTitleUpdateRequest issueTitleUpdateRequest) {
-        // TODO: 이슈 id가 해당 오가니제이션에 있는지 검증 필요
         Issue issue = issueTitleUpdateRequest.toEntity(issueId);
         if (!issueRepository.updateTitle(issue)) {
             throw new RuntimeException("Title update failed for issueId: " + issueId);
-        }
-    }
-
-    public void update(Long issueId, IssueAssigneeUpdateRequest issueAssigneeUpdateRequest) {
-        // TODO: 이슈 id가 해당 오가니제이션에 있는지 검증 필요
-        List<IssueAssignee> assignees = issueAssigneeUpdateRequest.toEntity(issueId);
-        if (!issueRepository.updateAssignees(assignees)) {
-            throw new RuntimeException("Assignee update failed for issueId: " + issueId);
-        }
-    }
-
-    public void update(Long issueId, IssueLabelUpdateRequest issueLabelUpdateRequest) {
-        List<IssueLabel> labels = issueLabelUpdateRequest.toEntity(issueId);
-        if (!issueRepository.updateLabels(labels)) {
-            throw new RuntimeException("Label update failed for issueId: " + issueId);
         }
     }
 
@@ -144,6 +86,6 @@ public class IssueService {
     @Transactional
     public void deleteOne(Long issueId) {
         issueRepository.delete(issueId);
-        commentRepository.delete(issueId);
+        issueInfoService.delete(issueId);
     }
 }
