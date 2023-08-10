@@ -1,11 +1,14 @@
 package com.codesquad.issuetracker.api.issue.repository;
 
+import com.codesquad.issuetracker.api.issue.domain.IssueLabel;
 import com.codesquad.issuetracker.api.issue.domain.IssueLabelVo;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
+import org.springframework.jdbc.core.namedparam.SqlParameterSourceUtils;
 import org.springframework.stereotype.Repository;
 
 @Repository
@@ -27,6 +30,24 @@ public class IssueLabelRepositoryImpl implements IssueLabelRepository {
                 + "JOIN label ON issue_label.label_id = label.id "
                 + "WHERE issue_label.issue_id = :issueId";
         return template.query(sql, Collections.singletonMap("issueId", issueId), issueLabelVoRowMapper());
+    }
+
+    public void save(List<IssueLabel> issueLabels) {
+        String sql = "INSERT INTO issue_label (issue_id, label_id) VALUES (:issueId, :labelId)";
+        template.batchUpdate(sql, SqlParameterSourceUtils.createBatch(issueLabels));
+    }
+
+    @Override
+    public boolean update(List<IssueLabel> labels) {
+        String sql = "INSERT INTO issue_label (issue_id, label_id) VALUES (:issueId, :labelId)";
+        int[] result = template.batchUpdate(sql, SqlParameterSourceUtils.createBatch(labels));
+        return result.length == labels.size();
+    }
+
+    @Override
+    public void delete(Long issueId) {
+        String sql = "DELETE FROM issue_label WHERE issue_id = :issueId";
+        template.update(sql, Map.of("issueId", issueId));
     }
 
     private RowMapper<IssueLabelVo> issueLabelVoRowMapper() {
