@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Getter
 @NoArgsConstructor
@@ -15,12 +16,13 @@ public class IssueCreateRequest {
 
     private Long organizationId;
     private Long milestonesId;
-    private Long memberId = 1L; // TODO: 임의로 1을 넣어놓은 상황
+    @Setter
+    private Long memberId;
 
     private String title;
     private CommentRequest comment;
-    private List<Long> assignees;
-    private List<Long> labels;
+    private List<Long> assigneesId;
+    private List<Long> labelsId;
     private final Boolean isClosed = false;
 
     public Issue toEntity(Long organizationId, Long issuesCount) {
@@ -35,14 +37,14 @@ public class IssueCreateRequest {
     }
 
     public List<IssueAssignee> extractAssignees(Long issueId) {
-        return assignees.stream()
-                .map(assignee -> new IssueAssignee(issueId, assignee))
+        return assigneesId.stream()
+                .map(assigneeId -> new IssueAssignee(issueId, assigneeId))
                 .collect(Collectors.toList());
     }
 
     public List<IssueLabel> extractLabels(Long issueId) {
-        return labels.stream()
-                .map(label -> new IssueLabel(issueId, label))
+        return labelsId.stream()
+                .map(labelId -> new IssueLabel(issueId, labelId))
                 .collect(Collectors.toList());
     }
 }
