@@ -57,12 +57,18 @@ public class JwtFilter implements Filter {
         try {
             String token = getToken(httpServletRequest);
             Claims claims = jwtProvider.getClaims(token);
-            request.setAttribute(MEMBER_ID,
-                    claims.get(MEMBER_ID));
+            Long memberId = convertMemberIdToLong(claims);
+            request.setAttribute(MEMBER_ID, memberId);
             chain.doFilter(request, response);
         } catch (RuntimeException e) {
             sendJwtExceptionResponse(response, e);
         }
+    }
+
+    private Long convertMemberIdToLong(Claims claims) {
+        Object memberIdObj = claims.get(MEMBER_ID);
+        Long memberId = Long.valueOf(memberIdObj.toString());
+        return memberId;
     }
 
     private boolean whiteListCheck(String uri) {
