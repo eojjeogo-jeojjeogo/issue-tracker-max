@@ -33,7 +33,7 @@ public class MemberService {
         if (!memberId.isPresent()) {
             memberId = memberRepository.save(member, providerName);
         }
-        Jwt tokens = jwtProvider.createTokens(Map.of("memberId", memberId));
+        Jwt tokens = jwtProvider.createTokens(Map.of("memberId", memberId.get()));
 
         if (memberId.isPresent()) {
             tokenRepository.deleteRefreshToken(memberId.get());
