@@ -1,4 +1,4 @@
-package com.codesquad.issuetracker.api.oauth;
+package com.codesquad.issuetracker.oauth.config;
 
 import java.util.HashMap;
 import java.util.Map;

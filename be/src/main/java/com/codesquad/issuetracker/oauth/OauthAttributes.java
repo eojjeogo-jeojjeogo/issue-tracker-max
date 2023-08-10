@@ -1,14 +1,14 @@
-package com.codesquad.issuetracker.api.oauth;
+package com.codesquad.issuetracker.oauth;
 
-import com.codesquad.issuetracker.api.oauth.dto.UserProfile;
+import com.codesquad.issuetracker.oauth.dto.response.OauthUserProfile;
 import java.util.Arrays;
 import java.util.Map;
 
 public enum OauthAttributes {
     GITHUB("github") {
         @Override
-        public UserProfile of(Map<String, Object> attributes) {
-            return UserProfile.builder()
+        public OauthUserProfile of(Map<String, Object> attributes) {
+            return OauthUserProfile.builder()
                     .email((String) attributes.get("email"))
                     .name((String) attributes.get("name"))
                     .imageUrl((String) attributes.get("avatar_url"))
@@ -22,7 +22,7 @@ public enum OauthAttributes {
         this.providerName = name;
     }
 
-    public static UserProfile extract(String providerName, Map<String, Object> attributes) {
+    public static OauthUserProfile extract(String providerName, Map<String, Object> attributes) {
         return Arrays.stream(values())
                 .filter(provider -> providerName.equals(provider.providerName))
                 .findFirst()
@@ -30,5 +30,5 @@ public enum OauthAttributes {
                 .of(attributes);
     }
 
-    public abstract UserProfile of(Map<String, Object> attributes);
+    public abstract OauthUserProfile of(Map<String, Object> attributes);
 }

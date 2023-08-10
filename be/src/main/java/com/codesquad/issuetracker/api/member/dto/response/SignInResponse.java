@@ -1,6 +1,6 @@
-package com.codesquad.issuetracker.api.oauth.dto;
+package com.codesquad.issuetracker.api.member.dto.response;
 
-import com.codesquad.issuetracker.api.oauth.jwt.Jwt;
+import com.codesquad.issuetracker.jwt.Jwt;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

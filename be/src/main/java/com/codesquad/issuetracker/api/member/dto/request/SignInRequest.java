@@ -1,4 +1,4 @@
-package com.codesquad.issuetracker.api.member.dto;
+package com.codesquad.issuetracker.api.member.dto.request;
 
 import com.codesquad.issuetracker.api.member.domain.Member;
 import lombok.Getter;

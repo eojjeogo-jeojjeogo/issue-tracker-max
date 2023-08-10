@@ -1,5 +1,7 @@
-package com.codesquad.issuetracker.api.oauth;
+package com.codesquad.issuetracker.oauth.domain;
 
+import com.codesquad.issuetracker.oauth.config.OauthProperties.Provider;
+import com.codesquad.issuetracker.oauth.config.OauthProperties.User;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -11,7 +13,7 @@ public class OauthProvider {
     private final String tokenUrl;
     private final String userInfoUrl;
 
-    public OauthProvider(OauthProperties.User user, OauthProperties.Provider provider) {
+    public OauthProvider(User user, Provider provider) {
         this(user.getClientId(), user.getClientSecret(), user.getRedirectUri(), provider.getTokenUri(),
                 provider.getUserInfoUri());
     }
