@@ -29,8 +29,7 @@ public class IssueResponse {
     private List<Emoticon> emoticons;
 
     public static IssueResponse of(IssueVo issueVo, List<CommentResponse> comments, MilestoneVo milestone,
-                                   List<IssueAssigneeVo> assignees, List<IssueLabelVo> labels,
-                                   List<Emoticon> emoticons) {
+                                   IssueInfoResponse issueInfoResponse) {
         return IssueResponse.builder()
                 .id(issueVo.getId())
                 .number(issueVo.getNumber())
@@ -40,9 +39,9 @@ public class IssueResponse {
                 .author(issueVo.getAuthor())
                 .comments(comments)
                 .milestone(milestone)
-                .assignees(assignees)
-                .labels(labels)
-                .emoticons(emoticons)
+                .assignees(issueInfoResponse.getAssignees())
+                .labels(issueInfoResponse.getLabels())
+                .emoticons(issueInfoResponse.getEmoticons())
                 .build();
     }
 }

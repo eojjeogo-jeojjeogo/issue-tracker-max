@@ -9,7 +9,7 @@ import lombok.Getter;
 public class IssueVo {
 
     private Long id;
-    private Long milestone_id;
+    private Long milestoneId;
     private Long number;
     private String title;
     private Boolean isClosed;
