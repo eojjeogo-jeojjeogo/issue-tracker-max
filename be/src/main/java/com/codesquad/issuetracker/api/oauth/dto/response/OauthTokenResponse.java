@@ -1,4 +1,4 @@
-package com.codesquad.issuetracker.oauth.dto.response;
+package com.codesquad.issuetracker.api.oauth.dto.response;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Builder;

@@ -1,10 +1,10 @@
-package com.codesquad.issuetracker.oauth.service;
+package com.codesquad.issuetracker.api.oauth.service;
 
-import com.codesquad.issuetracker.oauth.OauthAttributes;
-import com.codesquad.issuetracker.oauth.config.InMemoryProviderRepository;
-import com.codesquad.issuetracker.oauth.domain.OauthProvider;
-import com.codesquad.issuetracker.oauth.dto.response.OauthTokenResponse;
-import com.codesquad.issuetracker.oauth.dto.response.OauthUserProfile;
+import com.codesquad.issuetracker.api.oauth.OauthAttributes;
+import com.codesquad.issuetracker.api.oauth.config.InMemoryProviderRepository;
+import com.codesquad.issuetracker.api.oauth.domain.OauthProvider;
+import com.codesquad.issuetracker.api.oauth.dto.response.OauthTokenResponse;
+import com.codesquad.issuetracker.api.oauth.dto.response.OauthUserProfile;
 import java.nio.charset.StandardCharsets;
 import java.util.Collections;
 import java.util.Map;
@@ -22,7 +22,7 @@ public class OauthService {
 
     private final InMemoryProviderRepository inMemoryProviderRepository;
 
-    public OauthUserProfile login(String providerName, String code) {
+    public OauthUserProfile getOauthUserProfile(String providerName, String code) {
         // 프론트에서 넘어온 provider 이름을 통해 InMemoryProviderRepository에서 OauthProvider 가져오기
         OauthProvider provider = inMemoryProviderRepository.findByProviderName(providerName);
 
