@@ -1,10 +1,10 @@
 package com.codesquad.issuetracker.api.member.controller;
 
-import com.codesquad.issuetracker.api.member.Service.MemberService;
 import com.codesquad.issuetracker.api.member.dto.request.RefreshTokenRequest;
 import com.codesquad.issuetracker.api.member.dto.request.SignInRequest;
 import com.codesquad.issuetracker.api.member.dto.request.SignUpRequest;
 import com.codesquad.issuetracker.api.member.dto.response.SignInResponse;
+import com.codesquad.issuetracker.api.member.service.MemberService;
 import com.codesquad.issuetracker.api.oauth.dto.request.OauthSignInRequest;
 import java.util.Collections;
 import java.util.Map;
@@ -21,7 +21,7 @@ public class MemberController {
 
     private final MemberService memberService;
 
-    @PostMapping("/api/oauth/sign-up/{provider}")
+    @PostMapping("/api/oauth/sign-in/{provider}")
     public ResponseEntity<SignInResponse> oAuthSignIn(@RequestBody OauthSignInRequest oauthSignInRequest,
                                                       @PathVariable String provider) {
         SignInResponse oAuthSignInResponse = memberService.oAuthSignIn(
@@ -40,7 +40,7 @@ public class MemberController {
                 .body(Collections.singletonMap("id", memberId));
     }
 
-    @PostMapping("/api/sign-In")
+    @PostMapping("/api/sign-in")
     public ResponseEntity<SignInResponse> signIn(@RequestBody SignInRequest signInRequest) {
         SignInResponse oAuthSignInResponse = memberService.signIn(signInRequest);
         return ResponseEntity.ok()

@@ -1,4 +1,4 @@
-package com.codesquad.issuetracker.api.member.Service;
+package com.codesquad.issuetracker.api.member.service;
 
 import com.codesquad.issuetracker.api.member.domain.Member;
 import com.codesquad.issuetracker.api.member.dto.request.RefreshTokenRequest;

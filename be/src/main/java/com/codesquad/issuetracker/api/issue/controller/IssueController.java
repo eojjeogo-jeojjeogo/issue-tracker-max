@@ -90,6 +90,6 @@ public class IssueController {
     }
 
     private Long getSignInId(HttpServletRequest request) {
-        return  Long.parseLong(request.getAttribute("memberId").toString());
+        return (Long) request.getAttribute("memberId");
     }
 }
