@@ -15,7 +15,6 @@ public class Comment {
     private final LocalDateTime createdTime;
     private final String fileUrl;
     private final Long issueId;
-    //member_id 일단 1로 고정
-    private final Long memberId = 1L;
+    private final Long memberId;
 
 }
