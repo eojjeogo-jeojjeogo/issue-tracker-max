@@ -1,6 +1,6 @@
-package com.codesquad.issuetracker.oauth;
+package com.codesquad.issuetracker.api.oauth;
 
-import com.codesquad.issuetracker.oauth.dto.response.OauthUserProfile;
+import com.codesquad.issuetracker.api.oauth.dto.response.OauthUserProfile;
 import java.util.Arrays;
 import java.util.Map;
 

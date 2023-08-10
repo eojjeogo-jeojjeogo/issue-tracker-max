@@ -1,7 +1,7 @@
-package com.codesquad.issuetracker.oauth.domain;
+package com.codesquad.issuetracker.api.oauth.domain;
 
-import com.codesquad.issuetracker.oauth.config.OauthProperties.Provider;
-import com.codesquad.issuetracker.oauth.config.OauthProperties.User;
+import com.codesquad.issuetracker.api.oauth.config.OauthProperties.Provider;
+import com.codesquad.issuetracker.api.oauth.config.OauthProperties.User;
 import lombok.Builder;
 import lombok.Getter;
 

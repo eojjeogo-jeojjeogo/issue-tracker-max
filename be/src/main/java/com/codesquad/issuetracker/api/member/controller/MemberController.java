@@ -4,7 +4,7 @@ import com.codesquad.issuetracker.api.member.Service.MemberService;
 import com.codesquad.issuetracker.api.member.dto.request.SignInRequest;
 import com.codesquad.issuetracker.api.member.dto.request.SignUpRequest;
 import com.codesquad.issuetracker.api.member.dto.response.SignInResponse;
-import com.codesquad.issuetracker.oauth.dto.request.OauthSignInRequest;
+import com.codesquad.issuetracker.api.oauth.dto.request.OauthSignInRequest;
 import java.util.Collections;
 import java.util.Map;
 import lombok.RequiredArgsConstructor;

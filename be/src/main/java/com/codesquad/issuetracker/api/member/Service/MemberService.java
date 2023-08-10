@@ -6,10 +6,10 @@ import com.codesquad.issuetracker.api.member.dto.request.SignUpRequest;
 import com.codesquad.issuetracker.api.member.dto.response.SignInResponse;
 import com.codesquad.issuetracker.api.member.repository.MemberRepository;
 import com.codesquad.issuetracker.api.member.repository.TokenRepository;
+import com.codesquad.issuetracker.api.oauth.dto.response.OauthUserProfile;
+import com.codesquad.issuetracker.api.oauth.service.OauthService;
 import com.codesquad.issuetracker.jwt.Jwt;
 import com.codesquad.issuetracker.jwt.JwtProvider;
-import com.codesquad.issuetracker.oauth.dto.response.OauthUserProfile;
-import com.codesquad.issuetracker.oauth.service.OauthService;
 import java.util.Map;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
@@ -26,7 +26,7 @@ public class MemberService {
 
     public SignInResponse oAuthSignIn(String providerName, String code) {
         //github에서 사용자 정보 가져오기
-        OauthUserProfile oauthUserProfile = oauthService.login(providerName, code);
+        OauthUserProfile oauthUserProfile = oauthService.getOauthUserProfile(providerName, code);
         Member member = oauthUserProfile.toEntity();
 
         Optional<Long> memberId = memberRepository.findBy(member.getEmail());
