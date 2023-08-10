@@ -1,4 +1,4 @@
-package com.codesquad.issuetracker.api.oauth.jwt;
+package com.codesquad.issuetracker.jwt;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
