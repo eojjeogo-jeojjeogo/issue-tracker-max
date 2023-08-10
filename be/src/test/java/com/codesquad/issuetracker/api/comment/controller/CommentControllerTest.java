@@ -27,7 +27,7 @@ class CommentControllerTest {
 
     @Test
     @DisplayName("comment 생성요청이 들어오면 comment를 저장한뒤 commentId를 포함한 응답을 전송한다.")
-    void commentCreateTest() throws Exception {
+    void commentCreate() throws Exception {
         //given
         String organizationTitle = "testOrganization";
         String issueId = "1";
@@ -35,11 +35,11 @@ class CommentControllerTest {
 
         //when
         ResultActions resultActions =
-            mockMvc.perform(
-                MockMvcRequestBuilders.post("/api/{organizationTitle}/issues/{issueId}/comments",
-                        organizationTitle, issueId)
-                    .contentType(MediaType.APPLICATION_JSON)
-                    .content(request));
+                mockMvc.perform(
+                        MockMvcRequestBuilders.post("/api/{organizationTitle}/issues/{issueId}/comments",
+                                        organizationTitle, issueId)
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content(request));
 
         //then
         resultActions.andExpect(jsonPath("$.id").value(issueId));
@@ -48,22 +48,22 @@ class CommentControllerTest {
     @Sql(scripts = "classpath:schemaForDummyData.sql")
     @Test
     @DisplayName("comment의 title, fileUrl 수정 요청이 들어오면 해당 comment를 수정한뒤 commentId를 포함한 응답을 전송한다.")
-    void commentUpdateTestRequestWithTitleAndFileUrl() throws Exception {
+    void commentUpdateWithTitleAndFileUrl() throws Exception {
         //given
         String organizationTitle = "testOrganization";
         String issueId = "1";
         String commentId = "1";
         String request = objectMapper.writeValueAsString(
-            dummyCommentRequest());
+                dummyCommentRequest());
 
         //when
         ResultActions resultActions =
-            mockMvc.perform(
-                MockMvcRequestBuilders.patch(
-                        "/api/{organizationTitle}/issues/{issueId}/comments/{commentId}",
-                        organizationTitle, issueId, commentId)
-                    .contentType(MediaType.APPLICATION_JSON)
-                    .content(request));
+                mockMvc.perform(
+                        MockMvcRequestBuilders.patch(
+                                        "/api/{organizationTitle}/issues/{issueId}/comments/{commentId}",
+                                        organizationTitle, issueId, commentId)
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content(request));
 
         //then
         resultActions.andExpect(jsonPath("$.id").value(issueId));
@@ -71,9 +71,9 @@ class CommentControllerTest {
 
     private CommentRequest dummyCommentRequest() {
         return CommentRequest.builder()
-            .content("testContent")
-            .fileUrl("fileUrl")
-            .build();
+                .content("testContent")
+                .fileUrl("fileUrl")
+                .build();
     }
 
 }
