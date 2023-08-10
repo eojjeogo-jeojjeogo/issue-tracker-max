@@ -31,7 +31,6 @@ public class JwtFilter implements Filter {
             "/api/oauth/**",
             "/api/sign-In",
             "/api/reissue-access-token",
-            //나중에 code받는 redirect url 도 풀어놔야하는지 체크해야함
             //테스트용으로 풀어놓음
             "/"
     };

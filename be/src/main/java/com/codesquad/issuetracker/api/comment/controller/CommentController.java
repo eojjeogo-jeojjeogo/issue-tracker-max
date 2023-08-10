@@ -5,6 +5,7 @@ import com.codesquad.issuetracker.api.comment.dto.request.CommentRequest;
 import com.codesquad.issuetracker.api.comment.service.CommentService;
 import java.util.Collections;
 import java.util.Map;
+import javax.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,12 +19,16 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class CommentController {
 
+    public static final String MEMBER_ID = "memberId";
     private final CommentService commentService;
 
     @PostMapping("/api/{organizationTitle}/issues/{issueId}/comments")
-    public ResponseEntity<Map<String, Long>> createComment(@PathVariable Long issueId,
+    public ResponseEntity<Map<String, Long>> createComment(HttpServletRequest request,
+                                                           @PathVariable Long issueId,
                                                            @RequestBody CommentRequest commentRequest) {
-        Long commentId = commentService.createComment(issueId, commentRequest);
+        //작성자 아이디
+        Long memberId = (Long) request.getAttribute(MEMBER_ID);
+        Long commentId = commentService.createComment(issueId, commentRequest, memberId);
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(Collections.singletonMap("id", commentId));
     }
@@ -37,10 +42,11 @@ public class CommentController {
     }
 
     @PostMapping("/api/{organizationTitle}/issues/{issueId}/comments/{commentId}/emoticons")
-    public ResponseEntity<Void> createCommentEmoticon(@PathVariable Long commentId,
+    public ResponseEntity<Void> createCommentEmoticon(HttpServletRequest request,
+                                                      @PathVariable Long commentId,
                                                       @RequestBody CommentEmoticonAddRequest commentEmoticonAddRequest) {
         //todo 로그인 된 유저 정보가 필요함
-        Long memberId = 1L;
+        Long memberId = (Long) request.getAttribute(MEMBER_ID);
         commentService.createCommentEmoticon(commentId, memberId, commentEmoticonAddRequest);
         return ResponseEntity.status(HttpStatus.CREATED)
                 .build();

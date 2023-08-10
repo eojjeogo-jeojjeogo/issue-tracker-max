@@ -23,8 +23,8 @@ public class CommentService {
     private final CommentRepository commentRepository;
     private final CommentEmoticonRepository commentEmoticonRepository;
 
-    public Long createComment(Long issueId, CommentRequest commentRequest) {
-        Comment comment = commentRequest.toEntityWithIssueId(issueId);
+    public Long createComment(Long issueId, CommentRequest commentRequest, Long memberId) {
+        Comment comment = commentRequest.toEntityWithIssueId(issueId, memberId);
         return commentRepository.save(comment).orElseThrow();
     }
 

@@ -19,8 +19,9 @@ public class CommentRequest {
         this.fileUrl = fileUrl;
     }
 
-    public Comment toEntityWithIssueId(Long issueId) {
+    public Comment toEntityWithIssueId(Long issueId, Long memberId) {
         return Comment.builder()
+                .memberId(memberId)
                 .issueId(issueId)
                 .content(content)
                 .fileUrl(fileUrl)
