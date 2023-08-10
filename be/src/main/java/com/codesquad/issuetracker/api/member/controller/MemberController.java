@@ -1,6 +1,7 @@
 package com.codesquad.issuetracker.api.member.controller;
 
 import com.codesquad.issuetracker.api.member.Service.MemberService;
+import com.codesquad.issuetracker.api.member.dto.request.RefreshTokenRequest;
 import com.codesquad.issuetracker.api.member.dto.request.SignInRequest;
 import com.codesquad.issuetracker.api.member.dto.request.SignUpRequest;
 import com.codesquad.issuetracker.api.member.dto.response.SignInResponse;
@@ -44,5 +45,13 @@ public class MemberController {
         SignInResponse oAuthSignInResponse = memberService.signIn(signInRequest);
         return ResponseEntity.ok()
                 .body(oAuthSignInResponse);
+    }
+
+    @PostMapping("/api/reissue-access-token")
+    public ResponseEntity<Map<String, String>> reissueAccessToken(
+            @RequestBody RefreshTokenRequest refreshTokenRequest) {
+        String accessToken = memberService.reissueAccessToken(refreshTokenRequest);
+        return ResponseEntity.ok()
+                .body(Collections.singletonMap("accessToken", accessToken));
     }
 }

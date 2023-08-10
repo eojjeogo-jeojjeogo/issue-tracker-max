@@ -1,6 +1,7 @@
 package com.codesquad.issuetracker.api.member.Service;
 
 import com.codesquad.issuetracker.api.member.domain.Member;
+import com.codesquad.issuetracker.api.member.dto.request.RefreshTokenRequest;
 import com.codesquad.issuetracker.api.member.dto.request.SignInRequest;
 import com.codesquad.issuetracker.api.member.dto.request.SignUpRequest;
 import com.codesquad.issuetracker.api.member.dto.response.SignInResponse;
@@ -74,6 +75,14 @@ public class MemberService {
         tokenRepository.save(member.getId(), tokens.getRefreshToken());
 
         return new SignInResponse(tokens);
+    }
+
+    public String reissueAccessToken(RefreshTokenRequest refreshTokenRequest) {
+        Optional<Long> memberId = tokenRepository.findMemberIdBy(refreshTokenRequest.getRefreshToken());
+
+        Jwt tokens = jwtProvider.createTokens(Map.of("memberId", memberId.get()));
+
+        return tokens.getAccessToken();
     }
 
 }
