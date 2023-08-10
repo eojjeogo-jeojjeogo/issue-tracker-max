@@ -58,9 +58,9 @@ public class CommentRepositoryImpl implements CommentRepository {
     }
 
     @Override
-    public void delete(Long commentId) {
-        String sql = "DELETE FROM comment WHERE id = :commentId";
-        template.update(sql, Collections.singletonMap("commentId", commentId));
+    public void deleteBy(Long issueId) {
+        String sql = "DELETE FROM issue_comment WHERE issue_id = :issueId";
+        template.update(sql, Collections.singletonMap("issueId", issueId));
     }
 
     @Override
