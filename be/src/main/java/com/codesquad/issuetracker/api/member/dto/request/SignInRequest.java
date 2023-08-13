@@ -7,7 +7,6 @@ import lombok.Getter;
 public class SignInRequest {
 
     private String email;
-    private String nickname;
     private String password;
 
     public boolean validatePassword(Member member) {

@@ -35,13 +35,10 @@ public class MemberService {
             memberId = memberRepository.save(member, providerName);
         }
         Jwt tokens = jwtProvider.createTokens(Map.of("memberId", memberId.get()));
-
-        if (memberId.isPresent()) {
-            tokenRepository.deleteRefreshToken(memberId.get());
-        }
+        tokenRepository.deleteRefreshToken(memberId.get());
 
         tokenRepository.save(memberId.get(), tokens.getRefreshToken());
-        return new SignInResponse(tokens);
+        return SignInResponse.of(memberId.get(), member, tokens);
     }
 
     public Long signUp(SignUpRequest signUpRequest, String providerName) {
@@ -74,7 +71,7 @@ public class MemberService {
         tokenRepository.deleteRefreshToken(member.getId());
         tokenRepository.save(member.getId(), tokens.getRefreshToken());
 
-        return new SignInResponse(tokens);
+        return SignInResponse.of(member, tokens);
     }
 
     public String reissueAccessToken(RefreshTokenRequest refreshTokenRequest) {

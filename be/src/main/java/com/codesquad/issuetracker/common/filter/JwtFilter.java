@@ -27,10 +27,9 @@ public class JwtFilter implements Filter {
     private static final String HEADER_AUTHORIZATION = "Authorization";
     private static final String MEMBER_ID = "memberId";
     private static final String[] whiteListUris = {
-            "/api/sign-up/github",
-            "/api/sign-up/local",
+            "/api/sign-up/**",
             "/api/oauth/**",
-            "/api/sign-In",
+            "/api/sign-in",
             "/api/reissue-access-token",
             "/"
     };
