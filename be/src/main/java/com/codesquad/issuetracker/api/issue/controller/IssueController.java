@@ -1,6 +1,8 @@
 package com.codesquad.issuetracker.api.issue.controller;
 
 import com.codesquad.issuetracker.api.issue.dto.IssueCreateRequest;
+import com.codesquad.issuetracker.api.issue.dto.IssueFilterRequest;
+import com.codesquad.issuetracker.api.issue.dto.IssueFilterResponse;
 import com.codesquad.issuetracker.api.issue.dto.IssueMilestoneUpdateRequest;
 import com.codesquad.issuetracker.api.issue.dto.IssueResponse;
 import com.codesquad.issuetracker.api.issue.dto.IssueStatusUpdateRequest;
@@ -16,6 +18,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -87,6 +90,14 @@ public class IssueController {
         issueService.deleteOne(issueId);
         return ResponseEntity.status(HttpStatus.OK)
                 .build();
+    }
+
+    @GetMapping("/api/{organizationTitle}/issues")
+    public ResponseEntity<IssueFilterResponse> readFilteredIssue(@PathVariable String organizationTitle,
+                                                                 @ModelAttribute
+                                                                 IssueFilterRequest issueFilterRequest) {
+        IssueFilterResponse issueFilterResponse = issueService.readFilteredIssue(issueFilterRequest, organizationTitle);
+        return ResponseEntity.ok().body(issueFilterResponse);
     }
 
     private Long getSignInId(HttpServletRequest request) {

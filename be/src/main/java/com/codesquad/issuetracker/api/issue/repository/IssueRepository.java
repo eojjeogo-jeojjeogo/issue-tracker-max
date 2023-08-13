@@ -9,6 +9,10 @@ public interface IssueRepository {
 
     Optional<Long> countIssuesBy(Long organizationId);
 
+    Optional<Long> countOpenedIssuesBy(Long organizationId);
+
+    Optional<Long> countClosedIssuesBy(Long organizationId);
+
     Optional<Long> save(Issue issue);
 
     IssueVo findBy(Long issueId);

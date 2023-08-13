@@ -1,0 +1,5 @@
+mybatis:
+  type-aliases-package: com.codesquad.issuetracker.api.issue.domain
+  configuration:
+    map-underscore-to-camel-case: true
+  mapper-locations: classpath:mybatis/*.xml

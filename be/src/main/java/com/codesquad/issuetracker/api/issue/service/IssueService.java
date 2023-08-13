@@ -3,14 +3,18 @@ package com.codesquad.issuetracker.api.issue.service;
 import com.codesquad.issuetracker.api.comment.dto.response.CommentResponse;
 import com.codesquad.issuetracker.api.comment.service.CommentService;
 import com.codesquad.issuetracker.api.issue.domain.Issue;
+import com.codesquad.issuetracker.api.issue.domain.IssueFilterVo;
 import com.codesquad.issuetracker.api.issue.domain.IssueVo;
 import com.codesquad.issuetracker.api.issue.dto.IssueCreateRequest;
+import com.codesquad.issuetracker.api.issue.dto.IssueFilterRequest;
+import com.codesquad.issuetracker.api.issue.dto.IssueFilterResponse;
 import com.codesquad.issuetracker.api.issue.dto.IssueInfoResponse;
 import com.codesquad.issuetracker.api.issue.dto.IssueMilestoneUpdateRequest;
 import com.codesquad.issuetracker.api.issue.dto.IssueResponse;
 import com.codesquad.issuetracker.api.issue.dto.IssueStatusUpdateRequest;
 import com.codesquad.issuetracker.api.issue.dto.IssueTitleUpdateRequest;
 import com.codesquad.issuetracker.api.issue.dto.IssuesStatusUpdateRequest;
+import com.codesquad.issuetracker.api.issue.repository.IssueFilterMapper;
 import com.codesquad.issuetracker.api.issue.repository.IssueRepository;
 import com.codesquad.issuetracker.api.milestone.domain.MilestoneVo;
 import com.codesquad.issuetracker.api.milestone.service.MilestoneService;
@@ -32,6 +36,7 @@ public class IssueService {
 
     private final OrganizationRepository organizationRepository;
     private final IssueRepository issueRepository;
+    private final IssueFilterMapper issueFilterMapper;
 
     @Transactional
     public Long create(String organizationTitle, IssueCreateRequest issueCreateRequest) {
@@ -51,7 +56,8 @@ public class IssueService {
         // 이슈
         IssueVo issueVo = issueRepository.findBy(issueId);
         // 마일스톤
-        MilestoneVo milestone = milestoneService.read(issueVo.getMilestoneId()); // TODO 이거는 마일스톤 서비스보다 이슈 서비스에서 하는 것이 나을 듯
+        MilestoneVo milestone = milestoneService.read(
+                issueVo.getMilestoneId()); // TODO 이거는 마일스톤 서비스보다 이슈 서비스에서 하는 것이 나을 듯
         // 코멘트
         List<CommentResponse> comments = commentService.readAll(issueId, issueVo.getAuthor());
         // 담당자, 라벨, 이모티콘 목록
@@ -87,5 +93,15 @@ public class IssueService {
     public void deleteOne(Long issueId) {
         issueRepository.delete(issueId);
         issueInfoService.delete(issueId);
+    }
+
+    @Transactional
+    public IssueFilterResponse readFilteredIssue(IssueFilterRequest issueFilterRequest, String organizationTitle) {
+        Long organizationId = organizationRepository.findBy(organizationTitle).orElseThrow();
+        Long openedIssuesCount = issueRepository.countOpenedIssuesBy(organizationId).get();
+        Long closedIssueCount = issueRepository.countClosedIssuesBy(organizationId).get();
+        List<IssueFilterVo> issueFilterVos = issueFilterMapper.readAll(issueFilterRequest, organizationId);
+
+        return IssueFilterResponse.of(openedIssuesCount, closedIssueCount, issueFilterVos);
     }
 }
