@@ -9,6 +9,10 @@ import com.codesquad.issuetracker.api.member.dto.response.SignInResponse;
 import com.codesquad.issuetracker.api.member.repository.MemberRepository;
 import com.codesquad.issuetracker.api.oauth.dto.response.OauthUserProfile;
 import com.codesquad.issuetracker.api.oauth.service.OauthService;
+import com.codesquad.issuetracker.common.exception.CustomRuntimeException;
+import com.codesquad.issuetracker.common.exception.customexception.MemberException;
+import com.codesquad.issuetracker.common.exception.customexception.SignInException;
+import com.codesquad.issuetracker.common.exception.customexception.SignUpException;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -25,7 +29,9 @@ public class MemberService {
         OauthUserProfile oauthUserProfile = oauthService.getOauthUserProfile(providerName, code);
         Member member = oauthUserProfile.toEntity();
         Long memberId = getMemberId(member)
-                .orElseGet(() -> memberRepository.save(member, providerName).orElseThrow());
+                .orElseGet(
+                        () -> memberRepository.save(member, providerName).orElseThrow(() -> new CustomRuntimeException(
+                                MemberException.MEMBER_SAVE_FAIL)));
         Jwt token = jwtService.issueToken(memberId);
         return SignInResponse.of(memberId, member, token);
     }
@@ -36,7 +42,8 @@ public class MemberService {
 
         Member member = signUpRequest.toEntity();
         return memberRepository.save(member, providerName)
-                .orElseThrow(); // 회원정보 저장 실패 예외
+                .orElseThrow(() -> new CustomRuntimeException(
+                        MemberException.MEMBER_SAVE_FAIL));
     }
 
     public SignInResponse signIn(SignInRequest signInRequest) {
@@ -50,24 +57,24 @@ public class MemberService {
     private void validateEmail(String email) {
         memberRepository.findMemberIdByEmail(email)
                 .ifPresent(member -> {
-                    //이메일이 다를때 예외 던지기
+                    throw new CustomRuntimeException(SignUpException.INVALID_SIGN_UP_EMAIL);
                 });
     }
 
     private void validateNickname(String nickname) {
         if (memberRepository.isNicknameExists(nickname)) {
-            // 닉네임이 존재할때 예외 던지기
+            throw new CustomRuntimeException(SignUpException.INVALID_SIGN_UP_NICKNAME);
         }
     }
 
     private Member findMemberByEmail(String email) {
         return memberRepository.findMemberByEmail(email)
-                .orElseThrow(); // () -> new InvalidEmailException() 해당 email을 가진 사용자가 없으면 예외 던지기
+                .orElseThrow(() -> new CustomRuntimeException(SignInException.INCORRECT_SIGN_IN_EMAIL));
     }
 
     private void validatePassword(SignInRequest signInRequest, Member member) {
         if (!signInRequest.validatePassword(member)) {
-            // 패스워드가 다르다는 예외 던지기
+            throw new CustomRuntimeException(SignInException.INCORRECT_SIGN_IN_PASSWORD);
         }
     }
 
