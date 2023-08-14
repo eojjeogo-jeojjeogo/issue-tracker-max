@@ -1,7 +1,7 @@
 package com.codesquad.issuetracker.api.member.dto.response;
 
+import com.codesquad.issuetracker.api.jwt.domain.Jwt;
 import com.codesquad.issuetracker.api.member.domain.Member;
-import com.codesquad.issuetracker.jwt.Jwt;
 import lombok.Builder;
 import lombok.Getter;
 

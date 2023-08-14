@@ -1,5 +1,6 @@
-package com.codesquad.issuetracker.jwt;
+package com.codesquad.issuetracker.api.jwt.service;
 
+import com.codesquad.issuetracker.api.jwt.domain.Jwt;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;

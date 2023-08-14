@@ -1,4 +1,4 @@
-package com.codesquad.issuetracker.api.member.repository;
+package com.codesquad.issuetracker.api.jwt.repository;
 
 import java.util.Optional;
 

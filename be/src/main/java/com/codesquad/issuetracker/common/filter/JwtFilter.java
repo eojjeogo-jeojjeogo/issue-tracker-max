@@ -1,8 +1,8 @@
 package com.codesquad.issuetracker.common.filter;
 
+import com.codesquad.issuetracker.api.jwt.service.JwtProvider;
 import com.codesquad.issuetracker.common.exception.JwtExceptionResponse;
 import com.codesquad.issuetracker.common.exception.JwtExceptionType;
-import com.codesquad.issuetracker.jwt.JwtProvider;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.MalformedJwtException;
@@ -31,7 +31,8 @@ public class JwtFilter implements Filter {
             "/api/oauth/**",
             "/api/sign-in",
             "/api/reissue-access-token",
-            "/"
+            "/",
+            "/**"
     };
     public static final String OPTIONS = "OPTIONS";
 

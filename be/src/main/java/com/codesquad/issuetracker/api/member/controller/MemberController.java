@@ -1,5 +1,6 @@
 package com.codesquad.issuetracker.api.member.controller;
 
+import com.codesquad.issuetracker.api.jwt.service.JwtService;
 import com.codesquad.issuetracker.api.member.dto.request.RefreshTokenRequest;
 import com.codesquad.issuetracker.api.member.dto.request.SignInRequest;
 import com.codesquad.issuetracker.api.member.dto.request.SignUpRequest;
@@ -20,6 +21,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class MemberController {
 
     private final MemberService memberService;
+    private final JwtService jwtService;
 
     @PostMapping("/api/oauth/sign-in/{provider}")
     public ResponseEntity<SignInResponse> oAuthSignIn(@RequestBody OauthSignInRequest oauthSignInRequest,
@@ -50,7 +52,7 @@ public class MemberController {
     @PostMapping("/api/reissue-access-token")
     public ResponseEntity<Map<String, String>> reissueAccessToken(
             @RequestBody RefreshTokenRequest refreshTokenRequest) {
-        String accessToken = memberService.reissueAccessToken(refreshTokenRequest);
+        String accessToken = jwtService.reissueAccessToken(refreshTokenRequest);
         return ResponseEntity.ok()
                 .body(Collections.singletonMap("accessToken", accessToken));
     }
