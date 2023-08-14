@@ -11,10 +11,10 @@ public interface MemberRepository {
 
     List<MemberFilter> findFiltersBy(Long organizationId);
 
-    Optional<Long> findBy(String email);
+    Optional<Long> findMemberIdByEmail(String email);
 
-    Optional<Member> findMemberBy(String email);
+    Optional<Member> findMemberByEmail(String email);
 
-    boolean existsNickname(String nickname);
+    boolean isNicknameExists(String nickname);
 
 }

@@ -55,7 +55,7 @@ public class MemberRepositoryImpl implements MemberRepository {
     }
 
     @Override
-    public Optional<Long> findBy(String email) {
+    public Optional<Long> findMemberIdByEmail(String email) {
         String sql = "SELECT id FROM member WHERE email = :email";
 
         List<Long> results = template.query(
@@ -68,7 +68,7 @@ public class MemberRepositoryImpl implements MemberRepository {
     }
 
     @Override
-    public Optional<Member> findMemberBy(String email) {
+    public Optional<Member> findMemberByEmail(String email) {
         String sql = "SELECT id, email, password, nickname, profile_img_url FROM member WHERE email = :email";
 
         List<Member> member = template.query(
@@ -80,7 +80,7 @@ public class MemberRepositoryImpl implements MemberRepository {
     }
 
     @Override
-    public boolean existsNickname(String nickname) {
+    public boolean isNicknameExists(String nickname) {
         String sql = "SELECT COUNT(nickname) FROM member WHERE nickname = :nickname";
 
         int count = template.queryForObject(sql, Collections.singletonMap("nickname", nickname), Integer.class);

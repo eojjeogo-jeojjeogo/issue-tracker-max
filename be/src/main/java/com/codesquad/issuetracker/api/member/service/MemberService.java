@@ -48,20 +48,20 @@ public class MemberService {
     }
 
     private void validateEmail(String email) {
-        memberRepository.findBy(email)
+        memberRepository.findMemberIdByEmail(email)
                 .ifPresent(member -> {
                     //이메일이 다를때 예외 던지기
                 });
     }
 
     private void validateNickname(String nickname) {
-        if (memberRepository.existsNickname(nickname)) {
+        if (memberRepository.isNicknameExists(nickname)) {
             // 닉네임이 존재할때 예외 던지기
         }
     }
 
     private Member findMemberByEmail(String email) {
-        return memberRepository.findMemberBy(email)
+        return memberRepository.findMemberByEmail(email)
                 .orElseThrow(); // () -> new InvalidEmailException() 해당 email을 가진 사용자가 없으면 예외 던지기
     }
 
@@ -72,7 +72,7 @@ public class MemberService {
     }
 
     private Optional<Long> getMemberId(Member member) {
-        return memberRepository.findBy(member.getEmail());
+        return memberRepository.findMemberIdByEmail(member.getEmail());
     }
 
 }

@@ -4,7 +4,7 @@ import java.util.Optional;
 
 public interface TokenRepository {
 
-    void save(Long memberId, String refreshToken);
+    void saveRefreshToken(Long memberId, String refreshToken);
 
     void deleteRefreshToken(Long memberId);
 

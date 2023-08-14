@@ -18,7 +18,7 @@ public class JwtService {
     public Jwt issueToken(Long memberId) {
         Jwt token = jwtProvider.createTokens(Map.of(MEMBER_ID, memberId));
         tokenRepository.deleteRefreshToken(memberId);
-        tokenRepository.save(memberId, token.getRefreshToken());
+        tokenRepository.saveRefreshToken(memberId, token.getRefreshToken());
         return token;
     }
 
