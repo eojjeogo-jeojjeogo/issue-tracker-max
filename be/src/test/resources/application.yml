@@ -1,0 +1,8 @@
+spring:
+  profiles:
+    group:
+      test: testDB, jasypt, oauth
+    active: test
+  sql:
+    init:
+      mode: always
