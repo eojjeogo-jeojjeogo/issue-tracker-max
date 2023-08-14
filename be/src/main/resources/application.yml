@@ -1,7 +1,13 @@
 spring:
   profiles:
     group:
-      local: localDB, jasypt, oauth
-      prod: prodDB, jasypt
-      test: testDB, jasypt
+      local: localDB, jasypt, oauth, mybatis, aws
+      prod: prodDB, jasypt, oauth, mybatis, aws
+      test: testDB, jasypt, oauth, mybatis, aws
     active: local
+
+  servlet:
+    multipart:
+      enabled: true
+      max-file-size: 30MB
+      max-request-size: 10MB

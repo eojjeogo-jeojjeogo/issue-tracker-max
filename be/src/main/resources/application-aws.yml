@@ -1,0 +1,12 @@
+cloud:
+  aws:
+    region:
+      static: ap-northeast-2
+      auto: false
+    s3:
+      bucket: # github actions에서 값 넣어줌
+    credentials:
+      access-key: # github actions에서 값 넣어줌
+      secret-key: # github actions에서 값 넣어줌
+    stack:
+      auto: false
