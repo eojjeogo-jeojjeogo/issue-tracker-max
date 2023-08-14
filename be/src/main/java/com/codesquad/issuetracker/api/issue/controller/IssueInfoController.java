@@ -13,8 +13,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
 /**
- * Issue Label, Assignee Update을 담당하는 컨트롤러,
- * CRD는 각 도메인 컨트롤러에서 진행
+ * Issue Label, Assignee Update을 담당하는 컨트롤러, CRD는 각 도메인 컨트롤러에서 진행
  */
 @Controller
 @RequiredArgsConstructor

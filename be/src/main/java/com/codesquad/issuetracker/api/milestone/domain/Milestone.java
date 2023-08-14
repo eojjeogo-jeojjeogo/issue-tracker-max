@@ -14,5 +14,5 @@ public class Milestone {
     private final LocalDate dueDate;
     private final Boolean isClosed;
     private final Long organizationId;
-    
+
 }

@@ -18,7 +18,7 @@ public class OrganizationRepositoryImpl implements OrganizationRepository {
                 + "FROM organization "
                 + "WHERE title = :organizationTitle";
         List<Long> ids = template.query(sql, Collections.singletonMap("organizationTitle", organizationTitle),
-            (rs, rowNum) -> rs.getLong(1));
+                (rs, rowNum) -> rs.getLong(1));
         return ids.stream().findFirst();
     }
 
