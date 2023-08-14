@@ -19,7 +19,6 @@ public class CommentResponse {
     private Boolean isIssueAuthor;
     private LocalDateTime createdTime;
     private List<CommentEmoticonResponse> emoticons;
-    private String files; // TODO: 파일 첨부는 일단 1개만 가능하고, 이후 List로 변경 예정
 
     private static CommentResponse of(IssueCommentVo issueCommentVo,
                                       Map<Long, List<CommentEmoticonResponse>> commentEmoticonResponses) {
@@ -27,7 +26,6 @@ public class CommentResponse {
         return CommentResponse.builder()
                 .id(issueCommentVo.getId())
                 .content(issueCommentVo.getContent())
-                .files(issueCommentVo.getFiles())
                 .author(issueCommentVo.getAuthor())
                 .authorImg(issueCommentVo.getAuthorImg())
                 .isIssueAuthor(issueCommentVo.getIsIssueAuthor())

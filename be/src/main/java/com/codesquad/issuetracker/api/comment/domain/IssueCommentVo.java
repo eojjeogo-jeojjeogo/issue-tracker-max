@@ -17,6 +17,5 @@ public class IssueCommentVo {
     private final String authorImg;
     private final Boolean isIssueAuthor;
     private final LocalDateTime createdTime;
-    private final String files;
 
 }

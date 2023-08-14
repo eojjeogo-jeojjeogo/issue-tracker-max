@@ -70,10 +70,7 @@ class CommentControllerTest {
     }
 
     private CommentRequest dummyCommentRequest() {
-        return CommentRequest.builder()
-                .content("testContent")
-                .fileUrl("fileUrl")
-                .build();
+        return new CommentRequest("testContent");
     }
 
 }
