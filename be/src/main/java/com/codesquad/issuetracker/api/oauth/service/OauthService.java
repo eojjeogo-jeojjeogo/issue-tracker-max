@@ -5,16 +5,20 @@ import com.codesquad.issuetracker.api.oauth.config.InMemoryProviderRepository;
 import com.codesquad.issuetracker.api.oauth.domain.OauthProvider;
 import com.codesquad.issuetracker.api.oauth.dto.response.OauthTokenResponse;
 import com.codesquad.issuetracker.api.oauth.dto.response.OauthUserProfile;
+import com.codesquad.issuetracker.common.exception.CustomRuntimeException;
+import com.codesquad.issuetracker.common.exception.customexception.OauthException;
 import java.nio.charset.StandardCharsets;
 import java.util.Collections;
 import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.reactive.function.client.WebClient;
+import reactor.core.publisher.Mono;
 
 @Service
 @RequiredArgsConstructor
@@ -47,6 +51,9 @@ public class OauthService {
                 })
                 .bodyValue(tokenRequest(code, provider))
                 .retrieve()
+                .onStatus(HttpStatus::is4xxClientError,
+                        clientResponse -> Mono.error(
+                                new CustomRuntimeException(OauthException.ACCESS_TOKEN_FETCH_ERROR)))
                 .bodyToMono(OauthTokenResponse.class)
                 .block();
     }
@@ -72,6 +79,9 @@ public class OauthService {
                 .uri(provider.getUserInfoUrl())
                 .headers(header -> header.setBearerAuth(tokenResponse.getAccessToken()))
                 .retrieve()
+                .onStatus(HttpStatus::is4xxClientError,
+                        clientResponse -> Mono.error(
+                                new CustomRuntimeException(OauthException.USER_INFO_FETCH_ERROR)))
                 .bodyToMono(new ParameterizedTypeReference<Map<String, Object>>() {
                 })
                 .block();
