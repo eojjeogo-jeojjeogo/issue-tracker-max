@@ -100,6 +100,7 @@ public class IssueService {
         Long organizationId = organizationRepository.findBy(organizationTitle).orElseThrow();
         Long openedIssuesCount = issueRepository.countOpenedIssuesBy(organizationId).get();
         Long closedIssueCount = issueRepository.countClosedIssuesBy(organizationId).get();
+        issueFilterRequest.checkLabelsContainsZero();
         List<IssueFilterVo> issueFilterVos = issueFilterMapper.readAll(issueFilterRequest, organizationId);
 
         return IssueFilterResponse.of(openedIssuesCount, closedIssueCount, issueFilterVos);

@@ -22,11 +22,16 @@
 
     <select id="readAll" resultMap="issueResultMap">
         SELECT
+        label.id AS label_id,
+        label.title AS label_title,
+        label.description AS label_description,
+        label.background_color AS label_background_color,
+        label.is_dark AS label_is_dark,
         i.id, i.number, i.title, i.created_time,i.is_closed, i.member_id,
-        member.nickname, member.profile_img_url, milestone.id, milestone.title AS milestone_title,
-        label.id AS label_id, label.title AS label_title, label.description AS label_description,
-        label.background_color AS label_background_color, label.is_dark AS label_is_dark,
-        issue_assignee.member_id AS assignee, issue_comment.member_id
+        member.nickname, member.profile_img_url, milestone.id,
+        milestone.title AS milestone_title,
+        issue_assignee.member_id AS assignee,
+        issue_comment.member_id
         FROM
         issue i
         JOIN
@@ -46,30 +51,58 @@
             <if test="request.isClosed == null || request.isClosed == false ">
                 and i.is_closed = false
             </if>
+
             <if test="request.isClosed == true">
                 and i.is_closed = true
             </if>
+
             <if test="request.assignee != null">
-                and issue_assignee.member_id = #{request.assignee}
+                <choose>
+                    <when test="request.assignee == 0">
+                        and issue_assignee.member_id IS NULL
+                    </when>
+                    <otherwise>
+                        and issue_assignee.member_id = #{request.assignee}
+                    </otherwise>
+                </choose>
             </if>
-            <if test="request.labels != null and request.labels.size() > 0">
-                and i.id IN (
-                SELECT issue_label.issue_id
-                FROM issue_label
-                WHERE issue_label.label_id IN
-                <foreach item="labelId" collection="request.labels" open="(" separator="," close=")">
-                    #{labelId}
-                </foreach>
-                GROUP BY issue_label.issue_id
-                HAVING COUNT(issue_label.label_id) = ${request.labels.size}
-                )
+
+            <if test="request.labels != null">
+                <choose>
+                    <when test="request.labelsContainZero == true">
+                        and label.id IS NULL
+                    </when>
+                    <otherwise>
+                        and i.id IN (
+                        SELECT issue_label.issue_id
+                        FROM issue_label
+                        WHERE issue_label.label_id IN
+                        <foreach item="labelId" collection="request.labels" open="(" separator="," close=")">
+                            #{labelId}
+                        </foreach>
+                        GROUP BY issue_label.issue_id
+                        HAVING COUNT(issue_label.label_id) = ${request.labels.size}
+                        )
+                    </otherwise>
+                </choose>
+
             </if>
+
             <if test="request.milestone != null">
-                and milestone.id = #{request.milestone}
+                <choose>
+                    <when test="request.milestone == 0">
+                        and milestone.id IS NULL
+                    </when>
+                    <otherwise>
+                        and milestone.id = #{request.milestone}
+                    </otherwise>
+                </choose>
             </if>
+
             <if test="request.author != null">
                 and i.member_id = #{request.author}
             </if>
+
             <if test="request.includeMemberComment != null">
                 and issue_comment.member_id = #{request.includeMemberComment}
             </if>
