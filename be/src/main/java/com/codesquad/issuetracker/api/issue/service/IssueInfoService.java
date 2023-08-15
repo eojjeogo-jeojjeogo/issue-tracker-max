@@ -61,7 +61,7 @@ public class IssueInfoService {
     @Transactional
     public IssueInfoResponse readIssueInfo(Long issueId) {
         // 담당자
-        List<IssueAssigneeVo> assignees = issueAssigneeRepository.findAllBy(issueId);
+        List<IssueAssigneeVo> assignees = issueAssigneeRepository.findAllByIssueId(issueId);
         // 라벨
         List<IssueLabelVo> labels = issueLabelRepository.findAllBy(issueId);
         // 이모티콘
