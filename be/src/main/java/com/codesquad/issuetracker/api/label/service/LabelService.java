@@ -6,6 +6,8 @@ import com.codesquad.issuetracker.api.label.dto.request.LabelUpdateRequest;
 import com.codesquad.issuetracker.api.label.dto.response.LabelResponse;
 import com.codesquad.issuetracker.api.label.repository.LabelRepository;
 import com.codesquad.issuetracker.api.organization.repository.OrganizationRepository;
+import com.codesquad.issuetracker.common.exception.CustomRuntimeException;
+import com.codesquad.issuetracker.common.exception.customexception.LabelException;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
@@ -23,7 +25,8 @@ public class LabelService {
     public Long create(String organizationTitle, LabelCreateRequest labelCreateRequest) {
         Long organizationId = organizationRepository.findBy(organizationTitle).orElseThrow();
         Label label = labelCreateRequest.toEntity(organizationId);
-        return labelRepository.save(label).orElseThrow();
+        return labelRepository.save(label)
+                .orElseThrow(() -> new CustomRuntimeException(LabelException.LABEL_SAVE_FAIL_EXCEPTION));
     }
 
     @Transactional
