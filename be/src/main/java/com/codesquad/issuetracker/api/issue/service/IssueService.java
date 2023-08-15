@@ -19,6 +19,9 @@ import com.codesquad.issuetracker.api.issue.repository.IssueRepository;
 import com.codesquad.issuetracker.api.milestone.domain.MilestoneVo;
 import com.codesquad.issuetracker.api.milestone.service.MilestoneService;
 import com.codesquad.issuetracker.api.organization.repository.OrganizationRepository;
+import com.codesquad.issuetracker.common.exception.CustomRuntimeException;
+import com.codesquad.issuetracker.common.exception.customexception.IssueException;
+import com.codesquad.issuetracker.common.exception.customexception.OrganizationException;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -41,10 +44,11 @@ public class IssueService {
     @Transactional
     public Long create(String organizationTitle, IssueCreateRequest issueCreateRequest) {
         // 이슈 저장
-        Long organizationId = organizationRepository.findBy(organizationTitle).orElseThrow();
+        Long organizationId = getOrganizationId(organizationTitle);
         Long issuesCount = issueRepository.countIssuesBy(organizationId).orElseThrow();
         Issue issue = issueCreateRequest.toEntity(organizationId, issuesCount + 1);
-        Long issueId = issueRepository.save(issue).orElseThrow();
+        Long issueId = issueRepository.save(issue)
+                .orElseThrow(() -> new CustomRuntimeException(IssueException.ISSUE_SAVE_FAIL_EXCEPTION));
 
         // 코멘트, 담당자, 라벨 저장
         issueInfoService.saveIssueInfo(issueId, issueCreateRequest);
@@ -68,14 +72,14 @@ public class IssueService {
     public void update(Long issueId, IssueTitleUpdateRequest issueTitleUpdateRequest) {
         Issue issue = issueTitleUpdateRequest.toEntity(issueId);
         if (!issueRepository.updateTitle(issue)) {
-            throw new RuntimeException("Title update failed for issueId: " + issueId);
+            throw new CustomRuntimeException(IssueException.ISSUE_TITLE_UPDATE_FAIL_EXCEPTION);
         }
     }
 
     public void update(Long issueId, IssueMilestoneUpdateRequest issueMilestoneUpdateRequest) {
         Issue issue = issueMilestoneUpdateRequest.toEntity(issueId);
         if (!issueRepository.updateMilestone(issue)) {
-            throw new RuntimeException("Label update failed for issueId: " + issueId);
+            throw new CustomRuntimeException(IssueException.ISSUE_MILESTONE_UPDATE_FAIL_EXCEPTION);
         }
     }
 
@@ -97,7 +101,7 @@ public class IssueService {
 
     @Transactional
     public IssueFilterResponse readFilteredIssue(IssueFilterRequest issueFilterRequest, String organizationTitle) {
-        Long organizationId = organizationRepository.findBy(organizationTitle).orElseThrow();
+        Long organizationId = getOrganizationId(organizationTitle);
         Long openedIssuesCount = issueRepository.countOpenedIssuesBy(organizationId).get();
         Long closedIssueCount = issueRepository.countClosedIssuesBy(organizationId).get();
         issueFilterRequest.checkLabelsContainsZero();
@@ -105,4 +109,11 @@ public class IssueService {
 
         return IssueFilterResponse.of(openedIssuesCount, closedIssueCount, issueFilterVos);
     }
+
+    private Long getOrganizationId(String organizationTitle) {
+        return organizationRepository.findBy(organizationTitle)
+                .orElseThrow(() -> new CustomRuntimeException(
+                        OrganizationException.ORGANIZATION_NOT_FOUND_EXCEPTION));
+    }
+
 }
