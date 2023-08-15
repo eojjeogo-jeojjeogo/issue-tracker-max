@@ -12,6 +12,7 @@ import com.codesquad.issuetracker.api.issue.service.IssueService;
 import java.util.Collections;
 import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -34,7 +35,7 @@ public class IssueController {
     private final IssueService issueService;
 
     @PostMapping("/api/{organizationTitle}/issues")
-    public ResponseEntity<Map<String, Long>> create(@RequestBody IssueCreateRequest issueCreateRequest,
+    public ResponseEntity<Map<String, Long>> create(@Valid @RequestBody IssueCreateRequest issueCreateRequest,
                                                     @PathVariable String organizationTitle,
                                                     HttpServletRequest httpServletRequest) {
         issueCreateRequest.setMemberId(getSignInId(httpServletRequest));

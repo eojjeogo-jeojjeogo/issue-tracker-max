@@ -7,6 +7,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.IncorrectResultSizeDataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
@@ -27,5 +28,13 @@ public class GlobalExceptionHandler {
         log.info("sql 예외발생! expectedSize: " + e.getExpectedSize() + " actualSize: " + e.getActualSize());
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                 .body(Collections.singletonMap("errorMessage", "DB에서 예외가 발생했습니다."));
+    }
+
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ResponseEntity<Map<String, String>> methodArgumentNotValidExceptionHandler(
+            MethodArgumentNotValidException e) {
+        log.info("입력정보 관련 예외 발생 errorMessage: " + e.getFieldError().getDefaultMessage());
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                .body(Collections.singletonMap("errorMessage", e.getFieldError().getDefaultMessage()));
     }
 }

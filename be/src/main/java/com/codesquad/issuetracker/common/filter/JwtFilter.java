@@ -31,7 +31,8 @@ public class JwtFilter implements Filter {
             "/api/oauth/**",
             "/api/sign-in",
             "/api/reissue-access-token",
-            "/"
+            "/",
+            "/**"
     };
     public static final String OPTIONS = "OPTIONS";
 

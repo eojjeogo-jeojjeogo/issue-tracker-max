@@ -8,6 +8,7 @@ import com.codesquad.issuetracker.api.milestone.filterStatus.FilterStatus;
 import com.codesquad.issuetracker.api.milestone.service.MilestoneService;
 import java.util.Collections;
 import java.util.Map;
+import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -28,7 +29,7 @@ public class MilestoneController {
 
     @PostMapping("/api/{organizationTitle}/milestones")
     public ResponseEntity<Map<String, Long>> create(@PathVariable String organizationTitle,
-                                                    @RequestBody MilestoneRequest mileStoneRequest) {
+                                                    @Valid @RequestBody MilestoneRequest mileStoneRequest) {
         long milestoneId = milestoneService.create(organizationTitle, mileStoneRequest);
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(Collections.singletonMap("id", milestoneId));
@@ -50,7 +51,7 @@ public class MilestoneController {
 
     @PatchMapping("/api/{organizationTitle}/milestones/{milestoneId}")
     public ResponseEntity<Map<String, Long>> update(@PathVariable Long milestoneId,
-                                                    @RequestBody MilestoneRequest mileStoneRequest) {
+                                                    @Valid @RequestBody MilestoneRequest mileStoneRequest) {
         long id = milestoneService.update(milestoneId, mileStoneRequest);
         return ResponseEntity.ok(Collections.singletonMap("id", id));
     }

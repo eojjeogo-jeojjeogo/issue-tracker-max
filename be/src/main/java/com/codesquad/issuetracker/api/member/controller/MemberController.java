@@ -9,6 +9,7 @@ import com.codesquad.issuetracker.api.member.service.MemberService;
 import com.codesquad.issuetracker.api.oauth.dto.request.OauthSignInRequest;
 import java.util.Collections;
 import java.util.Map;
+import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -35,7 +36,7 @@ public class MemberController {
     }
 
     @PostMapping("/api/sign-up/{provider}")
-    public ResponseEntity<Map<String, Long>> signUp(@RequestBody SignUpRequest signUpRequest,
+    public ResponseEntity<Map<String, Long>> signUp(@Valid @RequestBody SignUpRequest signUpRequest,
                                                     @PathVariable String provider) {
         Long memberId = memberService.signUp(signUpRequest, provider);
         return ResponseEntity.ok()
@@ -43,7 +44,7 @@ public class MemberController {
     }
 
     @PostMapping("/api/sign-in")
-    public ResponseEntity<SignInResponse> signIn(@RequestBody SignInRequest signInRequest) {
+    public ResponseEntity<SignInResponse> signIn(@Valid @RequestBody SignInRequest signInRequest) {
         SignInResponse oAuthSignInResponse = memberService.signIn(signInRequest);
         return ResponseEntity.ok()
                 .body(oAuthSignInResponse);
