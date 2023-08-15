@@ -23,7 +23,6 @@ public class CommentRepositoryImpl implements CommentRepository {
     private final static String AUTHOR = "author";
     private final static String AUTHOR_IMG = "authorImg";
     private final static String CREATED_TIME = "created_time";
-    private final static String FILES = "files";
 
     private final NamedParameterJdbcTemplate template;
 
@@ -41,7 +40,7 @@ public class CommentRepositoryImpl implements CommentRepository {
 
     @Override
     public Long update(Comment comment) {
-        String sql = "UPDATE issue_comment SET content = :content";
+        String sql = "UPDATE issue_comment SET content = :content WHERE issue_comment.id = :id";
         SqlParameterSource params = new BeanPropertySqlParameterSource(comment);
         template.update(sql, params);
         return comment.getId();
