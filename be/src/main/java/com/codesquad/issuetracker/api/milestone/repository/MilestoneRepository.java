@@ -23,5 +23,5 @@ public interface MilestoneRepository {
 
     void delete(Long milestoneId);
 
-    long countBy(Long organizationId);
+    Long countBy(Long organizationId);
 }

@@ -4,7 +4,6 @@ import com.codesquad.issuetracker.api.filter.dto.LabelFilter;
 import com.codesquad.issuetracker.api.label.domain.Label;
 import java.util.Collections;
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.jdbc.core.RowMapper;
@@ -87,13 +86,11 @@ public class LabelRepositoryImpl implements LabelRepository {
     }
 
     @Override
-    public long countBy(Long organizationId) {
+    public Long countBy(Long organizationId) {
         String sql = "SELECT COUNT(id) "
                 + "FROM label "
                 + "WHERE organization_id = :organizationId";
-        return Objects.requireNonNull(
-                template.queryForObject(sql, Collections.singletonMap("organizationId", organizationId), Long.class)
-        );
+        return template.queryForObject(sql, Collections.singletonMap("organizationId", organizationId), Long.class);
     }
 
     private RowMapper<Label> labelRowMapper() {

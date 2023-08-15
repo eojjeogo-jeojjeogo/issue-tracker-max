@@ -7,7 +7,6 @@ import com.codesquad.issuetracker.api.milestone.domain.MilestonesVo;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.jdbc.core.RowMapper;
@@ -116,16 +115,14 @@ public class MilestoneRepositoryImpl implements MilestoneRepository {
     }
 
     @Override
-    public long countBy(Long organizationId) {
+    public Long countBy(Long organizationId) {
         String sql = "SELECT COUNT(id) "
                 + "FROM milestone "
                 + "WHERE organization_id = :organizationId AND is_closed = false";
-        return Objects.requireNonNull(
-                jdbcTemplate.queryForObject(
-                        sql,
-                        Collections.singletonMap("organizationId", organizationId),
-                        Long.class)
-        );
+        return jdbcTemplate.queryForObject(
+                sql,
+                Collections.singletonMap("organizationId", organizationId),
+                Long.class);
     }
 
     private RowMapper<MilestonesVo> milestonesVoRowMapper() {

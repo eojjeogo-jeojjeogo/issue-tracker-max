@@ -45,7 +45,7 @@ public class IssueService {
     public Long create(String organizationTitle, IssueCreateRequest issueCreateRequest) {
         // 이슈 저장
         Long organizationId = getOrganizationId(organizationTitle);
-        Long issuesCount = issueRepository.countIssuesBy(organizationId).orElseThrow();
+        Long issuesCount = issueRepository.countIssuesBy(organizationId);
         Issue issue = issueCreateRequest.toEntity(organizationId, issuesCount + 1);
         Long issueId = issueRepository.save(issue)
                 .orElseThrow(() -> new CustomRuntimeException(IssueException.ISSUE_SAVE_FAIL_EXCEPTION));
@@ -102,8 +102,8 @@ public class IssueService {
     @Transactional
     public IssueFilterResponse readFilteredIssue(IssueFilterRequest issueFilterRequest, String organizationTitle) {
         Long organizationId = getOrganizationId(organizationTitle);
-        Long openedIssuesCount = issueRepository.countOpenedIssuesBy(organizationId).get();
-        Long closedIssueCount = issueRepository.countClosedIssuesBy(organizationId).get();
+        Long openedIssuesCount = issueRepository.countOpenedIssuesBy(organizationId);
+        Long closedIssueCount = issueRepository.countClosedIssuesBy(organizationId);
         issueFilterRequest.checkLabelsContainsZero();
         List<IssueFilterVo> issueFilterVos = issueFilterMapper.readAll(issueFilterRequest, organizationId);
 

@@ -33,24 +33,21 @@ public class IssueRepositoryImpl implements IssueRepository {
     private final NamedParameterJdbcTemplate template;
 
     @Override
-    public Optional<Long> countIssuesBy(Long organizationId) {
+    public Long countIssuesBy(Long organizationId) {
         String sql = "SELECT COUNT(id) FROM issue WHERE organization_id = :organizationId";
-        return Optional.ofNullable(
-                template.queryForObject(sql, Map.of("organizationId", organizationId), Long.class));
+        return template.queryForObject(sql, Map.of("organizationId", organizationId), Long.class);
     }
 
     @Override
-    public Optional<Long> countOpenedIssuesBy(Long organizationId) {
+    public Long countOpenedIssuesBy(Long organizationId) {
         String sql = "SELECT COUNT(id) FROM issue WHERE organization_id = :organizationId AND is_closed = false";
-        return Optional.ofNullable(
-                template.queryForObject(sql, Map.of("organizationId", organizationId), Long.class));
+        return template.queryForObject(sql, Map.of("organizationId", organizationId), Long.class);
     }
 
     @Override
-    public Optional<Long> countClosedIssuesBy(Long organizationId) {
+    public Long countClosedIssuesBy(Long organizationId) {
         String sql = "SELECT COUNT(id) FROM issue WHERE organization_id = :organizationId AND is_closed = true";
-        return Optional.ofNullable(
-                template.queryForObject(sql, Map.of("organizationId", organizationId), Long.class));
+        return template.queryForObject(sql, Map.of("organizationId", organizationId), Long.class);
     }
 
     @Override
