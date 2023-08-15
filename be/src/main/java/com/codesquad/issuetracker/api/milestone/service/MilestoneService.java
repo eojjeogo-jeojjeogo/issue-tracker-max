@@ -8,6 +8,8 @@ import com.codesquad.issuetracker.api.milestone.dto.response.MilestonesResponse;
 import com.codesquad.issuetracker.api.milestone.filterStatus.FilterStatus;
 import com.codesquad.issuetracker.api.milestone.repository.MilestoneRepository;
 import com.codesquad.issuetracker.api.organization.repository.OrganizationRepository;
+import com.codesquad.issuetracker.common.exception.CustomRuntimeException;
+import com.codesquad.issuetracker.common.exception.customexception.MilestoneException;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -26,11 +28,12 @@ public class MilestoneService {
                 .orElseThrow();
         Milestone milestone = mileStoneRequest.toEntityByOrganizationId(organizationId);
         return milestoneRepository.save(milestone)
-                .orElseThrow();
+                .orElseThrow(() -> new CustomRuntimeException(MilestoneException.MILESTONE_SAVE_FAIL_EXCEPTION));
     }
 
     public MilestoneVo read(Long milestoneId) {
-        MilestoneVo milestone = milestoneRepository.findBy(milestoneId).orElseThrow();
+        MilestoneVo milestone = milestoneRepository.findBy(milestoneId)
+                .orElseThrow(() -> new CustomRuntimeException(MilestoneException.MILESTONE_NOT_FOUND_EXCEPTION));
         return milestone;
     }
 
