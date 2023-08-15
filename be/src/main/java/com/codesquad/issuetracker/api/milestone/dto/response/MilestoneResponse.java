@@ -1,14 +1,13 @@
-package com.codesquad.issuetracker.api.issue.domain;
+package com.codesquad.issuetracker.api.milestone.dto.response;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 @Getter
 @AllArgsConstructor
-public class IssueAssigneeVo {
+public class MilestoneResponse {
 
     private Long id;
     private String name;
-    private String imgUrl;
 
 }
