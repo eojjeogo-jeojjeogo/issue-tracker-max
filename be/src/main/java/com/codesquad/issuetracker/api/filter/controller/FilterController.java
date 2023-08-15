@@ -4,8 +4,10 @@ import com.codesquad.issuetracker.api.filter.dto.DynamicFiltersResponse;
 import com.codesquad.issuetracker.api.filter.dto.LabelFilter;
 import com.codesquad.issuetracker.api.filter.dto.MemberFilter;
 import com.codesquad.issuetracker.api.filter.dto.MilestoneFilter;
+import com.codesquad.issuetracker.api.filter.dto.StaticFiltersResponse;
 import com.codesquad.issuetracker.api.filter.service.FilterService;
 import java.util.List;
+import javax.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -16,6 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class FilterController {
 
+    public static final String MEMBER_ID = "memberId";
     private final FilterService filterService;
 
     @GetMapping(value = "/api/{organizationTitle}/milestones", params = "type=filter")
@@ -40,5 +43,12 @@ public class FilterController {
     public ResponseEntity<DynamicFiltersResponse> readDynamicFilters(@PathVariable String organizationTitle) {
         DynamicFiltersResponse response = filterService.readDynamicFilters(organizationTitle);
         return ResponseEntity.ok(response);
+    }
+
+    @GetMapping(value = "/api/{organizationTitle}/issues/filters", params = "type=static")
+    public ResponseEntity<StaticFiltersResponse> readStaticFilters(@PathVariable String organizationTitle,
+                                                                   HttpServletRequest servletRequest) {
+        Long memberId = (Long) servletRequest.getAttribute(MEMBER_ID);
+        return ResponseEntity.ok(new StaticFiltersResponse(memberId));
     }
 }
