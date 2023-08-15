@@ -18,10 +18,9 @@ import com.codesquad.issuetracker.api.issue.repository.IssueFilterMapper;
 import com.codesquad.issuetracker.api.issue.repository.IssueRepository;
 import com.codesquad.issuetracker.api.milestone.domain.MilestoneVo;
 import com.codesquad.issuetracker.api.milestone.service.MilestoneService;
-import com.codesquad.issuetracker.api.organization.repository.OrganizationRepository;
+import com.codesquad.issuetracker.api.organization.service.OrganizationService;
 import com.codesquad.issuetracker.common.exception.CustomRuntimeException;
 import com.codesquad.issuetracker.common.exception.customexception.IssueException;
-import com.codesquad.issuetracker.common.exception.customexception.OrganizationException;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -37,14 +36,14 @@ public class IssueService {
     private final CommentService commentService;
     private final MilestoneService milestoneService;
 
-    private final OrganizationRepository organizationRepository;
+    private final OrganizationService organizationService;
     private final IssueRepository issueRepository;
     private final IssueFilterMapper issueFilterMapper;
 
     @Transactional
     public Long create(String organizationTitle, IssueCreateRequest issueCreateRequest) {
         // 이슈 저장
-        Long organizationId = getOrganizationId(organizationTitle);
+        Long organizationId = organizationService.getOrganizationIdBy(organizationTitle);
         Long issuesCount = issueRepository.countIssuesBy(organizationId);
         Issue issue = issueCreateRequest.toEntity(organizationId, issuesCount + 1);
         Long issueId = issueRepository.save(issue)
@@ -101,19 +100,13 @@ public class IssueService {
 
     @Transactional
     public IssueFilterResponse readFilteredIssue(IssueFilterRequest issueFilterRequest, String organizationTitle) {
-        Long organizationId = getOrganizationId(organizationTitle);
+        Long organizationId = organizationService.getOrganizationIdBy(organizationTitle);
         Long openedIssuesCount = issueRepository.countOpenedIssuesBy(organizationId);
         Long closedIssueCount = issueRepository.countClosedIssuesBy(organizationId);
         issueFilterRequest.checkLabelsContainsZero();
         List<IssueFilterVo> issueFilterVos = issueFilterMapper.readAll(issueFilterRequest, organizationId);
 
         return IssueFilterResponse.of(openedIssuesCount, closedIssueCount, issueFilterVos);
-    }
-
-    private Long getOrganizationId(String organizationTitle) {
-        return organizationRepository.findBy(organizationTitle)
-                .orElseThrow(() -> new CustomRuntimeException(
-                        OrganizationException.ORGANIZATION_NOT_FOUND_EXCEPTION));
     }
 
 }

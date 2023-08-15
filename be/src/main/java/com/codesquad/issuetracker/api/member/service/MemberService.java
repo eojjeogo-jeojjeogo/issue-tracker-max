@@ -16,6 +16,7 @@ import com.codesquad.issuetracker.common.exception.customexception.SignUpExcepti
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
@@ -25,6 +26,7 @@ public class MemberService {
     private final JwtService jwtService;
     private final MemberRepository memberRepository;
 
+    @Transactional
     public SignInResponse oAuthSignIn(String providerName, String code) {
         OauthUserProfile oauthUserProfile = oauthService.getOauthUserProfile(providerName, code);
         Member member = oauthUserProfile.toEntity();
@@ -46,6 +48,7 @@ public class MemberService {
                         MemberException.MEMBER_SAVE_FAIL_EXCEPTION));
     }
 
+    @Transactional
     public SignInResponse signIn(SignInRequest signInRequest) {
         Member member = findMemberByEmail(signInRequest.getEmail());
         validatePassword(signInRequest, member);
