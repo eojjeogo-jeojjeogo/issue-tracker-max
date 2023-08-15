@@ -3,6 +3,8 @@ package com.codesquad.issuetracker.api.jwt.service;
 import com.codesquad.issuetracker.api.jwt.domain.Jwt;
 import com.codesquad.issuetracker.api.jwt.repository.TokenRepository;
 import com.codesquad.issuetracker.api.member.dto.request.RefreshTokenRequest;
+import com.codesquad.issuetracker.common.exception.CustomRuntimeException;
+import com.codesquad.issuetracker.common.exception.customexception.JwtException;
 import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -24,7 +26,7 @@ public class JwtService {
 
     public String reissueAccessToken(RefreshTokenRequest refreshTokenRequest) {
         Long memberId = tokenRepository.findMemberIdBy(refreshTokenRequest.getRefreshToken())
-                .orElseThrow(); // refreshToken 으로 회원을 찾을수 없다는 예외
+                .orElseThrow(() -> new CustomRuntimeException(JwtException.REFRESH_TOKEN_NOT_FOUND_EXCEPTION));
         Jwt tokens = jwtProvider.createTokens(Map.of(MEMBER_ID, memberId));
         return tokens.getAccessToken();
     }

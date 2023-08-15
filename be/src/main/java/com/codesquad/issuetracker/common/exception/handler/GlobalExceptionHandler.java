@@ -13,7 +13,7 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(CustomRuntimeException.class)
     public ResponseEntity<Map<String, String>> customExceptionHandler(CustomRuntimeException e) {
-        log.info("예외발생! errorType:" + e.getCustomException().getName() + " errorMessage" + e.getCustomException()
+        log.info("예외발생! errorType: " + e.getCustomException().getName() + " errorMessage: " + e.getCustomException()
                 .errorMessage());
         return e.sendError();
     }

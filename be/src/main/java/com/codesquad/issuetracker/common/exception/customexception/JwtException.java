@@ -10,7 +10,8 @@ public enum JwtException implements CustomException {
     EXPIRED_JWT_EXCEPTION(HttpStatus.UNAUTHORIZED, "기한이 만료되었습니다."),
     MALFORMED_JWT_EXCEPTION(HttpStatus.UNAUTHORIZED, "잘못된 형식의 토큰입니다."),
     SIGNATURE_EXCEPTION(HttpStatus.UNAUTHORIZED, "올바른 키가 아닙니다."),
-    ILLEGAL_ARGUMENT_EXCEPTION(HttpStatus.UNAUTHORIZED, "잘못된 값이 들어왔습니다.");
+    ILLEGAL_ARGUMENT_EXCEPTION(HttpStatus.UNAUTHORIZED, "잘못된 값이 들어왔습니다."),
+    REFRESH_TOKEN_NOT_FOUND_EXCEPTION(HttpStatus.UNAUTHORIZED, "DB에 Refresh token을 존재하지 않습니다.");
 
     private final HttpStatus httpStatus;
     private final String message;
