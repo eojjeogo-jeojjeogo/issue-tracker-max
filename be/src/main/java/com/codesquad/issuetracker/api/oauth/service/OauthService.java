@@ -53,7 +53,7 @@ public class OauthService {
                 .retrieve()
                 .onStatus(HttpStatus::is4xxClientError,
                         clientResponse -> Mono.error(
-                                new CustomRuntimeException(OauthException.ACCESS_TOKEN_FETCH_ERROR)))
+                                new CustomRuntimeException(OauthException.ACCESS_TOKEN_FETCH_EXCEPTION)))
                 .bodyToMono(OauthTokenResponse.class)
                 .block();
     }
@@ -81,7 +81,7 @@ public class OauthService {
                 .retrieve()
                 .onStatus(HttpStatus::is4xxClientError,
                         clientResponse -> Mono.error(
-                                new CustomRuntimeException(OauthException.USER_INFO_FETCH_ERROR)))
+                                new CustomRuntimeException(OauthException.USER_INFO_FETCH_EXCEPTION)))
                 .bodyToMono(new ParameterizedTypeReference<Map<String, Object>>() {
                 })
                 .block();

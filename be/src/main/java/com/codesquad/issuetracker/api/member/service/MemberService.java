@@ -31,7 +31,7 @@ public class MemberService {
         Long memberId = getMemberId(member)
                 .orElseGet(
                         () -> memberRepository.save(member, providerName).orElseThrow(() -> new CustomRuntimeException(
-                                MemberException.MEMBER_SAVE_FAIL)));
+                                MemberException.MEMBER_SAVE_FAIL_EXCEPTION)));
         Jwt token = jwtService.issueToken(memberId);
         return SignInResponse.of(memberId, member, token);
     }
@@ -43,7 +43,7 @@ public class MemberService {
         Member member = signUpRequest.toEntity();
         return memberRepository.save(member, providerName)
                 .orElseThrow(() -> new CustomRuntimeException(
-                        MemberException.MEMBER_SAVE_FAIL));
+                        MemberException.MEMBER_SAVE_FAIL_EXCEPTION));
     }
 
     public SignInResponse signIn(SignInRequest signInRequest) {
