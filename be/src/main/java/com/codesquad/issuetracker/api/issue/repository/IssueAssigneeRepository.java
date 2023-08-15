@@ -6,7 +6,9 @@ import java.util.List;
 
 public interface IssueAssigneeRepository {
 
-    List<IssueAssigneeVo> findAllBy(Long issueId);
+    List<IssueAssigneeVo> findAllByIssueId(Long issueId);
+
+    List<IssueAssigneeVo> findAllByOrganizationId(Long organizationId);
 
     void save(List<IssueAssignee> issueAssignees);
 

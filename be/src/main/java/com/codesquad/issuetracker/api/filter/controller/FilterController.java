@@ -1,5 +1,6 @@
 package com.codesquad.issuetracker.api.filter.controller;
 
+import com.codesquad.issuetracker.api.filter.dto.DynamicFiltersResponse;
 import com.codesquad.issuetracker.api.filter.dto.LabelFilter;
 import com.codesquad.issuetracker.api.filter.dto.MemberFilter;
 import com.codesquad.issuetracker.api.filter.dto.MilestoneFilter;
@@ -33,5 +34,11 @@ public class FilterController {
     public ResponseEntity<List<MemberFilter>> readAssignees(@PathVariable String organizationTitle) {
         List<MemberFilter> memberFiltersResponse = filterService.readAssignees(organizationTitle);
         return ResponseEntity.ok(memberFiltersResponse);
+    }
+
+    @GetMapping(value = "/api/{organizationTitle}/issues/filters", params = "type=dynamic")
+    public ResponseEntity<DynamicFiltersResponse> readDynamicFilters(@PathVariable String organizationTitle) {
+        DynamicFiltersResponse response = filterService.readDynamicFilters(organizationTitle);
+        return ResponseEntity.ok(response);
     }
 }
