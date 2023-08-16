@@ -1,9 +1,9 @@
 spring:
   profiles:
     group:
-      local: localDB, jasypt, oauth, mybatis, aws
-      prod: prodDB, jasypt, oauth, mybatis, aws
-      test: testDB, jasypt, oauth, mybatis, aws
+      local: localDB, jasypt, oauth, mybatis, aws, redis
+      prod: prodDB, jasypt, oauth, mybatis, aws, redis
+      test: testDB, jasypt, oauth, mybatis, aws, redis
     active: local
 
   servlet:
