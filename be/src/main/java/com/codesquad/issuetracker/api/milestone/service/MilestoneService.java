@@ -31,9 +31,11 @@ public class MilestoneService {
     }
 
     public MilestoneVo read(Long milestoneId) {
-        MilestoneVo milestone = milestoneRepository.findBy(milestoneId)
+        if (milestoneId == 0) {
+            return null;
+        }
+        return milestoneRepository.findBy(milestoneId)
                 .orElseThrow(() -> new CustomRuntimeException(MilestoneException.MILESTONE_NOT_FOUND_EXCEPTION));
-        return milestone;
     }
 
     @Transactional
