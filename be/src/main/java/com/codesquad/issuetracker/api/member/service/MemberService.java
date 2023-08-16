@@ -57,6 +57,13 @@ public class MemberService {
         return SignInResponse.of(member, tokens);
     }
 
+    @Transactional
+    public void signOut(String accessToken, Long memberId) {
+        jwtService.deleteRefreshToken(memberId);
+
+        jwtService.setBlackList(accessToken);
+    }
+
     private void validateEmail(String email) {
         memberRepository.findMemberIdByEmail(email)
                 .ifPresent(member -> {

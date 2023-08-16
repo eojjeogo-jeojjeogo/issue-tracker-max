@@ -9,6 +9,7 @@ import com.codesquad.issuetracker.api.member.service.MemberService;
 import com.codesquad.issuetracker.api.oauth.dto.request.OauthSignInRequest;
 import java.util.Collections;
 import java.util.Map;
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -56,5 +57,14 @@ public class MemberController {
         String accessToken = jwtService.reissueAccessToken(refreshTokenRequest);
         return ResponseEntity.ok()
                 .body(Collections.singletonMap("accessToken", accessToken));
+    }
+
+    @PostMapping("/api/sign-out")
+    public ResponseEntity<Map<String, String>> signOut(HttpServletRequest httpServletRequest) {
+        String authorizationHeader = httpServletRequest.getHeader("Authorization");
+        String accessToken = authorizationHeader.substring(7).replace("\"", "");
+        Long memberId = (Long) httpServletRequest.getAttribute("memberId");
+        memberService.signOut(accessToken, memberId);
+        return ResponseEntity.ok(Collections.singletonMap("message", "로그아웃 성공"));
     }
 }

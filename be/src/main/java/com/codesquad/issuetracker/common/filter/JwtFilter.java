@@ -3,6 +3,7 @@ package com.codesquad.issuetracker.common.filter;
 import com.codesquad.issuetracker.api.jwt.service.JwtProvider;
 import com.codesquad.issuetracker.common.exception.CustomRuntimeException;
 import com.codesquad.issuetracker.common.exception.customexception.JwtException;
+import com.codesquad.issuetracker.redis.util.RedisUtil;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.MalformedJwtException;
@@ -37,6 +38,7 @@ public class JwtFilter implements Filter {
 
     private final JwtProvider jwtProvider;
     private final ObjectMapper objectMapper;
+    private final RedisUtil redisUtil;
 
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
@@ -55,6 +57,11 @@ public class JwtFilter implements Filter {
 
         if (!isContainToken(httpServletRequest)) {
             sendJwtExceptionResponse(response, new MalformedJwtException(""));
+            return;
+        }
+
+        if (redisUtil.hasKeyBlackList(getToken(httpServletRequest))) {
+            sendJwtExceptionResponse(response, new CustomRuntimeException(JwtException.BLACKLISTED_JWT_EXCEPTION));
             return;
         }
 
