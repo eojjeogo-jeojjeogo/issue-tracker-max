@@ -25,14 +25,15 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class MilestoneController {
 
+    public static final String ID = "id";
     private final MilestoneService milestoneService;
 
     @PostMapping("/api/{organizationTitle}/milestones")
     public ResponseEntity<Map<String, Long>> create(@PathVariable String organizationTitle,
                                                     @Valid @RequestBody MilestoneRequest mileStoneRequest) {
-        long milestoneId = milestoneService.create(organizationTitle, mileStoneRequest);
+        Long milestoneId = milestoneService.create(organizationTitle, mileStoneRequest);
         return ResponseEntity.status(HttpStatus.CREATED)
-                .body(Collections.singletonMap("id", milestoneId));
+                .body(Collections.singletonMap(ID, milestoneId));
     }
 
     @GetMapping("/api/{organizationTitle}/milestones/{milestoneId}")
@@ -52,15 +53,15 @@ public class MilestoneController {
     @PatchMapping("/api/{organizationTitle}/milestones/{milestoneId}")
     public ResponseEntity<Map<String, Long>> update(@PathVariable Long milestoneId,
                                                     @Valid @RequestBody MilestoneRequest mileStoneRequest) {
-        long id = milestoneService.update(milestoneId, mileStoneRequest);
-        return ResponseEntity.ok(Collections.singletonMap("id", id));
+        Long id = milestoneService.update(milestoneId, mileStoneRequest);
+        return ResponseEntity.ok(Collections.singletonMap(ID, id));
     }
 
     @PatchMapping("/api/{organizationTitle}/milestones/{milestoneId}/status")
     public ResponseEntity<Map<String, Long>> updateStatus(@PathVariable Long milestoneId,
                                                           @RequestBody MilestoneStatusRequest milestoneStatusRequest) {
         milestoneService.updateStatus(milestoneId, milestoneStatusRequest.getIsClosed());
-        return ResponseEntity.ok(Collections.singletonMap("id", milestoneId));
+        return ResponseEntity.ok(Collections.singletonMap(ID, milestoneId));
     }
 
     @DeleteMapping("/api/{organizationTitle}/milestones/{milestoneId}")

@@ -1,5 +1,8 @@
 package com.codesquad.issuetracker.api.member.controller;
 
+import static com.codesquad.issuetracker.common.util.RequestUtil.extractAccessToken;
+import static com.codesquad.issuetracker.common.util.RequestUtil.extractMemberId;
+
 import com.codesquad.issuetracker.api.jwt.service.JwtService;
 import com.codesquad.issuetracker.api.member.dto.request.RefreshTokenRequest;
 import com.codesquad.issuetracker.api.member.dto.request.SignInRequest;
@@ -22,6 +25,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class MemberController {
 
+    public static final String ACCESS_TOKEN = "accessToken";
     private final MemberService memberService;
     private final JwtService jwtService;
 
@@ -56,14 +60,13 @@ public class MemberController {
             @RequestBody RefreshTokenRequest refreshTokenRequest) {
         String accessToken = jwtService.reissueAccessToken(refreshTokenRequest);
         return ResponseEntity.ok()
-                .body(Collections.singletonMap("accessToken", accessToken));
+                .body(Collections.singletonMap(ACCESS_TOKEN, accessToken));
     }
 
     @PostMapping("/api/sign-out")
     public ResponseEntity<Map<String, String>> signOut(HttpServletRequest httpServletRequest) {
-        String authorizationHeader = httpServletRequest.getHeader("Authorization");
-        String accessToken = authorizationHeader.substring(7).replace("\"", "");
-        Long memberId = (Long) httpServletRequest.getAttribute("memberId");
+        String accessToken = extractAccessToken(httpServletRequest);
+        Long memberId = extractMemberId(httpServletRequest);
         memberService.signOut(accessToken, memberId);
         return ResponseEntity.ok(Collections.singletonMap("message", "로그아웃 성공"));
     }

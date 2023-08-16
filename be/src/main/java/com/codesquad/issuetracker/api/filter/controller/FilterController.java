@@ -1,5 +1,7 @@
 package com.codesquad.issuetracker.api.filter.controller;
 
+import static com.codesquad.issuetracker.common.util.RequestUtil.extractMemberId;
+
 import com.codesquad.issuetracker.api.filter.dto.DynamicFiltersResponse;
 import com.codesquad.issuetracker.api.filter.dto.LabelFilter;
 import com.codesquad.issuetracker.api.filter.dto.MemberFilter;
@@ -47,8 +49,8 @@ public class FilterController {
 
     @GetMapping(value = "/api/{organizationTitle}/issues/filters", params = "type=static")
     public ResponseEntity<StaticFiltersResponse> readStaticFilters(@PathVariable String organizationTitle,
-                                                                   HttpServletRequest servletRequest) {
-        Long memberId = (Long) servletRequest.getAttribute(MEMBER_ID);
+                                                                   HttpServletRequest httpServletRequest) {
+        Long memberId = extractMemberId(httpServletRequest);
         return ResponseEntity.ok(new StaticFiltersResponse(memberId));
     }
 }

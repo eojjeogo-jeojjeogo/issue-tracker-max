@@ -1,5 +1,7 @@
 package com.codesquad.issuetracker.api.comment.controller;
 
+import static com.codesquad.issuetracker.common.util.RequestUtil.extractMemberId;
+
 import com.codesquad.issuetracker.api.comment.dto.request.CommentEmoticonAddRequest;
 import com.codesquad.issuetracker.api.comment.dto.request.CommentRequest;
 import com.codesquad.issuetracker.api.comment.service.CommentService;
@@ -23,10 +25,10 @@ public class CommentController {
     private final CommentService commentService;
 
     @PostMapping("/api/{organizationTitle}/issues/{issueId}/comments")
-    public ResponseEntity<Map<String, Long>> createComment(HttpServletRequest request,
+    public ResponseEntity<Map<String, Long>> createComment(HttpServletRequest httpServletRequest,
                                                            @PathVariable Long issueId,
                                                            @RequestBody CommentRequest commentRequest) {
-        Long memberId = (Long) request.getAttribute(MEMBER_ID);
+        Long memberId = extractMemberId(httpServletRequest);
         Long commentId = commentService.createComment(issueId, commentRequest, memberId);
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(Collections.singletonMap("id", commentId));
@@ -41,10 +43,10 @@ public class CommentController {
     }
 
     @PostMapping("/api/{organizationTitle}/issues/{issueId}/comments/{commentId}/emoticons")
-    public ResponseEntity<Void> createCommentEmoticon(HttpServletRequest request,
+    public ResponseEntity<Void> createCommentEmoticon(HttpServletRequest httpServletRequest,
                                                       @PathVariable Long commentId,
                                                       @RequestBody CommentEmoticonAddRequest commentEmoticonAddRequest) {
-        Long memberId = (Long) request.getAttribute(MEMBER_ID);
+        Long memberId = extractMemberId(httpServletRequest);
         commentService.createCommentEmoticon(commentId, memberId, commentEmoticonAddRequest);
         return ResponseEntity.status(HttpStatus.CREATED)
                 .build();

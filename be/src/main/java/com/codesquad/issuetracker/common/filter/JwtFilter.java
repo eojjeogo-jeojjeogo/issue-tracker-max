@@ -1,5 +1,7 @@
 package com.codesquad.issuetracker.common.filter;
 
+import static com.codesquad.issuetracker.common.util.RequestUtil.extractAccessToken;
+
 import com.codesquad.issuetracker.api.jwt.service.JwtProvider;
 import com.codesquad.issuetracker.common.exception.CustomRuntimeException;
 import com.codesquad.issuetracker.common.exception.customexception.JwtException;
@@ -60,13 +62,13 @@ public class JwtFilter implements Filter {
             return;
         }
 
-        if (redisUtil.hasKeyBlackList(getToken(httpServletRequest))) {
+        if (redisUtil.hasKeyBlackList(extractAccessToken(httpServletRequest))) {
             sendJwtExceptionResponse(response, new CustomRuntimeException(JwtException.BLACKLISTED_JWT_EXCEPTION));
             return;
         }
 
         try {
-            String token = getToken(httpServletRequest);
+            String token = extractAccessToken(httpServletRequest);
             Claims claims = jwtProvider.getClaims(token);
             Long memberId = convertMemberIdToLong(claims);
             request.setAttribute(MEMBER_ID, memberId);
@@ -89,11 +91,6 @@ public class JwtFilter implements Filter {
     private boolean isContainToken(HttpServletRequest request) {
         String authorization = request.getHeader(HEADER_AUTHORIZATION);
         return authorization != null && authorization.startsWith(TOKEN_PREFIX);
-    }
-
-    private String getToken(HttpServletRequest request) {
-        String authorization = request.getHeader(HEADER_AUTHORIZATION);
-        return authorization.substring(7).replace("\"", "");
     }
 
     private void sendJwtExceptionResponse(ServletResponse response, RuntimeException e) throws IOException {

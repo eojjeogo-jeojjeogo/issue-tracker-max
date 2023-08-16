@@ -1,5 +1,7 @@
 package com.codesquad.issuetracker.api.issue.controller;
 
+import static com.codesquad.issuetracker.common.util.RequestUtil.extractMemberId;
+
 import com.codesquad.issuetracker.api.issue.dto.IssueCreateRequest;
 import com.codesquad.issuetracker.api.issue.dto.IssueFilterRequest;
 import com.codesquad.issuetracker.api.issue.dto.IssueFilterResponse;
@@ -38,7 +40,7 @@ public class IssueController {
     public ResponseEntity<Map<String, Long>> create(@Valid @RequestBody IssueCreateRequest issueCreateRequest,
                                                     @PathVariable String organizationTitle,
                                                     HttpServletRequest httpServletRequest) {
-        issueCreateRequest.setMemberId(getSignInId(httpServletRequest));
+        issueCreateRequest.setMemberId(extractMemberId(httpServletRequest));
         Long issueId = issueService.create(organizationTitle, issueCreateRequest);
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(Collections.singletonMap("id", issueId));
@@ -99,9 +101,5 @@ public class IssueController {
                                                                  IssueFilterRequest issueFilterRequest) {
         IssueFilterResponse issueFilterResponse = issueService.readFilteredIssue(issueFilterRequest, organizationTitle);
         return ResponseEntity.ok().body(issueFilterResponse);
-    }
-
-    private Long getSignInId(HttpServletRequest request) {
-        return (Long) request.getAttribute("memberId");
     }
 }
