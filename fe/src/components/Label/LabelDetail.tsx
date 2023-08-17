@@ -14,6 +14,7 @@ import { useOutsideClick } from "../../hooks/useOutsideClick";
 import { LABEL_URL, SERVER } from "../../constants/url";
 import { AlertContext } from "../../contexts/AlertContext";
 import { colorList } from "../../constants/colors";
+import { TokenContext } from "../../contexts/TokenContext";
 
 const labelDetail = (color: ColorScheme, label?: LabelType) => css`
   display: flex;
@@ -114,6 +115,9 @@ export function LabelDetail({
   const alertContextValue = useContext(AlertContext)!;
   const { setShouldFetchAgain } = alertContextValue;
 
+  const tokenContextValue = useContext(TokenContext)!;
+  const { accessToken } = tokenContextValue;
+
   const color = useTheme() as ColorScheme;
   const [selectedColor, setSelectedColor] = useState<string>(
     label ? label?.backgroundColor : color.palette.offWhite
@@ -190,6 +194,7 @@ export function LabelDetail({
         const response = await fetch(url, {
           method: method,
           headers: {
+            "Authorization": "Bearer " + accessToken,
             "Content-Type": "application/json",
           },
           body: JSON.stringify(payload),
@@ -270,9 +275,13 @@ export function LabelDetail({
         </div>
       </div>
       <div className="buttonContainer" css={buttonContainer}>
-        <div className="cancelButton" onClick={onClickCancelButton}>
-          <Button type="outline" size="S" icon="xSquare" text="취소" />
-        </div>
+        <Button
+          onClick={onClickCancelButton}
+          type="outline"
+          size="S"
+          icon="xSquare"
+          text="취소"
+        />
         <Button
           onClick={handleClickCompleteButton}
           status={isEditCompleted ? "enabled" : "disabled"}

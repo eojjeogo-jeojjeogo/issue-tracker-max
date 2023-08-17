@@ -8,6 +8,7 @@ import { Button } from "../common/Button";
 import { useContext, useEffect, useState } from "react";
 import { MILESTONE_URL, SERVER } from "../../constants/url";
 import { AlertContext } from "../../contexts/AlertContext";
+import { TokenContext } from "../../contexts/TokenContext";
 
 const milestoneDetailStyle = (color: ColorScheme, milestone?: Milestone) => css`
   display: flex;
@@ -105,6 +106,9 @@ export function MilestoneDetail({
   const AlertContextValue = useContext(AlertContext)!;
   const { editElementId, setShouldFetchAgain } = AlertContextValue;
 
+  const tokenContextValue = useContext(TokenContext)!;
+  const { accessToken } = tokenContextValue;
+
   const color = useTheme() as ColorScheme;
 
   useEffect(() => {
@@ -176,6 +180,7 @@ export function MilestoneDetail({
           {
             method: isAddMode ? "POST" : "PATCH",
             headers: {
+              "Authorization": "Bearer " + accessToken,
               "Content-Type": "application/json",
             },
             body: JSON.stringify(milestoneToSend),

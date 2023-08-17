@@ -24,6 +24,7 @@ import {
   SERVER,
 } from "../constants/url";
 import { AlertContext } from "../contexts/AlertContext";
+import { TokenContext } from "../contexts/TokenContext";
 
 type MilestonesData = {
   milestoneOpenedCount: number;
@@ -57,29 +58,51 @@ export function MilestonePage() {
   const alertContextValue = useContext(AlertContext)!;
   const { shouldFetchAgain, setShouldFetchAgain } = alertContextValue;
 
+  const tokenContextValue = useContext(TokenContext)!;
+  const { accessToken } = tokenContextValue;
+
   const navigate = useNavigate();
+  if (!accessToken) navigate("/login");
+
   const color = useTheme() as ColorScheme;
 
   useEffect(() => {
     const fetchData = async () => {
       try {
+        const headers = {
+          "Authorization": "Bearer " + accessToken,
+          "Content-Type": "application/json",
+        };
         setLoading(true);
-        const totalCountResponse = await fetch(`${SERVER}${COMMON_URL}`);
+        const totalCountResponse = await fetch(`${SERVER}${COMMON_URL}`, {
+          headers,
+        });
 
         const milestoneResponse = await fetch(
           `${SERVER}${MILESTONE_URL}${
             isOpenSelected ? FILTER_OPEN_URL : FILTER_CLOSED_URL
-          }`
+          }`,
+          {
+            headers,
+          }
         );
+
+        if (!totalCountResponse.ok && !milestoneResponse.ok) {
+          throw new Error("Server response was not ok");
+        }
+
         const totalCountData = await totalCountResponse.json();
         const milestoneData = await milestoneResponse.json();
 
         setTotalCount(totalCountData);
         setMilestones(milestoneData);
         setLoading(false);
+
+        navigate(`${isOpenSelected ? "?state=open" : "?state=closed"}`);
       } catch (error) {
         console.error("API 요청 중 에러 발생:", error);
         setLoading(false);
+        navigate("/login");
       }
     };
 

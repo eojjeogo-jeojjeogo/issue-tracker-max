@@ -2,12 +2,13 @@ import { Txt } from "../components/util/Txt";
 import { Button } from "../components/common/Button";
 import { useNavigate } from "react-router-dom";
 import { TextInput } from "../components/common/TextInput";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { Background } from "../components/common/Background";
 import { ColorScheme } from "../contexts/ThemeContext";
 import { css, useTheme } from "@emotion/react";
 import { Icon } from "../components/common/Icon";
 import { LOGIN_CODE_URL, SERVER } from "../constants/url";
+import { TokenContext } from "../contexts/TokenContext";
 
 const ButtonStyle = (color: ColorScheme) => css`
   margin: 0 auto;
@@ -67,17 +68,28 @@ const loginButton = (color: ColorScheme, isFormValid: boolean) => css`
 // 찰리 client ID
 const GITHUB_CLIENT_ID = "f3baa022e59aef7557ea";
 
-// const REDIRECT_URI = "http://localhost:5173/login";
-const REDIRECT_URI = "http://54.180.146.130/login/oauth2/code/github";
+// const REDIRECT_URI = "http://localhost:5173/login/oauth2/code/github";
 // const REDIRECT_URI =
-//   "http://issue-tracker-team3.s3-website.ap-northeast-2.amazonaws.com/login";
+// "http://issue-tracker-team3.s3-website.ap-northeast-2.amazonaws.com/login/oauth2/code/github";
+const REDIRECT_URI = "http://54.180.146.130/login/oauth2/code/github";
+// const REDIRECT_URI = "http://54.180.146.130/issues";
+// const REDIRECT_URI =
+// "http://issue-tracker-team3.s3-website.ap-northeast-2.amazonaws.com/login";
 
 export function LoginPage() {
   const [id, setId] = useState("");
   const [password, setPassword] = useState("");
   const [isFormValid, setIsFormValid] = useState(false);
 
-  const isIdValid = id.length >= 6 && id.length <= 12;
+  const tokenContextValue = useContext(TokenContext)!;
+  const {
+    accessToken,
+    setAccessToken,
+    setRefreshToken,
+    handleSetProfileImage,
+  } = tokenContextValue;
+
+  const isIdValid = id.includes("@");
   const isPasswordValid = password.length >= 6 && password.length <= 12;
 
   useEffect(() => {
@@ -92,10 +104,13 @@ export function LoginPage() {
     const urlParams = new URLSearchParams(window.location.search);
     const code = urlParams.get("code");
     console.log(code);
+    // if (accessToken) {
+    //   navigate("/issues");
+    // }
     if (code) {
       sendCodeToServer(code);
     }
-  }, []);
+  }, [accessToken]);
 
   const color = useTheme() as ColorScheme;
 
@@ -103,7 +118,7 @@ export function LoginPage() {
 
   const onGitHubLoginCLick = () => {
     window.location.href = `https://github.com/login/oauth/authorize?client_id=${GITHUB_CLIENT_ID}&redirect_uri=${REDIRECT_URI}&scope=user`;
-    // window.location.href = `https://github.com/login/oauth/authorize?client_id=f3baa022e59aef7557ea&scope=id,name,email,avatar_url`;
+    // window.location.href = `https://github.com/login/oauth/authorize?client_id=${GITHUB_CLIENT_ID}&scope=repo:status read:repo_hook user:email&redirect_uri=${REDIRECT_URI}`;
   };
 
   const onClickLogo = () => {
@@ -122,10 +137,34 @@ export function LoginPage() {
     navigate("/register");
   };
 
+  const onClickLoginButton = async () => {
+    try {
+      const response = await fetch(`${SERVER}/api/sign-in`, {
+        method: "POST",
+        headers: {
+          "Authorization": "Bearer " + accessToken,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ email: id, password }),
+      });
+      const data = await response.json();
+      console.log(data);
+      if (response.ok) {
+        localStorage.setItem("token", data.token);
+        setAccessToken(data.tokens.accessToken);
+        setRefreshToken(data.tokens.refreshToken);
+        handleSetProfileImage(data.imgUrl);
+        navigate("/issues");
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   const sendCodeToServer = async (code: string) => {
     console.log(code);
     try {
-      const response = await fetch(`${SERVER}${LOGIN_CODE_URL}/${code}`, {
+      const response = await fetch(`${SERVER}${LOGIN_CODE_URL}/github`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -135,10 +174,10 @@ export function LoginPage() {
       const data = await response.json();
       console.log(data);
       if (response.ok) {
-        localStorage.setItem("token", data.token);
+        // localStorage.setItem("token", data.token);
         navigate("/issues");
       }
-      navigate("/issues");
+      // navigate("/issues");
     } catch (error) {
       console.log(error);
     }
@@ -161,11 +200,11 @@ export function LoginPage() {
         <TextInput
           isFormValid={isIdValid}
           inputValue={id}
-          caption="아이디는 6자 이상 12자 이하로 입력해주세요."
+          caption="올바른 이메일 형식이 아닙니다"
           onChange={onChangeId}
           width="100%"
           height={56}
-          placeholder="아이디"
+          placeholder="이메일"
         />
         <TextInput
           isFormValid={isPasswordValid}
@@ -176,7 +215,9 @@ export function LoginPage() {
           height={56}
           placeholder="비밀번호"
         />
-        <button css={loginButton(color, isFormValid)}>
+        <button
+          onClick={onClickLoginButton}
+          css={loginButton(color, isFormValid)}>
           <Txt typography="medium20" color={color.brand.text.default}>
             아이디로 로그인
           </Txt>

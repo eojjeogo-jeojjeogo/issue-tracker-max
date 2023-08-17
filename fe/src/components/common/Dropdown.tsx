@@ -70,6 +70,7 @@ export const Dropdown = React.forwardRef<HTMLDivElement, Props>(
     const color = useTheme() as ColorScheme;
     if (!isDropdownOpen) return null;
 
+    console.log(selectedOptions);
     return (
       <div ref={ref} className="dropdown" css={dropdownStyle(color)}>
         <div css={DropdownHeader(color)}>

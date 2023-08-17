@@ -114,12 +114,13 @@ export function IssueElement({
             <Icon type="alertCircle" color={color.palette.blue} />
             <div onClick={onClickIssueTitle} css={{ cursor: "pointer" }}>
               <Txt typography="medium20" color={color.neutral.text.strong}>
-                이슈 제목
+                {/* 이슈 제목 */}
+                {issue.title}
               </Txt>
             </div>
             <div css={{ display: "flex", gap: "4px" }}>
               {issue.labels.map((label, idx) => (
-                <Label key={idx} label={label} />
+                <Label  isDark={label.isDark} key={idx} label={label} />
               ))}
             </div>
           </div>

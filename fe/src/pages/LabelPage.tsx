@@ -16,6 +16,8 @@ import { TotalCount } from "./MilestonePage";
 import { LoadingBar } from "../components/common/LoadingBar";
 import { COMMON_URL, LABEL_URL, SERVER } from "../constants/url";
 import { AlertContext } from "../contexts/AlertContext";
+import { TokenContext } from "../contexts/TokenContext";
+// import { TokenContext } from "../contexts/TokenContext";
 
 const tableContainer = css`
   display: flex;
@@ -46,12 +48,44 @@ export function LabelPage() {
   const alertContextValue = useContext(AlertContext)!;
   const { shouldFetchAgain, setShouldFetchAgain } = alertContextValue;
 
+  const tokenContextValue = useContext(TokenContext)!;
+  const { accessToken } = tokenContextValue;
+
+  const navigate = useNavigate();
+  const color = useTheme() as ColorScheme;
+  const labelTable = tableStyle(color);
+  const labelTableHeader = tableHeaderStyle(color);
+
+  if (!accessToken) navigate("/login");
+
+  // const getCookieValue = (name: string): string | null => {
+  //   const value = `; ${document.cookie}`;
+  //   const parts = value.split(`; ${name}=`);
+
+  //   // 쿠키 이름에 해당하는 값이 없을 경우, null 반환
+  //   if (parts.length < 2) return null;
+
+  //   // 첫 번째 매치된 값만 반환
+  //   return parts[1].split(";")[0];
+  // };
+
   useEffect(() => {
+    // const accessTokenFromCookie = getCookieValue("accessToken");
+
+    const headers = {
+      "Authorization": "Bearer " + accessToken,
+      "Content-Type": "application/json",
+    };
+
     const fetchData = async () => {
       try {
         setLoading(true);
-        const totalCountResponse = await fetch(`${SERVER}${COMMON_URL}`);
-        const labelsResponse = await fetch(`${SERVER}${LABEL_URL}`);
+        const totalCountResponse = await fetch(`${SERVER}${COMMON_URL}`, {
+          headers,
+        });
+        const labelsResponse = await fetch(`${SERVER}${LABEL_URL}`, {
+          headers,
+        });
         const totalCountData = await totalCountResponse.json();
         const labelsData = await labelsResponse.json();
 
@@ -60,18 +94,13 @@ export function LabelPage() {
         setLoading(false);
       } catch (error) {
         console.error("API 요청 중 에러 발생:", error);
-        setLoading(false);
+        navigate("/login");
       }
     };
 
     fetchData();
     setShouldFetchAgain(false);
   }, [shouldFetchAgain]);
-
-  const navigate = useNavigate();
-  const color = useTheme() as ColorScheme;
-  const labelTable = tableStyle(color);
-  const labelTableHeader = tableHeaderStyle(color);
 
   const leftText = "레이블";
   const rightText = "마일스톤";

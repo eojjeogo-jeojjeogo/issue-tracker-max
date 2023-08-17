@@ -16,6 +16,7 @@ import { useContext, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { IssueContext } from "../contexts/IssueContext";
 import { ISSUE_URL, SERVER } from "../constants/url";
+import { TokenContext } from "../contexts/TokenContext";
 
 const newIssueContentContainer = (color: ColorScheme) => css`
   display: flex;
@@ -62,31 +63,47 @@ export function NewIssuePage() {
   // const [labelsList, setLabelsList] = useState<string[]>([]);
   // const [milestoneList, setMilestoneList] = useState<string[]>([]);
 
-  const issueContextValue = useContext(IssueContext)!;
-  const { assigneeList, labelList, milestoneList } = issueContextValue;
+  const tokenContextValue = useContext(TokenContext)!;
+  const { accessToken } = tokenContextValue;
 
   const navigate = useNavigate();
+
+  if (!accessToken) navigate("/login");
+
+  const issueContextValue = useContext(IssueContext)!;
+  const {
+    assigneeList,
+    labelList,
+    milestoneList,
+    setAssigneeList,
+    setLabelList,
+    setMilestoneList,
+  } = issueContextValue;
 
   const onClickCancelButton = () => {
     navigate("/issues");
   };
 
   const onClickCompleteButton = async () => {
+    console.log(milestoneList[0]);
     const newIssueData = {
       title: inputTitle,
-      assignees: assigneeList,
-      labels: labelList,
-      milestoneId: milestoneList[0],
+      assigneesId: assigneeList,
+      labelsId: labelList,
+      milestonesId: milestoneList[0],
       comment: {
         content: inputContent,
         fileUrl: "fileUrl",
       },
     };
 
+    console.log(newIssueData);
+
     try {
       const response = await fetch(`${SERVER}${ISSUE_URL}`, {
         method: "POST",
         headers: {
+          "Authorization": "Bearer " + accessToken,
           "Content-Type": "application/json",
         },
         body: JSON.stringify(newIssueData),
@@ -95,7 +112,9 @@ export function NewIssuePage() {
       if (response.ok) {
         const data = await response.json();
 
-        console.log(data);
+        setAssigneeList([]);
+        setLabelList([]);
+        setMilestoneList([]);
 
         navigate(`/issues/${data.id}`);
       } else {
@@ -139,6 +158,7 @@ export function NewIssuePage() {
               </div>
               <div css={inputContainer}>
                 <TextInput
+                  inputValue={inputTitle}
                   onChange={onChangeInputTitle}
                   placeholder="제목"
                   width="912px"

@@ -25,8 +25,8 @@ export function RegisterPage() {
   };
 
   const onClickLogin = () => {
-    navigate("/login")
-  }
+    navigate("/login");
+  };
 
   const onChangeEmail = (e: React.ChangeEvent<HTMLInputElement>) => {
     setEmail(e.target.value);
@@ -46,7 +46,6 @@ export function RegisterPage() {
 
   const onClickRegisterButton = async () => {
     if (isFormValid) {
-      console.log("가입정보", email, id, password, checkPassword); //API 연결전 임시 사용
       try {
         fetch(`${SERVER}${REGISTER_URL}`, {
           method: "POST",
@@ -63,7 +62,7 @@ export function RegisterPage() {
         console.log(`error: ${error}
         `);
       }
-      // navigate("/issues");
+      navigate("/login");
     }
   };
 

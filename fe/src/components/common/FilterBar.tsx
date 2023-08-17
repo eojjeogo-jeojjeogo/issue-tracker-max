@@ -8,6 +8,7 @@ import { Dropdown } from "./Dropdown";
 import { useOutsideClick } from "../../hooks/useOutsideClick";
 
 type Props = {
+  filterBarValue: string;
   selectedOptions: string[];
   isFilterOpen: boolean;
   filterItems: { title: string; icon: string | null; color: string | null }[];
@@ -17,7 +18,7 @@ type Props = {
     icon: string | null;
     color: string | null;
   }) => void;
-
+  onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
 };
 
 const filterBarContainer = (color: ColorScheme, isActive: boolean) => css`
@@ -66,20 +67,22 @@ const inputContainer = (color: ColorScheme, isActive: boolean) => css`
     : color.neutral.surface.bold};
 `;
 
-const input = (color: ColorScheme) => css`
+const input = (color: ColorScheme, isActive: boolean) => css`
   width: 100%;
   border: none;
   outline: none;
   background-color: transparent;
-
-  &::placeholder {
-    color: ${color.neutral.text.weak};
-    font-size: ${fonts.medium16.fontSize};
-    font-weight: ${fonts.medium16.fontWeight};
-  }
+  color: ${isActive ? color.neutral.text.default : color.neutral.text.weak};
+  // &::placeholder {
+  //   color: ${color.neutral.text.weak};
+  //   font-size: ${fonts.medium16.fontSize};
+  //   font-weight: ${fonts.medium16.fontWeight};
+  // }
 `;
 
 export function FilterBar({
+  filterBarValue,
+  onChange,
   selectedOptions,
   isFilterOpen,
   filterItems,
@@ -131,18 +134,19 @@ export function FilterBar({
             isDropdownOpen={isFilterOpen}
             title="이슈 필터"
             items={filterItems}
-            
           />
         </div>
       </div>
       <div css={inputContainer(color, isActive)}>
         <Icon type="search" color={color.neutral.text.default} />
         <input
+          value={filterBarValue}
+          onChange={onChange}
           onFocus={onFocus}
           onBlur={onBlur}
-          css={input(color)}
+          css={input(color, isActive)}
           type="text"
-          placeholder="is:issue is:open"
+          // placeholder={filterBarValue}
         />
       </div>
     </div>

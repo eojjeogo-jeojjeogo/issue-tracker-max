@@ -10,6 +10,8 @@ import {
   MILESTONE_URL,
   SERVER,
 } from "../../constants/url";
+import { useNavigate } from "react-router-dom";
+import { TokenContext } from "../../contexts/TokenContext";
 
 const alertStyle = (color: ColorScheme) => css`
   display: flex;
@@ -52,7 +54,12 @@ export function Alert() {
     setShouldFetchAgain,
   } = AlertContextValue!;
 
+  const navigate = useNavigate();
+
   if (isLabelAlertOpen === false) return;
+
+  const tokenContextValue = useContext(TokenContext)!;
+  const { accessToken } = tokenContextValue;
 
   const onClickCancelButton = () => {
     setIsLabelAlertOpen(false);
@@ -65,6 +72,10 @@ export function Alert() {
     try {
       const response = await fetch(url, {
         method: "DELETE",
+        headers: {
+          "Authorization": "Bearer " + accessToken,
+          "Content-Type": "application/json",
+        },
       });
       if (!response.ok) {
         console.log("fail");
@@ -74,7 +85,7 @@ export function Alert() {
     } finally {
       setIsLabelAlertOpen(false);
     }
-
+    if (currentType === "issue") navigate("/issues");
     setIsLabelAlertOpen(false);
     setCurrentType(undefined);
     setShouldFetchAgain(true);

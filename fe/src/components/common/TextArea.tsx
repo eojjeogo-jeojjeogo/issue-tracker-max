@@ -1,10 +1,12 @@
 import { css, useTheme } from "@emotion/react";
 import { ColorScheme } from "../../contexts/ThemeContext";
-import { useRef, useState } from "react";
+import { useContext, useRef, useState } from "react";
 import { InputState } from "./TextInput";
 import { fonts } from "../../constants/fonts";
 import { Icon } from "./Icon";
 import { Txt } from "../util/Txt";
+import { SERVER } from "../../constants/url";
+import { TokenContext } from "../../contexts/TokenContext";
 
 const TextAreaContainer = ({
   color,
@@ -92,6 +94,9 @@ export function TextArea({
   const [inputState, setInputState] = useState<InputState>("enabled");
   const [selectedFileName, setSelectedFileName] = useState<string | null>(null);
 
+  const tokenContextValue = useContext(TokenContext)!;
+  const { accessToken } = tokenContextValue;
+
   const color = useTheme() as ColorScheme;
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -103,9 +108,31 @@ export function TextArea({
     setInputState("enabled");
   };
 
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files.length > 0) {
-      setSelectedFileName(e.target.files[0].name);
+      const selectedFile = e.target.files[0];
+      setSelectedFileName(selectedFile.name);
+
+      const formData = new FormData();
+      formData.append("file", selectedFile);
+
+      try {
+        const response = await fetch(`${SERVER}/api/images`, {
+          method: "POST",
+          headers: {
+            Authorization: "Bearer " + accessToken,
+          },
+          body: formData,
+        });
+
+        if (response.ok) {
+          console.log("File uploaded successfully");
+        } else {
+          console.error("Error uploading file");
+        }
+      } catch (error) {
+        console.error("There was an error uploading the file", error);
+      }
     }
   };
 

@@ -9,6 +9,7 @@ import { useContext, useEffect, useState } from "react";
 import { MilestoneDetail } from "./MilestoneDetail";
 import { AlertContext } from "../../contexts/AlertContext";
 import { MILESTONE_URL, SERVER } from "../../constants/url";
+import { TokenContext } from "../../contexts/TokenContext";
 
 const elementContainer = (color: ColorScheme) => css`
   display: flex;
@@ -108,6 +109,9 @@ export function MilestoneElement({
     setCurrentType,
   } = AlertContextValue!;
 
+  const tokenContextValue = useContext(TokenContext)!;
+  const { accessToken } = tokenContextValue;
+
   const color = useTheme() as ColorScheme;
 
   useEffect(() => {
@@ -138,6 +142,7 @@ export function MilestoneElement({
       fetch(`${SERVER}${MILESTONE_URL}/${milestones.id}/status`, {
         method: "PATCH",
         headers: {
+          "Authorization": "Bearer " + accessToken,
           "Content-Type": "application/json",
         },
         body: JSON.stringify({

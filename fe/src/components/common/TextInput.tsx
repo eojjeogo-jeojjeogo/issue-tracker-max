@@ -99,6 +99,7 @@ export function TextInput({
           </div>
         )}
         <input
+          value={inputValue ? inputValue : ""}
           onFocus={onFocus}
           onBlur={onBlur}
           onChange={onChange}

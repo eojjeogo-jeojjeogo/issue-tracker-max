@@ -11,6 +11,9 @@ import { Dropdown } from "../common/Dropdown";
 
 import { useOutsideClick } from "../../hooks/useOutsideClick";
 import { IssueContext } from "../../contexts/IssueContext";
+import { ISSUE_URL, SERVER } from "../../constants/url";
+import { TokenContext } from "../../contexts/TokenContext";
+import { IssueDetail } from "../../pages/IssueDetailPage";
 
 type FilterLabel = {
   id: number;
@@ -59,9 +62,13 @@ const titleContainer = css`
 type FilterItems = FilterLabel[] | FilterMilestone[] | FilterAssignee[];
 
 export function AddBoxItem({
+  issueId,
+  // issueDetail,
   title,
   dropdownItems,
 }: {
+  issueId?: string;
+  issueDetail?: IssueDetail;
   mode: string;
   title: string;
   dropdownItems: FilterLabel[] | FilterMilestone[] | FilterAssignee[];
@@ -74,17 +81,21 @@ export function AddBoxItem({
   const [selectedCategory, setSelectedCategory] = useState<string>("");
   const [addBoxFilterItems, setAddBoxFilterItems] = useState<FilterItems>([]);
 
+  const tokenContextValue = useContext(TokenContext)!;
+  const { accessToken } = tokenContextValue;
+
   const IssueContextValue = useContext(IssueContext)!;
   const {
     // assigneeList,
     // setAssigneeList,
-    // labelList,
+    labelList,
     // setLabelList,
     // milestone,
     // setMilestone,
     handleSetAssigneeList,
     handleSetLabelList,
     handleSetMilestoneList,
+    setShouldFetchAgain,
   } = IssueContextValue;
 
   const dropdownRef = useRef<HTMLDivElement>(null);
@@ -146,7 +157,26 @@ export function AddBoxItem({
     }
   };
 
-  useOutsideClick(dropdownRef, [filterButtonRef], () => {
+  useOutsideClick(dropdownRef, [filterButtonRef], async () => {
+    try {
+      const response = await fetch(`${SERVER}${ISSUE_URL}/${issueId}/labels`, {
+        method: "PUT",
+        headers: {
+          "Authorization": "Bearer " + accessToken,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          labels: labelList,
+        }),
+      });
+
+      if (response.ok) {
+        setShouldFetchAgain(true);
+      }
+    } catch (error) {
+      console.error("API 요청 중 에러 발생:", error);
+    }
+
     setIsDropdownOpen(false);
     const addBoxItems = getAddBoxItems(selectedOptions)!;
     console.log(addBoxItems);
@@ -169,21 +199,6 @@ export function AddBoxItem({
         break;
     }
   };
-  // const setCurrentSelectedOptions = (addBoxItems: FilterItems) => {
-  //   switch (title) {
-  //     case "담당자":
-  //       handleSetAssigneeList(addBoxItems.map((item) => item.id));
-  //       break;
-  //     case "레이블":
-  //       handleSetLabelList(addBoxItems.map((item) => item.id));
-  //       break;
-  //     case "마일스톤":
-  //       handleSetMilestoneList(addBoxItems.map((item) => item.id));
-  //       break;
-  //     default:
-  //       break;
-  //   }
-  // };
 
   const onClickTitleContainer = () => {
     setIsDropdownOpen(true);
@@ -214,6 +229,7 @@ export function AddBoxItem({
         } else {
           setSelectedOptions([...selectedOptions, item.title]);
         }
+
         break;
       case "마일스톤":
         setSelectedOptions([item.title]);
@@ -223,12 +239,39 @@ export function AddBoxItem({
     }
   };
 
+  // useEffect(() => {
+  //   const fetchData = async () => {
+  //     try {
+  //       const response = await fetch(`${SERVER}${ISSUE_URL}/1/labels`, {
+  //         method: "PUT",
+  //         headers: {
+  //           "Authorization": "Bearer " + accessToken,
+  //           "Content-Type": "application/json",
+  //         },
+  //         body: JSON.stringify({
+  //           labels: selectedOptions,
+  //         }),
+  //       });
+
+  //       if (response.ok) {
+  //         setShouldFetchAgain(true);
+  //       }
+  //     } catch (error) {
+  //       console.error("API 요청 중 에러 발생:", error);
+  //     }
+  //   };
+
+  //   fetchData();
+  //   setIsStatusChanged(false);
+  // }, [isStatusChanged]);
+
   const renderAddBoxFilterItems = () => {
     switch (title) {
       case "담당자":
         return (
           <div css={{ display: "flex", gap: "16px", flexDirection: "column" }}>
             {(addBoxFilterItems as FilterAssignee[]).map((item) => (
+              /* {assigneeItems.map((item) => ( */
               <div
                 key={item.id}
                 css={{
@@ -257,6 +300,7 @@ export function AddBoxItem({
         return (
           <div css={{ display: "flex", gap: "4px", flexWrap: "wrap" }}>
             {(addBoxFilterItems as FilterLabel[]).map((item) => (
+              /* {labelItems.map((item) => ( */
               <Label key={item.id} isDark={item.isDark} label={item} />
             ))}
           </div>

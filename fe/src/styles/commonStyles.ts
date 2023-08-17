@@ -16,7 +16,16 @@ export const tableStyle = (color: ColorScheme) => css`
   flex-direction: column;
   border-radius: 16px;
   border: 1px solid ${color.neutral.border.default};
-  overflow: hidden;
+
+  & > :first-of-type {
+    border-top-left-radius: 16px;
+    border-top-right-radius: 16px;
+  }
+
+  & > :last-child {
+    border-bottom-left-radius: 16px;
+    border-bottom-right-radius: 16px;
+  }
 `;
 
 export const tableHeaderStyle = (color: ColorScheme) => css`

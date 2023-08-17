@@ -12,6 +12,8 @@ export const ISSUE_URL = `/api/${ORGAN}/issues`;
 export const REGISTER_URL = `/api/sign-up/local`;
 
 export const FILTER_URL = `?type=filter`;
+export const STATIC_FILTER_URL = `/filters?type=static`;
+export const DYNAMIC_FILTER_URL = `/filters?type=dynamic`;
 export const FILTER_OPEN_URL = `?filter=open`;
 export const FILTER_CLOSED_URL = `?filter=closed`;
 
