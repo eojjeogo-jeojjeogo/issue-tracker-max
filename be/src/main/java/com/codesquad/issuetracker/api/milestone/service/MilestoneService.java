@@ -7,7 +7,9 @@ import com.codesquad.issuetracker.api.milestone.dto.request.MilestoneRequest;
 import com.codesquad.issuetracker.api.milestone.dto.response.MilestonesResponse;
 import com.codesquad.issuetracker.api.milestone.filterStatus.FilterStatus;
 import com.codesquad.issuetracker.api.milestone.repository.MilestoneRepository;
-import com.codesquad.issuetracker.api.organization.repository.OrganizationRepository;
+import com.codesquad.issuetracker.api.organization.service.OrganizationService;
+import com.codesquad.issuetracker.common.exception.CustomRuntimeException;
+import com.codesquad.issuetracker.common.exception.customexception.MilestoneException;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -18,26 +20,27 @@ import org.springframework.transaction.annotation.Transactional;
 public class MilestoneService {
 
     private final MilestoneRepository milestoneRepository;
-    private final OrganizationRepository organizationRepository;
+    private final OrganizationService organizationService;
 
     @Transactional
     public long create(String organizationTitle, MilestoneRequest mileStoneRequest) {
-        Long organizationId = organizationRepository.findBy(organizationTitle)
-                .orElseThrow();
+        Long organizationId = organizationService.getOrganizationIdBy(organizationTitle);
         Milestone milestone = mileStoneRequest.toEntityByOrganizationId(organizationId);
         return milestoneRepository.save(milestone)
-                .orElseThrow();
+                .orElseThrow(() -> new CustomRuntimeException(MilestoneException.MILESTONE_SAVE_FAIL_EXCEPTION));
     }
 
     public MilestoneVo read(Long milestoneId) {
-        MilestoneVo milestone = milestoneRepository.findBy(milestoneId).orElseThrow();
-        return milestone;
+        if (milestoneId == 0) {
+            return null;
+        }
+        return milestoneRepository.findBy(milestoneId)
+                .orElseThrow(() -> new CustomRuntimeException(MilestoneException.MILESTONE_NOT_FOUND_EXCEPTION));
     }
 
     @Transactional
     public MilestonesResponse readAll(String organizationTitle, FilterStatus filterStatus) {
-        Long organizationId = organizationRepository.findBy(organizationTitle)
-                .orElseThrow();
+        Long organizationId = organizationService.getOrganizationIdBy(organizationTitle);
         List<MilestonesVo> milestones = milestoneRepository.findAllBy(organizationId);
         return MilestonesResponse.from(milestones, filterStatus);
     }
@@ -55,4 +58,5 @@ public class MilestoneService {
     public void delete(Long milestoneId) {
         milestoneRepository.delete(milestoneId);
     }
+
 }

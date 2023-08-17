@@ -7,7 +7,11 @@ import java.util.Optional;
 
 public interface IssueRepository {
 
-    Optional<Long> countIssuesBy(Long organizationId);
+    Long countIssuesBy(Long organizationId);
+
+    Long countOpenedIssuesBy(Long organizationId);
+
+    Long countClosedIssuesBy(Long organizationId);
 
     Optional<Long> save(Issue issue);
 

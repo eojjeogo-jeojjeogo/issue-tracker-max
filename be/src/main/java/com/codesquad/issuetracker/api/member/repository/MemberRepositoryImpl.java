@@ -20,7 +20,9 @@ public class MemberRepositoryImpl implements MemberRepository {
 
     private static final String ID = "id";
     private static final String NICKNAME = "nickname";
-    private static final String URL = "profile_img_url";
+    private static final String PROFILE_IMG_URL = "profile_img_url";
+    public static final String EMAIL = "email";
+    public static final String PASSWORD = "password";
 
     private final NamedParameterJdbcTemplate template;
 
@@ -53,7 +55,7 @@ public class MemberRepositoryImpl implements MemberRepository {
     }
 
     @Override
-    public Optional<Long> findBy(String email) {
+    public Optional<Long> findMemberIdByEmail(String email) {
         String sql = "SELECT id FROM member WHERE email = :email";
 
         List<Long> results = template.query(
@@ -66,8 +68,8 @@ public class MemberRepositoryImpl implements MemberRepository {
     }
 
     @Override
-    public Optional<Member> findMemberBy(String email) {
-        String sql = "SELECT id, email, password FROM member WHERE email = :email";
+    public Optional<Member> findMemberByEmail(String email) {
+        String sql = "SELECT id, email, password, nickname, profile_img_url FROM member WHERE email = :email";
 
         List<Member> member = template.query(
                 sql,
@@ -78,7 +80,7 @@ public class MemberRepositoryImpl implements MemberRepository {
     }
 
     @Override
-    public boolean existsNickname(String nickname) {
+    public boolean isNicknameExists(String nickname) {
         String sql = "SELECT COUNT(nickname) FROM member WHERE nickname = :nickname";
 
         int count = template.queryForObject(sql, Collections.singletonMap("nickname", nickname), Integer.class);
@@ -90,16 +92,18 @@ public class MemberRepositoryImpl implements MemberRepository {
                 MemberFilter.builder()
                         .id(rs.getLong(ID))
                         .name(rs.getString(NICKNAME))
-                        .imgUrl(rs.getString(URL))
+                        .imgUrl(rs.getString(PROFILE_IMG_URL))
                         .build();
     }
 
     private RowMapper<Member> memberRowMapper() {
         return (rs, rowNum) ->
                 Member.builder()
-                        .id(rs.getLong("id"))
-                        .email(rs.getString("email"))
-                        .password(rs.getString("password"))
+                        .id(rs.getLong(ID))
+                        .email(rs.getString(EMAIL))
+                        .password(rs.getString(PASSWORD))
+                        .nickname(rs.getString(NICKNAME))
+                        .profileImgUrl(rs.getString(PROFILE_IMG_URL))
                         .build();
     }
 }

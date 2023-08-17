@@ -17,11 +17,11 @@ public class MilestonesResponse {
     private List<MilestonesVo> milestonesVos;
 
     public static MilestonesResponse from(List<MilestonesVo> milestonesVos,
-        FilterStatus filterStatus) {
+                                          FilterStatus filterStatus) {
         long closedCount = getClosedCount(milestonesVos);
         long openedCount = getOpenedCount(closedCount, milestonesVos);
         List<MilestonesVo> mileStonesResponse = MilestonesVo.classifyByFilterStatus(milestonesVos,
-            filterStatus);
+                filterStatus);
         return new MilestonesResponse(openedCount, closedCount, mileStonesResponse);
     }
 
@@ -31,7 +31,7 @@ public class MilestonesResponse {
 
     private static long getClosedCount(List<MilestonesVo> milestones) {
         return milestones.stream()
-            .filter(MilestonesVo::getIsClosed)
-            .count();
+                .filter(MilestonesVo::getIsClosed)
+                .count();
     }
 }

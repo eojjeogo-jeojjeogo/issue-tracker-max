@@ -1,6 +1,10 @@
 package com.codesquad.issuetracker.api.issue.controller;
 
+import static com.codesquad.issuetracker.common.util.RequestUtil.extractMemberId;
+
 import com.codesquad.issuetracker.api.issue.dto.IssueCreateRequest;
+import com.codesquad.issuetracker.api.issue.dto.IssueFilterRequest;
+import com.codesquad.issuetracker.api.issue.dto.IssueFilterResponse;
 import com.codesquad.issuetracker.api.issue.dto.IssueMilestoneUpdateRequest;
 import com.codesquad.issuetracker.api.issue.dto.IssueResponse;
 import com.codesquad.issuetracker.api.issue.dto.IssueStatusUpdateRequest;
@@ -10,12 +14,14 @@ import com.codesquad.issuetracker.api.issue.service.IssueService;
 import java.util.Collections;
 import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -31,10 +37,10 @@ public class IssueController {
     private final IssueService issueService;
 
     @PostMapping("/api/{organizationTitle}/issues")
-    public ResponseEntity<Map<String, Long>> create(@RequestBody IssueCreateRequest issueCreateRequest,
+    public ResponseEntity<Map<String, Long>> create(@Valid @RequestBody IssueCreateRequest issueCreateRequest,
                                                     @PathVariable String organizationTitle,
                                                     HttpServletRequest httpServletRequest) {
-        issueCreateRequest.setMemberId(getSignInId(httpServletRequest));
+        issueCreateRequest.setMemberId(extractMemberId(httpServletRequest));
         Long issueId = issueService.create(organizationTitle, issueCreateRequest);
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(Collections.singletonMap("id", issueId));
@@ -89,7 +95,11 @@ public class IssueController {
                 .build();
     }
 
-    private Long getSignInId(HttpServletRequest request) {
-        return (Long) request.getAttribute("memberId");
+    @GetMapping("/api/{organizationTitle}/issues")
+    public ResponseEntity<IssueFilterResponse> readFilteredIssue(@PathVariable String organizationTitle,
+                                                                 @ModelAttribute
+                                                                 IssueFilterRequest issueFilterRequest) {
+        IssueFilterResponse issueFilterResponse = issueService.readFilteredIssue(issueFilterRequest, organizationTitle);
+        return ResponseEntity.ok().body(issueFilterResponse);
     }
 }

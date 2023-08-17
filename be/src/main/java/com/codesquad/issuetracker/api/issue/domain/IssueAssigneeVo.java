@@ -8,7 +8,7 @@ import lombok.Getter;
 public class IssueAssigneeVo {
 
     private Long id;
-    private String nickName;
+    private String name;
     private String imgUrl;
 
 }

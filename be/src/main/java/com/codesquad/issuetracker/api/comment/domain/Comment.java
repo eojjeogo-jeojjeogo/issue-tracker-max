@@ -13,7 +13,6 @@ public class Comment {
     private final Long id;
     private final String content;
     private final LocalDateTime createdTime;
-    private final String fileUrl;
     private final Long issueId;
     private final Long memberId;
 

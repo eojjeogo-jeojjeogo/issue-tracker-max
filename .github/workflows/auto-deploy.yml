@@ -13,6 +13,7 @@ env:
   FE_WORKING_DIR: ./fe
   NGINX_WORKING_DIR: ./nginx
   APPLICATION_PROPERTIES_FILE_PATH: ./src/main/resources/application.yml
+  AWS_APPLICATION_FILE_PATH: ./src/main/resources/application-aws.yml
 
 jobs:
 
@@ -40,6 +41,8 @@ jobs:
         run: |
           touch '${{ env.APPLICATION_PROPERTIES_FILE_PATH }}'
           echo '${{ secrets.APPLICATION }}' > '${{ env.APPLICATION_PROPERTIES_FILE_PATH }}'
+          touch '${{ env.AWS_APPLICATION_FILE_PATH }}'
+          echo '${{ secrets.AWS_APPLICATION }}' > '${{ env.AWS_APPLICATION_FILE_PATH }}'
 
       # 3. build 단계
       - name: Grant execute permission for gradlew

@@ -16,18 +16,30 @@ import org.springframework.stereotype.Repository;
 public class IssueAssigneeRepositoryImpl implements IssueAssigneeRepository {
 
     public static final String ID = "id";
-    public static final String NICKNAME = "nickName";
-    public static final String IMG_URL = "img_url";
+    public static final String NAME = "name";
+    public static final String IMG_URL = "imgUrl";
 
     private final NamedParameterJdbcTemplate template;
 
     @Override
-    public List<IssueAssigneeVo> findAllBy(Long issueId) {
-        String sql = "SELECT member.id, member.nickname, member.profile_img_url AS img_url "
+    public List<IssueAssigneeVo> findAllByIssueId(Long issueId) {
+        String sql = "SELECT member.id, member.nickname AS name, member.profile_img_url AS imgUrl "
                 + "FROM issue_assignee "
                 + "JOIN member ON issue_assignee.member_id = member.id "
                 + "WHERE issue_assignee.issue_id = :issueId";
         return template.query(sql, Collections.singletonMap("issueId", issueId), issueAssigneeVoRowMapper());
+    }
+
+    @Override
+    public List<IssueAssigneeVo> findAllByOrganizationId(Long organizationId) {
+        String sql =
+                "SELECT DISTINCT member.id, member.nickname AS name, member.profile_img_url AS imgUrl "
+                + "FROM issue_assignee "
+                + "JOIN member ON issue_assignee.member_id = member.id "
+                + "JOIN issue ON issue_assignee.issue_id = issue.id "
+                + "WHERE issue_assignee.issue_id = issue.id "
+                + "AND issue.organization_id = :organizationId";
+        return template.query(sql, Collections.singletonMap("organizationId", organizationId), issueAssigneeVoRowMapper());
     }
 
     @Override
@@ -52,7 +64,7 @@ public class IssueAssigneeRepositoryImpl implements IssueAssigneeRepository {
     private RowMapper<IssueAssigneeVo> issueAssigneeVoRowMapper() {
         return (rs, rowNum) -> new IssueAssigneeVo(
                 rs.getLong(ID),
-                rs.getString(NICKNAME),
+                rs.getString(NAME),
                 rs.getString(IMG_URL)
         );
     }

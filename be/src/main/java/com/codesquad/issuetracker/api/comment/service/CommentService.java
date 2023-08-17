@@ -9,6 +9,8 @@ import com.codesquad.issuetracker.api.comment.dto.response.CommentEmoticonRespon
 import com.codesquad.issuetracker.api.comment.dto.response.CommentResponse;
 import com.codesquad.issuetracker.api.comment.repository.CommentEmoticonRepository;
 import com.codesquad.issuetracker.api.comment.repository.CommentRepository;
+import com.codesquad.issuetracker.common.exception.CustomRuntimeException;
+import com.codesquad.issuetracker.common.exception.customexception.CommentException;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -25,7 +27,8 @@ public class CommentService {
 
     public Long createComment(Long issueId, CommentRequest commentRequest, Long memberId) {
         Comment comment = commentRequest.toEntityWithIssueId(issueId, memberId);
-        return commentRepository.save(comment).orElseThrow();
+        return commentRepository.save(comment)
+                .orElseThrow(() -> new CustomRuntimeException(CommentException.COMMENT_SAVE_FAIL_EXCEPTION));
     }
 
     @Transactional

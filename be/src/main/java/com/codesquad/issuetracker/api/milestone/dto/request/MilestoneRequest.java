@@ -5,6 +5,8 @@ import static com.codesquad.issuetracker.common.unit.ConverterFormatter.DATE_TIM
 import com.codesquad.issuetracker.api.milestone.domain.Milestone;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -12,6 +14,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class MilestoneRequest {
 
+    @NotNull
+    @Size(min = 1, max = 20, message = "유효하지 않은 마일스톤 제목 형식입니다.")
     private String title;
     private String description;
     private String dueDate;

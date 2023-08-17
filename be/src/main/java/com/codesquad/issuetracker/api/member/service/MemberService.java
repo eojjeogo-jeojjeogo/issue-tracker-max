@@ -1,88 +1,95 @@
 package com.codesquad.issuetracker.api.member.service;
 
+import com.codesquad.issuetracker.api.jwt.domain.Jwt;
+import com.codesquad.issuetracker.api.jwt.service.JwtService;
 import com.codesquad.issuetracker.api.member.domain.Member;
-import com.codesquad.issuetracker.api.member.dto.request.RefreshTokenRequest;
 import com.codesquad.issuetracker.api.member.dto.request.SignInRequest;
 import com.codesquad.issuetracker.api.member.dto.request.SignUpRequest;
 import com.codesquad.issuetracker.api.member.dto.response.SignInResponse;
 import com.codesquad.issuetracker.api.member.repository.MemberRepository;
-import com.codesquad.issuetracker.api.member.repository.TokenRepository;
 import com.codesquad.issuetracker.api.oauth.dto.response.OauthUserProfile;
 import com.codesquad.issuetracker.api.oauth.service.OauthService;
-import com.codesquad.issuetracker.jwt.Jwt;
-import com.codesquad.issuetracker.jwt.JwtProvider;
-import java.util.Map;
+import com.codesquad.issuetracker.common.exception.CustomRuntimeException;
+import com.codesquad.issuetracker.common.exception.customexception.MemberException;
+import com.codesquad.issuetracker.common.exception.customexception.SignInException;
+import com.codesquad.issuetracker.common.exception.customexception.SignUpException;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
 public class MemberService {
 
     private final OauthService oauthService;
+    private final JwtService jwtService;
     private final MemberRepository memberRepository;
-    private final JwtProvider jwtProvider;
-    private final TokenRepository tokenRepository;
 
+    @Transactional
     public SignInResponse oAuthSignIn(String providerName, String code) {
-        //github에서 사용자 정보 가져오기
         OauthUserProfile oauthUserProfile = oauthService.getOauthUserProfile(providerName, code);
         Member member = oauthUserProfile.toEntity();
-
-        Optional<Long> memberId = memberRepository.findBy(member.getEmail());
-        if (!memberId.isPresent()) {
-            memberId = memberRepository.save(member, providerName);
-        }
-        Jwt tokens = jwtProvider.createTokens(Map.of("memberId", memberId.get()));
-
-        if (memberId.isPresent()) {
-            tokenRepository.deleteRefreshToken(memberId.get());
-        }
-
-        tokenRepository.save(memberId.get(), tokens.getRefreshToken());
-        return new SignInResponse(tokens);
+        Long memberId = getMemberId(member)
+                .orElseGet(
+                        () -> memberRepository.save(member, providerName).orElseThrow(() -> new CustomRuntimeException(
+                                MemberException.MEMBER_SAVE_FAIL_EXCEPTION)));
+        Jwt token = jwtService.issueToken(memberId);
+        return SignInResponse.of(memberId, member, token);
     }
 
     public Long signUp(SignUpRequest signUpRequest, String providerName) {
-        //member 테이블에 저장된 email 인지 또는 저장된 nickname인지 확인
-        if (memberRepository.findBy(signUpRequest.getEmail()).isPresent()) {
-            // 예외처리
-        }
+        validateEmail(signUpRequest.getEmail());
+        validateNickname(signUpRequest.getNickname());
 
-        //member 테이블에 저장된 nickname인지 확인
-        if (memberRepository.existsNickname(signUpRequest.getNickname())) {
-            //예외처리
-        }
-
-        //member 테이블에 저장
         Member member = signUpRequest.toEntity();
-        Long memberId = memberRepository.save(member, providerName).orElseThrow();
-
-        return memberId;
+        return memberRepository.save(member, providerName)
+                .orElseThrow(() -> new CustomRuntimeException(
+                        MemberException.MEMBER_SAVE_FAIL_EXCEPTION));
     }
 
+    @Transactional
     public SignInResponse signIn(SignInRequest signInRequest) {
-        //해당 email의 회원이 없다면 "잘못된 이메일 입니다" 예외 던지기
-        Member member = memberRepository.findMemberBy(signInRequest.getEmail()).orElseThrow();
+        Member member = findMemberByEmail(signInRequest.getEmail());
+        validatePassword(signInRequest, member);
+        Jwt tokens = jwtService.issueToken(member.getId());
 
-        if (signInRequest.validatePassword(member)) {
-            // 비밀번호 다르다는 예외처리
-        }
-        Jwt tokens = jwtProvider.createTokens(Map.of("memberId", member.getId()));
-
-        tokenRepository.deleteRefreshToken(member.getId());
-        tokenRepository.save(member.getId(), tokens.getRefreshToken());
-
-        return new SignInResponse(tokens);
+        return SignInResponse.of(member, tokens);
     }
 
-    public String reissueAccessToken(RefreshTokenRequest refreshTokenRequest) {
-        Optional<Long> memberId = tokenRepository.findMemberIdBy(refreshTokenRequest.getRefreshToken());
+    @Transactional
+    public void signOut(String accessToken, Long memberId) {
+        jwtService.deleteRefreshToken(memberId);
 
-        Jwt tokens = jwtProvider.createTokens(Map.of("memberId", memberId.get()));
+        jwtService.setBlackList(accessToken);
+    }
 
-        return tokens.getAccessToken();
+    private void validateEmail(String email) {
+        memberRepository.findMemberIdByEmail(email)
+                .ifPresent(member -> {
+                    throw new CustomRuntimeException(SignUpException.INVALID_SIGN_UP_EMAIL);
+                });
+    }
+
+    private void validateNickname(String nickname) {
+        if (memberRepository.isNicknameExists(nickname)) {
+            throw new CustomRuntimeException(SignUpException.INVALID_SIGN_UP_NICKNAME);
+        }
+    }
+
+    private Member findMemberByEmail(String email) {
+        return memberRepository.findMemberByEmail(email)
+                .orElseThrow(() -> new CustomRuntimeException(SignInException.INCORRECT_SIGN_IN_EMAIL));
+    }
+
+    private void validatePassword(SignInRequest signInRequest, Member member) {
+        if (!signInRequest.validatePassword(member)) {
+            throw new CustomRuntimeException(SignInException.INCORRECT_SIGN_IN_PASSWORD);
+        }
+    }
+
+    private Optional<Long> getMemberId(Member member) {
+        return memberRepository.findMemberIdByEmail(member.getEmail());
     }
 
 }

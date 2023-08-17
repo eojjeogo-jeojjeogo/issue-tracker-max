@@ -7,6 +7,7 @@ import com.codesquad.issuetracker.api.label.service.LabelService;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -25,7 +26,7 @@ public class LabelController {
     private final LabelService labelService;
 
     @PostMapping("/api/{organizationTitle}/labels")
-    public ResponseEntity<Map<String, Long>> create(@RequestBody LabelCreateRequest labelCreateRequest,
+    public ResponseEntity<Map<String, Long>> create(@Valid @RequestBody LabelCreateRequest labelCreateRequest,
                                                     @PathVariable String organizationTitle) {
         // TODO: 로그인 관련 처리 필요
         Long labelId = labelService.create(organizationTitle, labelCreateRequest);
@@ -41,7 +42,7 @@ public class LabelController {
     }
 
     @PatchMapping("/api/{organizationTitle}/labels/{labelId}")
-    public ResponseEntity<Map<String, Long>> update(@RequestBody LabelUpdateRequest labelUpdateRequest,
+    public ResponseEntity<Map<String, Long>> update(@Valid @RequestBody LabelUpdateRequest labelUpdateRequest,
                                                     @PathVariable Long labelId,
                                                     @PathVariable String organizationTitle) {
         // TODO: 로그인 관련 처리 필요

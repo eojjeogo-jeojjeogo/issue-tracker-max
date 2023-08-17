@@ -3,18 +3,24 @@ package com.codesquad.issuetracker.api.issue.service;
 import com.codesquad.issuetracker.api.comment.dto.response.CommentResponse;
 import com.codesquad.issuetracker.api.comment.service.CommentService;
 import com.codesquad.issuetracker.api.issue.domain.Issue;
+import com.codesquad.issuetracker.api.issue.domain.IssueFilterVo;
 import com.codesquad.issuetracker.api.issue.domain.IssueVo;
 import com.codesquad.issuetracker.api.issue.dto.IssueCreateRequest;
+import com.codesquad.issuetracker.api.issue.dto.IssueFilterRequest;
+import com.codesquad.issuetracker.api.issue.dto.IssueFilterResponse;
 import com.codesquad.issuetracker.api.issue.dto.IssueInfoResponse;
 import com.codesquad.issuetracker.api.issue.dto.IssueMilestoneUpdateRequest;
 import com.codesquad.issuetracker.api.issue.dto.IssueResponse;
 import com.codesquad.issuetracker.api.issue.dto.IssueStatusUpdateRequest;
 import com.codesquad.issuetracker.api.issue.dto.IssueTitleUpdateRequest;
 import com.codesquad.issuetracker.api.issue.dto.IssuesStatusUpdateRequest;
+import com.codesquad.issuetracker.api.issue.repository.IssueFilterMapper;
 import com.codesquad.issuetracker.api.issue.repository.IssueRepository;
 import com.codesquad.issuetracker.api.milestone.domain.MilestoneVo;
 import com.codesquad.issuetracker.api.milestone.service.MilestoneService;
-import com.codesquad.issuetracker.api.organization.repository.OrganizationRepository;
+import com.codesquad.issuetracker.api.organization.service.OrganizationService;
+import com.codesquad.issuetracker.common.exception.CustomRuntimeException;
+import com.codesquad.issuetracker.common.exception.customexception.IssueException;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -30,16 +36,18 @@ public class IssueService {
     private final CommentService commentService;
     private final MilestoneService milestoneService;
 
-    private final OrganizationRepository organizationRepository;
+    private final OrganizationService organizationService;
     private final IssueRepository issueRepository;
+    private final IssueFilterMapper issueFilterMapper;
 
     @Transactional
     public Long create(String organizationTitle, IssueCreateRequest issueCreateRequest) {
         // 이슈 저장
-        Long organizationId = organizationRepository.findBy(organizationTitle).orElseThrow();
-        Long issuesCount = issueRepository.countIssuesBy(organizationId).orElseThrow();
+        Long organizationId = organizationService.getOrganizationIdBy(organizationTitle);
+        Long issuesCount = issueRepository.countIssuesBy(organizationId);
         Issue issue = issueCreateRequest.toEntity(organizationId, issuesCount + 1);
-        Long issueId = issueRepository.save(issue).orElseThrow();
+        Long issueId = issueRepository.save(issue)
+                .orElseThrow(() -> new CustomRuntimeException(IssueException.ISSUE_SAVE_FAIL_EXCEPTION));
 
         // 코멘트, 담당자, 라벨 저장
         issueInfoService.saveIssueInfo(issueId, issueCreateRequest);
@@ -51,7 +59,8 @@ public class IssueService {
         // 이슈
         IssueVo issueVo = issueRepository.findBy(issueId);
         // 마일스톤
-        MilestoneVo milestone = milestoneService.read(issueVo.getMilestoneId()); // TODO 이거는 마일스톤 서비스보다 이슈 서비스에서 하는 것이 나을 듯
+        MilestoneVo milestone = milestoneService.read(
+                issueVo.getMilestoneId()); // TODO 이거는 마일스톤 서비스보다 이슈 서비스에서 하는 것이 나을 듯
         // 코멘트
         List<CommentResponse> comments = commentService.readAll(issueId, issueVo.getAuthor());
         // 담당자, 라벨, 이모티콘 목록
@@ -62,14 +71,14 @@ public class IssueService {
     public void update(Long issueId, IssueTitleUpdateRequest issueTitleUpdateRequest) {
         Issue issue = issueTitleUpdateRequest.toEntity(issueId);
         if (!issueRepository.updateTitle(issue)) {
-            throw new RuntimeException("Title update failed for issueId: " + issueId);
+            throw new CustomRuntimeException(IssueException.ISSUE_TITLE_UPDATE_FAIL_EXCEPTION);
         }
     }
 
     public void update(Long issueId, IssueMilestoneUpdateRequest issueMilestoneUpdateRequest) {
         Issue issue = issueMilestoneUpdateRequest.toEntity(issueId);
         if (!issueRepository.updateMilestone(issue)) {
-            throw new RuntimeException("Label update failed for issueId: " + issueId);
+            throw new CustomRuntimeException(IssueException.ISSUE_MILESTONE_UPDATE_FAIL_EXCEPTION);
         }
     }
 
@@ -88,4 +97,16 @@ public class IssueService {
         issueRepository.delete(issueId);
         issueInfoService.delete(issueId);
     }
+
+    @Transactional
+    public IssueFilterResponse readFilteredIssue(IssueFilterRequest issueFilterRequest, String organizationTitle) {
+        Long organizationId = organizationService.getOrganizationIdBy(organizationTitle);
+        Long openedIssuesCount = issueRepository.countOpenedIssuesBy(organizationId);
+        Long closedIssueCount = issueRepository.countClosedIssuesBy(organizationId);
+        issueFilterRequest.checkLabelsContainsZero();
+        List<IssueFilterVo> issueFilterVos = issueFilterMapper.readAll(issueFilterRequest, organizationId);
+
+        return IssueFilterResponse.of(openedIssuesCount, closedIssueCount, issueFilterVos);
+    }
+
 }

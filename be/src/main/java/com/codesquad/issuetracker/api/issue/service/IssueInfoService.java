@@ -40,10 +40,7 @@ public class IssueInfoService {
     }
 
     private void saveComment(Long issueId, IssueCreateRequest issueCreateRequest) {
-        CommentRequest commentRequest = new CommentRequest(
-                issueCreateRequest.getComment().getContent(),
-                issueCreateRequest.getComment().getFileUrl()
-        );
+        CommentRequest commentRequest = new CommentRequest(issueCreateRequest.getComment().getContent());
         Comment comment = commentRequest.toEntityWithIssueId(issueId, issueCreateRequest.getMemberId());
         commentRepository.save(comment);
     }
@@ -64,7 +61,7 @@ public class IssueInfoService {
     @Transactional
     public IssueInfoResponse readIssueInfo(Long issueId) {
         // 담당자
-        List<IssueAssigneeVo> assignees = issueAssigneeRepository.findAllBy(issueId);
+        List<IssueAssigneeVo> assignees = issueAssigneeRepository.findAllByIssueId(issueId);
         // 라벨
         List<IssueLabelVo> labels = issueLabelRepository.findAllBy(issueId);
         // 이모티콘

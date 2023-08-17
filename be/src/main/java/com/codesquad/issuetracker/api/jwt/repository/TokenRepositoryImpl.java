@@ -1,4 +1,4 @@
-package com.codesquad.issuetracker.api.member.repository;
+package com.codesquad.issuetracker.api.jwt.repository;
 
 import java.util.Collections;
 import java.util.Optional;
@@ -15,7 +15,7 @@ public class TokenRepositoryImpl implements TokenRepository {
     private final NamedParameterJdbcTemplate template;
 
     @Override
-    public void save(Long memberId, String refreshToken) {
+    public void saveRefreshToken(Long memberId, String refreshToken) {
         String sql = "INSERT INTO token "
                 + "VALUES (:memberId, :refreshToken)";
 

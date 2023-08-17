@@ -1,4 +1,4 @@
-package com.codesquad.issuetracker.jwt;
+package com.codesquad.issuetracker.api.jwt.domain;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
