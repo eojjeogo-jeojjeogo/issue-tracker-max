@@ -1,6 +1,6 @@
 spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: ENC(VuzP242u9RBVJKsn4vkU1FbPHkuboRGgJUM3zweDDxE7ytrpghcbhJm40IwEFMfWl+zyOiup/gWoy4RjVx8ML6ySnxrgxl0YoQNHLm5btCwc1KvbarZIbvvpHOFX88TwmSp504S8wEUDompfvCe7p56yktC445JTceR5NjiQ9BDT2NkKFWcJE3b2bUc5toa2mx+Nhm6aBM1NyTYJiHQPSA==)
-    username: ENC(Obz+f6ilu77tJcfb33e34temlpBQxxnd)
-    password: ENC(B7WCvKtz3rpOdIF0VubdKDNBYKmj3c8n)
+    url: jdbc:mysql://localhost:3306/issue_tracker
+    username:
+    password: 

@@ -7,9 +7,8 @@ DROP TABLE IF EXISTS issue;
 DROP TABLE IF EXISTS label;
 DROP TABLE IF EXISTS milestone;
 DROP TABLE IF EXISTS member;
-DROP TABLE IF EXISTS emoticon;
-DROP TABLE IF EXISTS profile_img;
 DROP TABLE IF EXISTS organization;
+DROP TABLE IF EXISTS token;
 
 CREATE TABLE issue
 (
@@ -29,7 +28,6 @@ CREATE TABLE issue_comment
     id           BIGINT       NOT NULL AUTO_INCREMENT,
     content      VARCHAR(500) NOT NULL,
     created_time DATETIME     NOT NULL,
-    file_url     VARCHAR(2000) NULL,
     issue_id     BIGINT       NOT NULL,
     member_id    BIGINT       NOT NULL,
     PRIMARY KEY (id)
@@ -59,25 +57,26 @@ CREATE TABLE milestone
 
 CREATE TABLE member
 (
-    id             BIGINT       NOT NULL AUTO_INCREMENT,
-    email          VARCHAR(256) NOT NULL,
-    password       VARCHAR(20)  NOT NULL,
-    nickname       VARCHAR(20)  NOT NULL,
-    created_time   TIMESTAMP    NOT NULL,
-    profile_img_id BIGINT       NOT NULL,
+    id              BIGINT       NOT NULL AUTO_INCREMENT,
+    email           VARCHAR(256) NOT NULL,
+    password        VARCHAR(20) NULL,
+    nickname        VARCHAR(20)  NOT NULL,
+    created_time    TIMESTAMP    NOT NULL,
+    profile_img_url VARCHAR(2000) NULL,
+    sign_in_type_id BIGINT       NOT NULL,
     PRIMARY KEY (id)
 );
 
-CREATE TABLE emoticon
+CREATE TABLE token
 (
-    id      BIGINT  NOT NULL AUTO_INCREMENT,
-    unicode CHAR(7) NOT NULL,
-    PRIMARY KEY (id)
+    member_id     BIGINT        NOT NULL,
+    refresh_token VARCHAR(1000) NOT NULL
 );
 
 CREATE TABLE comment_emoticon
 (
     comment_id  BIGINT NOT NULL,
+    member_id   BIGINT NOT NULL,
     emoticon_id BIGINT NOT NULL
 );
 
@@ -91,13 +90,6 @@ CREATE TABLE issue_assignee
 (
     issue_id  BIGINT NOT NULL,
     member_id BIGINT NOT NULL
-);
-
-CREATE TABLE profile_img
-(
-    id  BIGINT        NOT NULL AUTO_INCREMENT,
-    url VARCHAR(2000) NOT NULL,
-    PRIMARY KEY (id)
 );
 
 CREATE TABLE organization
