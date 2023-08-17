@@ -7,7 +7,6 @@ DROP TABLE IF EXISTS issue;
 DROP TABLE IF EXISTS label;
 DROP TABLE IF EXISTS milestone;
 DROP TABLE IF EXISTS member;
-DROP TABLE IF EXISTS organization;
 DROP TABLE IF EXISTS token;
 
 CREATE TABLE issue
@@ -92,15 +91,9 @@ CREATE TABLE issue_assignee
     member_id BIGINT NOT NULL
 );
 
-CREATE TABLE organization
-(
-    id    BIGINT      NOT NULL AUTO_INCREMENT,
-    title VARCHAR(30) NOT NULL,
-    PRIMARY KEY (id)
-);
-
 CREATE TABLE organization_member
 (
     organization_id BIGINT NOT NULL,
     member_id       BIGINT NOT NULL
 );
+
