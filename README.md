@@ -59,7 +59,16 @@
 
 ## ⚙️ 개발 환경
 ### Front-End
+Vite
 
+TypeScript
+
+React
+
+Emotion
+
+AWS S3
+  
 ### Back-End
 ![](https://img.shields.io/badge/Java-007396?style=flat&logo=OpenJDK&logoColor=white) 
 ![](https://img.shields.io/badge/SpringBoot-6DB33F?style=flat&logo=SpringBoot&logoColor=white)
