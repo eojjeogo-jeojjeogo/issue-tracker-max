@@ -59,10 +59,10 @@
 
 ## ⚙️ 개발 환경
 ### Front-End
-<img src="https://img.shields.io/badge/vite-646CFF?style=for-the-badge&logo=vite&logoColor=white">
-<img src="https://img.shields.io/badge/TypeScript-3178C6?style=for-the-badge&logo=typescript&logoColor=white">
-<img src="https://img.shields.io/badge/react-61DAFB?style=for-the-badge&logo=react&logoColor=white">
-<img src="https://img.shields.io/badge/amazons3-569A31?style=for-the-badge&logo=amazons3&logoColor=white">
+<img src="https://img.shields.io/badge/vite-646CFF?style=flat&logo=vite&logoColor=white">
+<img src="https://img.shields.io/badge/TypeScript-3178C6?style=flat&logo=typescript&logoColor=white">
+<img src="https://img.shields.io/badge/react-61DAFB?style=flat&logo=react&logoColor=white">
+<img src="https://img.shields.io/badge/amazons3-569A31?style=flat&logo=amazons3&logoColor=white">
 <img src="https://emotion.sh/logo-96x96.png"  width="40 height"40" />
   
 ### Back-End
@@ -87,6 +87,7 @@
 <br/>
 
 ## 🔧️ 인프라 구조
+![이슈 트래커 아키텍쳐](https://github.com/eojjeogo-jeojjeogo/issue-tracker-max/assets/108214590/3788e584-3ebd-4182-936e-949b7171fc2d)
 
 
 <br/>
