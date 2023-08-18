@@ -4,7 +4,7 @@
 # ✔️ 이슈 트래커 프로젝트
 - 2023 코드스쿼드 마스터즈 Max에서 진행한 "이슈 트래커"를 구현하는 그룹 프로젝트 
 - 미션 기간: `2023-07-24 ~ 2023-08-18` [4 Week]
-- 프로젝트 Notion → <a href=""><img src="https://img.shields.io/badge/Notion-%23000000.svg?style=for-the-flat&amp;logo=notion&amp;logoColor=white"></a>
+- 프로젝트 Notion → <a href="https://graceful-dracorex-565.notion.site/3-Issue-Tracker-9bc34a6553ee410b8a153b517e400fe5?pvs=4"><img src="https://img.shields.io/badge/Notion-%23000000.svg?style=for-the-flat&amp;logo=notion&amp;logoColor=white"></a>
 
 <br/>
 
@@ -27,7 +27,9 @@
 
 ### 유저
 - github OAuth 2.0 로그인 기능
+- 일반 회원가입 기능
 - 일반 로그인 기능
+- 로그아웃 기능
 
 ### 이슈
 - 이슈 생성
@@ -52,6 +54,7 @@
 ### 마일스톤
 - 마일스톤 생성
 - 전체 마일스톤 목록 조회
+- 마일스토별 이슈 조회
 - 마일스톤 삭제
 - 마일스톤 삭제
 
@@ -59,12 +62,15 @@
 
 ## ⚙️ 개발 환경
 ### Front-End
-<img src="https://img.shields.io/badge/vite-646CFF?style=flat&logo=vite&logoColor=white">
-<img src="https://img.shields.io/badge/TypeScript-3178C6?style=flat&logo=typescript&logoColor=white">
-<img src="https://img.shields.io/badge/react-61DAFB?style=flat&logo=react&logoColor=white">
-<img src="https://img.shields.io/badge/amazons3-569A31?style=flat&logo=amazons3&logoColor=white">
+![](https://img.shields.io/badge/vite-646CFF?style=flat&logo=vite&logoColor=white)
+![](https://img.shields.io/badge/TypeScript-3178C6?style=flat&logo=typescript&logoColor=white)
+![](https://img.shields.io/badge/react-61DAFB?style=flat&logo=react&logoColor=white)
+![](https://img.shields.io/badge/amazons3-569A31?style=flat&logo=amazons3&logoColor=white)
+
+<br/>
 <img src="https://emotion.sh/logo-96x96.png"  width="40 height"40" />
-  
+
+
 ### Back-End
 ![](https://img.shields.io/badge/Java-007396?style=flat&logo=OpenJDK&logoColor=white) 
 ![](https://img.shields.io/badge/SpringBoot-6DB33F?style=flat&logo=SpringBoot&logoColor=white)
