@@ -59,15 +59,11 @@
 
 ## ⚙️ 개발 환경
 ### Front-End
-Vite
-
-TypeScript
-
-React
-
-Emotion
-
-AWS S3
+<img src="https://img.shields.io/badge/vite-646CFF?style=for-the-badge&logo=vite&logoColor=white">
+<img src="https://img.shields.io/badge/TypeScript-3178C6?style=for-the-badge&logo=typescript&logoColor=white">
+<img src="https://img.shields.io/badge/react-61DAFB?style=for-the-badge&logo=react&logoColor=white">
+<img src="https://img.shields.io/badge/amazons3-569A31?style=for-the-badge&logo=amazons3&logoColor=white">
+<img src="https://emotion.sh/logo-96x96.png"  width="40 height"40" />
   
 ### Back-End
 ![](https://img.shields.io/badge/Java-007396?style=flat&logo=OpenJDK&logoColor=white) 
