@@ -71,16 +71,18 @@
 ![](https://img.shields.io/badge/AWS%20EC2-FA7343?style=flat&logo=amazonec2&logoColor=white)
 ![](https://img.shields.io/badge/-AWS_S3-569A31?style=flat&amp;logo=Amazon-S3&amp;logoColor=white)
 ![](https://img.shields.io/badge/AWS_RDS-527FFF?style=flat&logo=amazonrds&logoColor=white)
+![](https://img.shields.io/badge/Redis-FF4D4D?style=flat&logo=redis&logoColor=white)
 
 - Java: `JDK 11`
-- SpringBoot: `ver. `
-- MySQL: `ver. `
+- SpringBoot: `ver. 2.7.14`
+- MySQL: `ver. 8.0.33`
+- Redis: `7.0.12`
 - Amazon AWS: `EC2`, `S3`, `RDS`
 
 <br/>
 
 ## 🔧️ 인프라 구조
-- 작성 예정
+
 
 <br/>
 
