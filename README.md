@@ -93,7 +93,7 @@
 <br/>
 
 ## 🔧️ 인프라 구조
-![이슈 트래커 아키텍쳐](https://github.com/eojjeogo-jeojjeogo/issue-tracker-max/assets/108214590/3788e584-3ebd-4182-936e-949b7171fc2d)
+![image](https://github.com/eojjeogo-jeojjeogo/issue-tracker-max/assets/108214590/80e6d094-02f6-436b-b699-21204c7bde9b)
 
 
 <br/>
