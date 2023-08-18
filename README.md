@@ -1,4 +1,4 @@
-![Last Update](https://img.shields.io/badge/Last_Upadate-2023--08--15-blue)
+![Last Update](https://img.shields.io/badge/Last_Upadate-2023--08--18-blue)
 [![Build Status](https://img.shields.io/endpoint.svg?url=https%3A%2F%2Factions-badge.atrox.dev%2Feojjeogo-jeojjeogo%2Fissue-tracker-max%2Fbadge%3Fref%3Drelease&style=flat)](https://actions-badge.atrox.dev/eojjeogo-jeojjeogo/issue-tracker-max/goto?ref=release)
 
 # ✔️ 이슈 트래커 프로젝트
@@ -93,8 +93,7 @@
 <br/>
 
 ## 🔧️ 인프라 구조
-![image](https://github.com/eojjeogo-jeojjeogo/issue-tracker-max/assets/108214590/80e6d094-02f6-436b-b699-21204c7bde9b)
-
+![이슈트래커 아키텍쳐 (1)](https://github.com/eojjeogo-jeojjeogo/issue-tracker-max/assets/108214590/11fdbd50-b925-4106-822f-e57b98b228c0)
 
 <br/>
 
