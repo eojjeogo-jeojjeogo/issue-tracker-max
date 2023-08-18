@@ -19,7 +19,11 @@
 <br/>
 
 ## 🖥️ 동작 화면
-- 추가 예정
+
+
+
+https://github.com/eojjeogo-jeojjeogo/issue-tracker-max/assets/114852081/90edd514-1de7-418c-99c2-298fd1975bc5
+
 
 <br/>
 
