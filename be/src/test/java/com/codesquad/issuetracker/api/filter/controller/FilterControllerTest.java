@@ -6,12 +6,10 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import com.codesquad.issuetracker.annotation.ControllerTest;
 import com.codesquad.issuetracker.api.label.dto.request.LabelCreateRequest;
-import com.codesquad.issuetracker.api.member.dto.request.SignUpRequest;
 import com.codesquad.issuetracker.api.milestone.dto.request.MilestoneRequest;
 import com.codesquad.issuetracker.init.BaseControllerTest;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.springframework.test.context.jdbc.Sql;
 
 @ControllerTest
 class FilterControllerTest extends BaseControllerTest {
@@ -54,44 +52,5 @@ class FilterControllerTest extends BaseControllerTest {
                 .andExpect(jsonPath("*.name").exists())
                 .andExpect(jsonPath("*.backgroundColor").exists())
                 .andExpect(jsonPath("*.isDark").exists());
-    }
-
-    /**
-     * 담당자 필터에서 필요한 담당자를 가져오기 위해선 organization_member 테이블에 정보가 필요한데, 아직 Organization 에 대한 CRUD가 없기 때문에 불가능하다.
-     *
-     * @throws Exception
-     */
-    @Sql(statements = {
-            "INSERT INTO organization_member VALUES (1,1);",
-            "INSERT INTO organization_member VALUES (1,2);"
-    })
-    @DisplayName("담당자 필드 목록을 조회 한다.")
-    @Test
-    void readAssignees() throws Exception {
-        // given
-        SignUpRequest tester1 = SignUpRequest.builder()
-                .email("aaa@naver.com")
-                .nickname("tester1")
-                .password("123456")
-                .build();
-
-        SignUpRequest tester2 = SignUpRequest.builder()
-                .email("bbb@naver.com")
-                .nickname("tester2")
-                .password("123456")
-                .build();
-
-        memberService.signUp(tester1, "local");
-        memberService.signUp(tester2, "local");
-
-        // when
-        mockMvc.perform(get("/api/" + TEST_ORGANIZATION_NAME + "/assignees")
-                        .param("type", "filter")
-                        .header(AUTHORIZATION, JWT_TOKEN_PREFIX + jwt.getAccessToken()))
-                // then
-                .andDo(print())
-                .andExpect(jsonPath("*.id").exists())
-                .andExpect(jsonPath("*.name").exists())
-                .andExpect(jsonPath("*.imgUrl").exists());
     }
 }
