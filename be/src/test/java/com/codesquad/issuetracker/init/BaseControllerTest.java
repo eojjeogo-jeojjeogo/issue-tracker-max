@@ -4,6 +4,7 @@ import com.codesquad.issuetracker.api.comment.service.CommentService;
 import com.codesquad.issuetracker.api.jwt.domain.Jwt;
 import com.codesquad.issuetracker.api.jwt.service.JwtProvider;
 import com.codesquad.issuetracker.api.label.service.LabelService;
+import com.codesquad.issuetracker.api.member.service.MemberService;
 import com.codesquad.issuetracker.api.milestone.service.MilestoneService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.Collections;
@@ -28,6 +29,9 @@ public abstract class BaseControllerTest {
 
     @Autowired
     public MilestoneService milestoneService;
+
+    @Autowired
+    public MemberService memberService;
 
     @Autowired
     public LabelService labelService;

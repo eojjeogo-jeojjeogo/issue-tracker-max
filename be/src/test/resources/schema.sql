@@ -97,3 +97,13 @@ CREATE TABLE organization_member
     member_id       BIGINT NOT NULL
 );
 
+insert into sign_in_type VALUES (1,"local");
+insert into sign_in_type VALUES (2,"github");
+
+INSERT INTO emoticon (unicode) VALUES ('U+1F600');
+INSERT INTO emoticon (unicode) VALUES ('U+1F603');
+INSERT INTO emoticon (unicode) VALUES ('U+1F604');
+INSERT INTO emoticon (unicode) VALUES ('U+1F601');
+INSERT INTO emoticon (unicode) VALUES ('U+1F606');
+
+INSERT INTO organization (title) VALUES ('testOrganization');
